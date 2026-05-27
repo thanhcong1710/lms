@@ -1,0 +1,482 @@
+[
+  {
+    "testSeq": 144,
+    "evalNm": "test 6",
+    "testGradeCdNm": "Lớp 1",
+    "testGradeCd": "DG001",
+    "testTypeCdNm": "Đánh giá học thử IG.BH",
+    "testTypeCd": "TT004",
+    "filePath": "/upload/bullet/attach/2018/08/20180817114855816.xlsx",
+    "realFileNm": "LMS_text_180814.xlsx"
+  },
+  {
+    "testSeq": 139,
+    "evalNm": "Test",
+    "testGradeCdNm": "Lớp 1",
+    "testGradeCd": "DG001",
+    "testTypeCdNm": "Đánh giá học thử IG.BH",
+    "testTypeCd": "TT004",
+    "filePath": "/upload/bullet/attach/2018/08/20180817114855816.xlsx",
+    "realFileNm": "LMS_text_180814.xlsx"
+  },
+  {
+    "testSeq": 137,
+    "evalNm": "PT lớp 5 Q1",
+    "testGradeCdNm": "Lớp 5",
+    "testGradeCd": "DG005",
+    "testTypeCdNm": "Đánh giá học thử IG.BH",
+    "testTypeCd": "TT004",
+    "filePath": "/pdf/upload/2023/03/20230307134451506.pdf",
+    "realFileNm": "Lop5_Quá I.pdf"
+  },
+  {
+    "testSeq": 136,
+    "evalNm": "PT lớp 4 Q1",
+    "testGradeCdNm": "Lớp 4",
+    "testGradeCd": "DG004",
+    "testTypeCdNm": "Đánh giá học thử IG.BH",
+    "testTypeCd": "TT004",
+    "filePath": "/pdf/upload/2023/03/20230307132834512.pdf",
+    "realFileNm": "Lop 4_Quá I.pdf"
+  },
+  {
+    "testSeq": 135,
+    "evalNm": "PT lớp 3 Q1",
+    "testGradeCdNm": "Lớp 3",
+    "testGradeCd": "DG003",
+    "testTypeCdNm": "Đánh giá học thử IG.BH",
+    "testTypeCd": "TT004",
+    "filePath": "/pdf/upload/2023/03/20230307111122525.pdf",
+    "realFileNm": "Lop 3_Quá I.pdf"
+  },
+  {
+    "testSeq": 134,
+    "evalNm": "PT lớp 2 Q1",
+    "testGradeCdNm": "Lớp 2",
+    "testGradeCd": "DG002",
+    "testTypeCdNm": "Đánh giá học thử IG.BH",
+    "testTypeCd": "TT004",
+    "filePath": "/pdf/upload/2023/03/20230306130203475.pdf",
+    "realFileNm": "Lớp 2_Quá I (màu).pdf"
+  },
+  {
+    "testSeq": 133,
+    "evalNm": "PT lớp 1 Q1",
+    "testGradeCdNm": "Lớp 1",
+    "testGradeCd": "DG001",
+    "testTypeCdNm": "Đánh giá học thử IG.BH",
+    "testTypeCd": "TT004",
+    "filePath": "/pdf/upload/2023/03/20230306123215735.pdf",
+    "realFileNm": "Lớp 1_Quá I (màu).PDF"
+  },
+  {
+    "testSeq": 132,
+    "evalNm": "PT lớp 5 Q4",
+    "testGradeCdNm": "Lớp 5",
+    "testGradeCd": "DG005",
+    "testTypeCdNm": "Đánh giá học thử IG.BH",
+    "testTypeCd": "TT004",
+    "filePath": "/pdf/upload/2022/12/20221205165820592.pdf",
+    "realFileNm": "Lop5.pdf"
+  },
+  {
+    "testSeq": 131,
+    "evalNm": "PT lớp 4 Q4",
+    "testGradeCdNm": "Lớp 4",
+    "testGradeCd": "DG004",
+    "testTypeCdNm": "Đánh giá học thử IG.BH",
+    "testTypeCd": "TT004",
+    "filePath": "/pdf/upload/2022/12/20221205130137940.pdf",
+    "realFileNm": "Lop4.pdf"
+  },
+  {
+    "testSeq": 130,
+    "evalNm": "PT lớp 3 Q4",
+    "testGradeCdNm": "Lớp 3",
+    "testGradeCd": "DG003",
+    "testTypeCdNm": "Đánh giá học thử IG.BH",
+    "testTypeCd": "TT004",
+    "filePath": "/pdf/upload/2022/12/20221205124244504.pdf",
+    "realFileNm": "Lop3.pdf"
+  },
+  {
+    "testSeq": 129,
+    "evalNm": "PT lớp 2 Q4",
+    "testGradeCdNm": "Lớp 2",
+    "testGradeCd": "DG002",
+    "testTypeCdNm": "Đánh giá học thử IG.BH",
+    "testTypeCd": "TT004",
+    "filePath": "/pdf/upload/2022/12/20221205123123030.pdf",
+    "realFileNm": "Lớp 2_Quá IV(màu).PDF"
+  },
+  {
+    "testSeq": 128,
+    "evalNm": "PT lớp 1 Q4",
+    "testGradeCdNm": "Lớp 1",
+    "testGradeCd": "DG001",
+    "testTypeCdNm": "Đánh giá học thử IG.BH",
+    "testTypeCd": "TT004",
+    "filePath": "/pdf/upload/2022/12/20221205121752074.pdf",
+    "realFileNm": "Lớp 1_Quá IV (màu).PDF"
+  },
+  {
+    "testSeq": 127,
+    "evalNm": "PT lớp 5 Q3",
+    "testGradeCdNm": "Lớp 5",
+    "testGradeCd": "DG005",
+    "testTypeCdNm": "Đánh giá học thử IG.BH",
+    "testTypeCd": "TT004",
+    "filePath": "/pdf/upload/2022/09/20220922115227840.pdf",
+    "realFileNm": "Lop5.pdf"
+  },
+  {
+    "testSeq": 126,
+    "evalNm": "PT lớp 4 Q3",
+    "testGradeCdNm": "Lớp 4",
+    "testGradeCd": "DG004",
+    "testTypeCdNm": "Đánh giá học thử IG.BH",
+    "testTypeCd": "TT004",
+    "filePath": "/pdf/upload/2022/08/20220830180913413.pdf",
+    "realFileNm": "Lop4.pdf"
+  },
+  {
+    "testSeq": 125,
+    "evalNm": "PT lớp 3 Q3",
+    "testGradeCdNm": "Lớp 3",
+    "testGradeCd": "DG003",
+    "testTypeCdNm": "Đánh giá học thử IG.BH",
+    "testTypeCd": "TT004",
+    "filePath": "/pdf/upload/2022/08/20220829155740915.pdf",
+    "realFileNm": "Lop3.pdf"
+  },
+  {
+    "testSeq": 124,
+    "evalNm": "PT lớp 2 Q3",
+    "testGradeCdNm": "Lớp 2",
+    "testGradeCd": "DG002",
+    "testTypeCdNm": "Đánh giá học thử IG.BH",
+    "testTypeCd": "TT004",
+    "filePath": "/pdf/upload/2022/08/20220825201934601.pdf",
+    "realFileNm": "Lớp 2_Quá III (màu).PDF"
+  },
+  {
+    "testSeq": 123,
+    "evalNm": "PT lớp 1 Q3",
+    "testGradeCdNm": "Lớp 1",
+    "testGradeCd": "DG001",
+    "testTypeCdNm": "Đánh giá học thử IG.BH",
+    "testTypeCd": "TT004",
+    "filePath": "/pdf/upload/2022/08/20220825195225975.pdf",
+    "realFileNm": "Lớp 1_Quá III (màu).PDF"
+  },
+  {
+    "testSeq": 122,
+    "evalNm": "PT lớp 5 Q2",
+    "testGradeCdNm": "Lớp 5",
+    "testGradeCd": "DG005",
+    "testTypeCdNm": "Đánh giá học thử IG.BH",
+    "testTypeCd": "TT004",
+    "filePath": "/pdf/upload/2022/04/20220427172036947.pdf",
+    "realFileNm": "Test lop5.PDF"
+  },
+  {
+    "testSeq": 120,
+    "evalNm": "PT lớp 4 Q2",
+    "testGradeCdNm": "Lớp 4",
+    "testGradeCd": "DG004",
+    "testTypeCdNm": "Đánh giá học thử IG.BH",
+    "testTypeCd": "TT004",
+    "filePath": "/pdf/upload/2022/04/20220426123640217.pdf",
+    "realFileNm": "Test lop4.PDF"
+  },
+  {
+    "testSeq": 119,
+    "evalNm": "PT lớp 3 Q2",
+    "testGradeCdNm": "Lớp 3",
+    "testGradeCd": "DG003",
+    "testTypeCdNm": "Đánh giá học thử IG.BH",
+    "testTypeCd": "TT004",
+    "filePath": "/pdf/upload/2022/04/20220426123603551.pdf",
+    "realFileNm": "Test lop3.PDF"
+  },
+  {
+    "testSeq": 118,
+    "evalNm": "PT lớp 1 Q2",
+    "testGradeCdNm": "Lớp 1",
+    "testGradeCd": "DG001",
+    "testTypeCdNm": "Đánh giá học thử IG.BH",
+    "testTypeCd": "TT004",
+    "filePath": "/pdf/upload/2023/06/20230629130547763.pdf",
+    "realFileNm": "Lớp 1_Quá II (màu).pdf"
+  },
+  {
+    "testSeq": 117,
+    "evalNm": "PT lớp 2 Q2",
+    "testGradeCdNm": "Lớp 2",
+    "testGradeCd": "DG002",
+    "testTypeCdNm": "Đánh giá học thử IG.BH",
+    "testTypeCd": "TT004",
+    "filePath": "/pdf/upload/2023/06/20230629130630412.pdf",
+    "realFileNm": "Lớp 2_Quá II (màu).pdf"
+  },
+  {
+    "testSeq": 111,
+    "evalNm": "PT Lớp 5 Q4",
+    "testGradeCdNm": "Lớp 5",
+    "testGradeCd": "DG005",
+    "testTypeCdNm": "Đánh giá học thử IG.BH",
+    "testTypeCd": "TT004",
+    "filePath": "/pdf/upload/2021/11/20211110175222406.pdf",
+    "realFileNm": "Lop5.pdf"
+  },
+  {
+    "testSeq": 109,
+    "evalNm": "PT Lớp 5 Q2",
+    "testGradeCdNm": "Lớp 5",
+    "testGradeCd": "DG005",
+    "testTypeCdNm": "Đánh giá học thử IG.BH",
+    "testTypeCd": "TT004",
+    "filePath": "/pdf/upload/2020/05/20200513082110173.pdf",
+    "realFileNm": "Placement test lop5.PDF"
+  },
+  {
+    "testSeq": 101,
+    "evalNm": "Online PT lớp 4",
+    "testGradeCdNm": "Lớp 4",
+    "testGradeCd": "DG004",
+    "testTypeCdNm": "Đánh giá học thử IG.BH",
+    "testTypeCd": "TT004",
+    "filePath": "/upload/bullet/attach/2018/08/20180817114855816.xlsx",
+    "realFileNm": "LMS_text_180814.xlsx"
+  },
+  {
+    "testSeq": 100,
+    "evalNm": "Online PT lớp 1",
+    "testGradeCdNm": "Lớp 1",
+    "testGradeCd": "DG001",
+    "testTypeCdNm": "Đánh giá học thử IG.BH",
+    "testTypeCd": "TT004",
+    "filePath": "/pdf/upload/2020/03/20200322182521503.pdf",
+    "realFileNm": "Online_Placement Test_1st_Answer.pdf"
+  },
+  {
+    "testSeq": 98,
+    "evalNm": "Online PT lớp 5",
+    "testGradeCdNm": "Lớp 5",
+    "testGradeCd": "DG005",
+    "testTypeCdNm": "Đánh giá học thử IG.BH",
+    "testTypeCd": "TT004",
+    "filePath": "/upload/bullet/attach/2018/08/20180817114855816.xlsx",
+    "realFileNm": "LMS_text_180814.xlsx"
+  },
+  {
+    "testSeq": 96,
+    "evalNm": "Học sinh giỏi",
+    "testGradeCdNm": "Lớp 4",
+    "testGradeCd": "DG004",
+    "testTypeCdNm": "Đánh giá học thử IG.BH",
+    "testTypeCd": "TT004",
+    "filePath": "/pdf/upload/2019/12/20191224173613119.pdf",
+    "realFileNm": "Đề thi Tuyển CMs Championship1.PDF"
+  },
+  {
+    "testSeq": 95,
+    "evalNm": "BH-P4 summative test",
+    "testGradeCdNm": "BH Lev.P4",
+    "testGradeCd": "LP4",
+    "testTypeCdNm": "Đánh giá tổng kết BH",
+    "testTypeCd": "TT006",
+    "filePath": "/pdf/upload/2019/12/20191205191033727.pdf",
+    "realFileNm": "BH-P4 summative test.pdf"
+  },
+  {
+    "testSeq": 94,
+    "evalNm": "BH-P3 summative test",
+    "testGradeCdNm": "BH Lev.P3",
+    "testGradeCd": "LP3",
+    "testTypeCdNm": "Đánh giá tổng kết BH",
+    "testTypeCd": "TT006",
+    "filePath": "/pdf/upload/2019/12/20191205190553808.pdf",
+    "realFileNm": "BH-P3 summative test.pdf"
+  },
+  {
+    "testSeq": 93,
+    "evalNm": "BH-P2 summative test",
+    "testGradeCdNm": "BH Lev.P2",
+    "testGradeCd": "LP2",
+    "testTypeCdNm": "Đánh giá tổng kết BH",
+    "testTypeCd": "TT006",
+    "filePath": "/pdf/upload/2019/12/20191205190215291.pdf",
+    "realFileNm": "BH-P2 summative test.pdf"
+  },
+  {
+    "testSeq": 92,
+    "evalNm": "BH-P1 summative test",
+    "testGradeCdNm": "BH Lev.P1",
+    "testGradeCd": "LP1",
+    "testTypeCdNm": "Đánh giá tổng kết BH",
+    "testTypeCd": "TT006",
+    "filePath": "/pdf/upload/2019/12/20191205185857178.pdf",
+    "realFileNm": "BH-P1 summative test.pdf"
+  },
+  {
+    "testSeq": 91,
+    "evalNm": "BH-B4 summative test",
+    "testGradeCdNm": "BH Lev.B4",
+    "testGradeCd": "LB4",
+    "testTypeCdNm": "Đánh giá tổng kết BH",
+    "testTypeCd": "TT006",
+    "filePath": "/pdf/upload/2019/12/20191205185329182.pdf",
+    "realFileNm": "BH-B4 summative test.pdf"
+  },
+  {
+    "testSeq": 90,
+    "evalNm": "BH-B3 summative test",
+    "testGradeCdNm": "BH Lev.B3",
+    "testGradeCd": "LB3",
+    "testTypeCdNm": "Đánh giá tổng kết BH",
+    "testTypeCd": "TT006",
+    "filePath": "/pdf/upload/2020/12/20201217122234538.pdf",
+    "realFileNm": "BH-B3 summative test1.pdf"
+  },
+  {
+    "testSeq": 89,
+    "evalNm": "BH-B2 summative test",
+    "testGradeCdNm": "BH Lev.B2",
+    "testGradeCd": "LB2",
+    "testTypeCdNm": "Đánh giá tổng kết BH",
+    "testTypeCd": "TT006",
+    "filePath": "/pdf/upload/2019/12/20191205183937859.pdf",
+    "realFileNm": "BH-B2 summative test.pdf"
+  },
+  {
+    "testSeq": 88,
+    "evalNm": "BH-B1 summative test",
+    "testGradeCdNm": "BH Lev.B1",
+    "testGradeCd": "LB1",
+    "testTypeCdNm": "Đánh giá tổng kết BH",
+    "testTypeCd": "TT006",
+    "filePath": "/pdf/upload/2019/12/20191205183413943.pdf",
+    "realFileNm": "BH-B1 summative test .pdf"
+  },
+  {
+    "testSeq": 87,
+    "evalNm": "BH-R4 summative test",
+    "testGradeCdNm": "BH Lev.R4",
+    "testGradeCd": "LR4",
+    "testTypeCdNm": "Đánh giá tổng kết BH",
+    "testTypeCd": "TT006",
+    "filePath": "/pdf/upload/2019/12/20191205182812527.pdf",
+    "realFileNm": "BH-R4 summative test.pdf"
+  },
+  {
+    "testSeq": 86,
+    "evalNm": "BH-R3 summative test",
+    "testGradeCdNm": "BH Lev.R3",
+    "testGradeCd": "LR3",
+    "testTypeCdNm": "Đánh giá tổng kết BH",
+    "testTypeCd": "TT006",
+    "filePath": "/pdf/upload/2019/12/20191205181416249.pdf",
+    "realFileNm": "BH-R3 summative test.pdf"
+  },
+  {
+    "testSeq": 85,
+    "evalNm": "BH-R2 summative test",
+    "testGradeCdNm": "BH Lev.R2",
+    "testGradeCd": "LR2",
+    "testTypeCdNm": "Đánh giá tổng kết BH",
+    "testTypeCd": "TT006",
+    "filePath": "/pdf/upload/2019/12/20191205181001962.pdf",
+    "realFileNm": "BH-R2 summative test.pdf"
+  },
+  {
+    "testSeq": 84,
+    "evalNm": "BH-R1 summative test",
+    "testGradeCdNm": "BH Lev.R1",
+    "testGradeCd": "LR1",
+    "testTypeCdNm": "Đánh giá tổng kết BH",
+    "testTypeCd": "TT006",
+    "filePath": "/pdf/upload/2019/12/20191231140453886.pdf",
+    "realFileNm": "BH-R1 summative test_sửa lỗi câu 8.pdf"
+  },
+  {
+    "testSeq": 83,
+    "evalNm": "BH-G2 summative test",
+    "testGradeCdNm": "BH Lev.G2",
+    "testGradeCd": "LG2",
+    "testTypeCdNm": "Đánh giá tổng kết BH",
+    "testTypeCd": "TT006",
+    "filePath": "/pdf/upload/2019/12/20191205175731249.pdf",
+    "realFileNm": "BH-G2 summative test.pdf"
+  },
+  {
+    "testSeq": 82,
+    "evalNm": "BH-G1 summative test",
+    "testGradeCdNm": "BH Lev.G1",
+    "testGradeCd": "LG1",
+    "testTypeCdNm": "Đánh giá tổng kết BH",
+    "testTypeCd": "TT006",
+    "filePath": "/pdf/upload/2019/12/20191205175231015.pdf",
+    "realFileNm": "BH-G1 summative test.pdf"
+  },
+  {
+    "testSeq": 81,
+    "evalNm": "IG-U summative test",
+    "testGradeCdNm": "IG Lev.U",
+    "testGradeCd": "LU",
+    "testTypeCdNm": "Đánh giá tổng kết IG",
+    "testTypeCd": "TT005",
+    "filePath": "/pdf/upload/2019/12/20191205174536072.pdf",
+    "realFileNm": "IG-U summative test.pdf"
+  },
+  {
+    "testSeq": 80,
+    "evalNm": "IG-Q summative test",
+    "testGradeCdNm": "IG Lev.Q",
+    "testGradeCd": "LQ",
+    "testTypeCdNm": "Đánh giá tổng kết IG",
+    "testTypeCd": "TT005",
+    "filePath": "/pdf/upload/2019/12/20191205173856265.pdf",
+    "realFileNm": "IG-Q summative test.pdf"
+  },
+  {
+    "testSeq": 79,
+    "evalNm": "IG-W summative test",
+    "testGradeCdNm": "IG Lev.W",
+    "testGradeCd": "LW",
+    "testTypeCdNm": "Đánh giá tổng kết IG",
+    "testTypeCd": "TT005",
+    "filePath": "/pdf/upload/2019/12/20191205173519173.pdf",
+    "realFileNm": "IG-W summative test.pdf"
+  },
+  {
+    "testSeq": 78,
+    "evalNm": "IG-C summative test",
+    "testGradeCdNm": "IG Lev.C",
+    "testGradeCd": "LC",
+    "testTypeCdNm": "Đánh giá tổng kết IG",
+    "testTypeCd": "TT005",
+    "filePath": "/pdf/upload/2019/12/20191205172952735.pdf",
+    "realFileNm": "IG-C summative test.pdf"
+  },
+  {
+    "testSeq": 77,
+    "evalNm": "IG-T summative test",
+    "testGradeCdNm": "IG Lev.T",
+    "testGradeCd": "LT",
+    "testTypeCdNm": "Đánh giá tổng kết IG",
+    "testTypeCd": "TT005",
+    "filePath": "/pdf/upload/2019/12/20191205171858858.pdf",
+    "realFileNm": "IG-T summative test.pdf"
+  },
+  {
+    "testSeq": 76,
+    "evalNm": "IG-J summative test",
+    "testGradeCdNm": "IG Lev.J",
+    "testGradeCd": "LJ",
+    "testTypeCdNm": "Đánh giá tổng kết IG",
+    "testTypeCd": "TT005",
+    "filePath": "/pdf/upload/2019/12/20191205171252154.pdf",
+    "realFileNm": "IG-J summative test.pdf"
+  }
+]

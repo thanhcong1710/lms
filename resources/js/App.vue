@@ -68,6 +68,9 @@
           <router-link to="/contracts" @click="isMobileMenuOpen = false" class="flex items-center gap-3 px-4 py-3 rounded-xl transition hover:bg-brand-input hover:text-brand-text text-brand-desc" active-class="bg-indigo-600/10 text-indigo-500 border-l-4 border-indigo-600 font-medium">
             <span>📄 Contracts</span>
           </router-link>
+          <router-link to="/tests" @click="isMobileMenuOpen = false" class="flex items-center gap-3 px-4 py-3 rounded-xl transition hover:bg-brand-input hover:text-brand-text text-brand-desc" active-class="bg-indigo-600/10 text-indigo-500 border-l-4 border-indigo-600 font-medium">
+            <span>📝 Tests</span>
+          </router-link>
         </nav>
       </div>
 

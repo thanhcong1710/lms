@@ -6,6 +6,7 @@ import TeacherList from './views/TeacherList.vue';
 import ClassList from './views/ClassList.vue';
 import StudentList from './views/StudentList.vue';
 import ContractList from './views/ContractList.vue';
+import TestList from './views/TestList.vue';
 
 const routes = [
     { path: '/login', name: 'login', component: Login },
@@ -15,6 +16,7 @@ const routes = [
     { path: '/classes', name: 'classes', component: ClassList, meta: { requiresAuth: true } },
     { path: '/students', name: 'students', component: StudentList, meta: { requiresAuth: true } },
     { path: '/contracts', name: 'contracts', component: ContractList, meta: { requiresAuth: true } },
+    { path: '/tests', name: 'tests', component: TestList, meta: { requiresAuth: true } },
 ];
 
 const router = createRouter({
