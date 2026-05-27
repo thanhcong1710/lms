@@ -1,74 +1,115 @@
 <template>
-  <div class="min-h-screen bg-[#070b13] text-gray-100 flex font-sans">
-    <!-- Sidebar -->
-    <aside v-if="isAuthenticated" class="w-64 bg-[#0d1527]/80 backdrop-blur-md border-r border-gray-800 flex flex-col justify-between p-4">
+  <div :class="[theme, 'min-h-screen flex font-sans bg-brand-bg text-brand-text']">
+    <!-- Mobile Hamburger Header -->
+    <header class="md:hidden w-full bg-brand-card/80 backdrop-blur-md border-b border-brand-border h-16 fixed top-0 left-0 z-40 flex items-center justify-between px-4" v-if="isAuthenticated">
+      <div class="flex items-center gap-3">
+        <div class="h-9 w-9 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center font-bold text-white shadow-lg">
+          LMS
+        </div>
+        <span class="font-bold text-base leading-none">CMS EDU</span>
+      </div>
+      
+      <div class="flex items-center gap-2">
+        <!-- Theme Toggle -->
+        <button @click="toggleTheme" class="p-2 rounded-xl bg-brand-input hover:bg-brand-border transition text-brand-desc hover:text-brand-text">
+          <span v-if="theme === 'dark'">☀️</span>
+          <span v-else>🌙</span>
+        </button>
+        <!-- Mobile Menu Toggle -->
+        <button @click="isMobileMenuOpen = !isMobileMenuOpen" class="p-2 rounded-xl bg-brand-input hover:bg-brand-border text-brand-desc hover:text-brand-text">
+          🍔
+        </button>
+      </div>
+    </header>
+
+    <!-- Sidebar Overlay for Mobile -->
+    <div v-if="isAuthenticated && isMobileMenuOpen" @click="isMobileMenuOpen = false" class="md:hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-40"></div>
+
+    <!-- Sidebar (Desktop and Mobile Drawer) -->
+    <aside :class="[
+      isAuthenticated ? 'flex' : 'hidden',
+      isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0',
+      'w-64 bg-brand-card/90 backdrop-blur-md border-r border-brand-border flex-col justify-between p-5 fixed md:sticky top-0 h-screen z-50 transition-transform duration-300 ease-in-out'
+    ]">
       <div>
-        <!-- Logo -->
-        <div class="flex items-center gap-3 px-2 py-4 mb-6">
-          <div class="h-10 w-10 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center font-bold text-white shadow-lg shadow-indigo-500/20">
-            LMS
+        <!-- Logo and Close Button (Mobile) -->
+        <div class="flex items-center justify-between mb-8">
+          <div class="flex items-center gap-3">
+            <div class="h-10 w-10 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center font-bold text-white shadow-lg shadow-indigo-500/20">
+              LMS
+            </div>
+            <div>
+              <h1 class="font-bold text-lg leading-none">CMS EDU</h1>
+              <span class="text-xs text-indigo-500 font-medium">LMS PORTAL</span>
+            </div>
           </div>
-          <div>
-            <h1 class="font-bold text-lg leading-none bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">CMS EDU</h1>
-            <span class="text-xs text-indigo-400 font-medium">LMS PORTAL CLONE</span>
-          </div>
+          <button @click="isMobileMenuOpen = false" class="md:hidden p-1.5 rounded-lg bg-brand-input hover:bg-brand-border">
+            ✕
+          </button>
         </div>
 
         <!-- Navigation Links -->
-        <nav class="space-y-1.5">
-          <router-link to="/" class="flex items-center gap-3 px-4 py-3 rounded-xl transition duration-150 hover:bg-gray-800/50 hover:text-white" active-class="bg-indigo-600/20 text-indigo-400 border-l-4 border-indigo-600 font-medium">
-            <span>Dashboard</span>
+        <nav class="space-y-1">
+          <router-link to="/" @click="isMobileMenuOpen = false" class="flex items-center gap-3 px-4 py-3 rounded-xl transition hover:bg-brand-input hover:text-brand-text text-brand-desc" active-class="bg-indigo-600/10 text-indigo-500 border-l-4 border-indigo-600 font-medium">
+            <span>📊 Dashboard</span>
           </router-link>
-          <router-link to="/branches" class="flex items-center gap-3 px-4 py-3 rounded-xl transition duration-150 hover:bg-gray-800/50 hover:text-white" active-class="bg-indigo-600/20 text-indigo-400 border-l-4 border-indigo-600 font-medium">
-            <span>Branches</span>
+          <router-link to="/branches" @click="isMobileMenuOpen = false" class="flex items-center gap-3 px-4 py-3 rounded-xl transition hover:bg-brand-input hover:text-brand-text text-brand-desc" active-class="bg-indigo-600/10 text-indigo-500 border-l-4 border-indigo-600 font-medium">
+            <span>🏢 Branches</span>
           </router-link>
-          <router-link to="/teachers" class="flex items-center gap-3 px-4 py-3 rounded-xl transition duration-150 hover:bg-gray-800/50 hover:text-white" active-class="bg-indigo-600/20 text-indigo-400 border-l-4 border-indigo-600 font-medium">
-            <span>Teachers</span>
+          <router-link to="/teachers" @click="isMobileMenuOpen = false" class="flex items-center gap-3 px-4 py-3 rounded-xl transition hover:bg-brand-input hover:text-brand-text text-brand-desc" active-class="bg-indigo-600/10 text-indigo-500 border-l-4 border-indigo-600 font-medium">
+            <span>👨‍🏫 Teachers</span>
           </router-link>
-          <router-link to="/classes" class="flex items-center gap-3 px-4 py-3 rounded-xl transition duration-150 hover:bg-gray-800/50 hover:text-white" active-class="bg-indigo-600/20 text-indigo-400 border-l-4 border-indigo-600 font-medium">
-            <span>Classes</span>
+          <router-link to="/classes" @click="isMobileMenuOpen = false" class="flex items-center gap-3 px-4 py-3 rounded-xl transition hover:bg-brand-input hover:text-brand-text text-brand-desc" active-class="bg-indigo-600/10 text-indigo-500 border-l-4 border-indigo-600 font-medium">
+            <span>🏫 Classes</span>
           </router-link>
-          <router-link to="/students" class="flex items-center gap-3 px-4 py-3 rounded-xl transition duration-150 hover:bg-gray-800/50 hover:text-white" active-class="bg-indigo-600/20 text-indigo-400 border-l-4 border-indigo-600 font-medium">
-            <span>Students</span>
+          <router-link to="/students" @click="isMobileMenuOpen = false" class="flex items-center gap-3 px-4 py-3 rounded-xl transition hover:bg-brand-input hover:text-brand-text text-brand-desc" active-class="bg-indigo-600/10 text-indigo-500 border-l-4 border-indigo-600 font-medium">
+            <span>🎓 Students</span>
           </router-link>
-          <router-link to="/contracts" class="flex items-center gap-3 px-4 py-3 rounded-xl transition duration-150 hover:bg-gray-800/50 hover:text-white" active-class="bg-indigo-600/20 text-indigo-400 border-l-4 border-indigo-600 font-medium">
-            <span>Contracts</span>
+          <router-link to="/contracts" @click="isMobileMenuOpen = false" class="flex items-center gap-3 px-4 py-3 rounded-xl transition hover:bg-brand-input hover:text-brand-text text-brand-desc" active-class="bg-indigo-600/10 text-indigo-500 border-l-4 border-indigo-600 font-medium">
+            <span>📄 Contracts</span>
           </router-link>
         </nav>
       </div>
 
       <!-- User Profile / Logout -->
-      <div class="border-t border-gray-800 pt-4">
-        <div class="flex items-center justify-between mb-4">
-          <div class="flex items-center gap-3">
-            <div class="h-9 w-9 rounded-full bg-indigo-500/20 flex items-center justify-center font-bold text-indigo-400 border border-indigo-500/30">
-              U
-            </div>
-            <div>
-              <p class="text-sm font-semibold text-white">Administrator</p>
-              <p class="text-xs text-gray-400">admin@example.com</p>
-            </div>
+      <div class="border-t border-brand-border pt-4">
+        <div class="flex items-center gap-3 mb-4">
+          <div class="h-9 w-9 rounded-full bg-indigo-500/10 flex items-center justify-center font-bold text-indigo-500 border border-indigo-500/20">
+            A
+          </div>
+          <div class="min-w-0 flex-1">
+            <p class="text-sm font-semibold truncate">Administrator</p>
+            <p class="text-xs text-brand-desc truncate">admin@lms.com</p>
           </div>
         </div>
-        <button @click="logout" class="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl border border-red-500/30 text-red-400 hover:bg-red-500/10 transition duration-150 text-sm font-medium">
+        <button @click="logout" class="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl border border-red-500/20 text-red-500 hover:bg-red-500/10 transition text-sm font-medium">
           Logout
         </button>
       </div>
     </aside>
 
     <!-- Main Content Area -->
-    <main class="flex-1 flex flex-col min-w-0">
-      <!-- Top header -->
-      <header v-if="isAuthenticated" class="h-16 border-b border-gray-800 bg-[#070b13]/50 backdrop-blur-md flex items-center justify-between px-8 sticky top-0 z-40">
-        <div class="text-sm text-gray-400">Welcome to CMS EDU LMS Management Portal</div>
-        <div class="flex items-center gap-4">
-          <span class="h-2 w-2 rounded-full bg-green-500 animate-pulse"></span>
-          <span class="text-xs text-green-400 font-medium uppercase tracking-wider">System Live</span>
+    <main class="flex-1 flex flex-col min-w-0 pt-16 md:pt-0">
+      <!-- Desktop header -->
+      <header v-if="isAuthenticated" class="hidden md:flex h-16 border-b border-brand-border bg-brand-card/50 backdrop-blur-md items-center justify-between px-8 sticky top-0 z-40">
+        <div class="text-sm text-brand-desc">Welcome to CMS EDU LMS Management Portal</div>
+        
+        <div class="flex items-center gap-6">
+          <!-- Theme Toggle -->
+          <button @click="toggleTheme" class="p-2 rounded-xl bg-brand-input hover:bg-brand-border transition text-brand-desc hover:text-brand-text flex items-center justify-center">
+            <span v-if="theme === 'dark'">☀️ Light Mode</span>
+            <span v-else>🌙 Dark Mode</span>
+          </button>
+          
+          <div class="flex items-center gap-2">
+            <span class="h-2 w-2 rounded-full bg-green-500 animate-pulse"></span>
+            <span class="text-xs text-green-500 font-medium uppercase tracking-wider">System Live</span>
+          </div>
         </div>
       </header>
 
       <!-- Router View Wrapper -->
-      <div class="flex-1 p-8 overflow-y-auto">
+      <div class="flex-1 p-4 md:p-8 overflow-y-auto">
         <router-view></router-view>
       </div>
     </main>
@@ -79,7 +120,9 @@
 export default {
   data() {
     return {
-      isAuthenticated: false
+      isAuthenticated: false,
+      isMobileMenuOpen: false,
+      theme: localStorage.getItem('theme') || 'dark'
     }
   },
   watch: {
@@ -97,6 +140,10 @@ export default {
     logout() {
       localStorage.removeItem('token');
       this.$router.push('/login');
+    },
+    toggleTheme() {
+      this.theme = this.theme === 'dark' ? 'light' : 'dark';
+      localStorage.setItem('theme', this.theme);
     }
   }
 }

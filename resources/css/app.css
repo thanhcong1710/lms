@@ -1,1 +1,38 @@
 @import "tailwindcss";
+
+:root {
+  --bg-main: #070b13;
+  --bg-card: #0d1527;
+  --bg-input: #0f172a;
+  --border-color: #1f2937;
+  --text-title: #ffffff;
+  --text-desc: #9ca3af;
+  --bg-table-header: #111827;
+}
+
+.light {
+  --bg-main: #f3f4f6;
+  --bg-card: #ffffff;
+  --bg-input: #f9fafb;
+  --border-color: #e5e7eb;
+  --text-title: #111827;
+  --text-desc: #4b5563;
+  --bg-table-header: #f3f4f6;
+}
+
+@theme {
+  --color-brand-bg: var(--bg-main);
+  --color-brand-card: var(--bg-card);
+  --color-brand-input: var(--bg-input);
+  --color-brand-border: var(--border-color);
+  --color-brand-text: var(--text-title);
+  --color-brand-desc: var(--text-desc);
+  --color-brand-header: var(--bg-table-header);
+}
+
+/* Base transitions */
+* {
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
