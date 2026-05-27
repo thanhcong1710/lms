@@ -128,6 +128,18 @@ export default {
   watch: {
     $route() {
       this.checkAuth();
+    },
+    theme: {
+      immediate: true,
+      handler(newTheme) {
+        if (newTheme === 'light') {
+          document.documentElement.classList.add('light');
+          document.documentElement.classList.remove('dark');
+        } else {
+          document.documentElement.classList.add('dark');
+          document.documentElement.classList.remove('light');
+        }
+      }
     }
   },
   created() {
