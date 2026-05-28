@@ -6,26 +6,36 @@
         <p class="text-sm text-brand-desc">Manage student evaluations and test results</p>
       </div>
 
-      <!-- Tabs -->
-      <div class="flex bg-brand-card border border-brand-border p-1 rounded-xl">
+      <!-- Actions -->
+      <div class="flex items-center gap-4 flex-wrap md:flex-nowrap">
         <button 
-          @click="changeTab('pending')" 
-          :class="[
-            activeTab === 'pending' ? 'bg-indigo-600 text-white' : 'text-brand-desc hover:text-brand-text',
-            'px-4 py-2 rounded-lg text-sm font-semibold transition'
-          ]"
+          @click="openCreateModal" 
+          class="px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white font-semibold transition text-sm flex items-center gap-1.5 shadow-lg shadow-indigo-600/30"
         >
-          Pending Evaluation
+          <span class="text-base font-bold">+</span> Thêm Mới Nhập Điểm
         </button>
-        <button 
-          @click="changeTab('completed')" 
-          :class="[
-            activeTab === 'completed' ? 'bg-emerald-500 text-white' : 'text-brand-desc hover:text-brand-text',
-            'px-4 py-2 rounded-lg text-sm font-semibold transition'
-          ]"
-        >
-          Completed Results
-        </button>
+
+        <!-- Tabs -->
+        <div class="flex bg-brand-card border border-brand-border p-1 rounded-xl">
+          <button 
+            @click="changeTab('pending')" 
+            :class="[
+              activeTab === 'pending' ? 'bg-indigo-600 text-white' : 'text-brand-desc hover:text-brand-text',
+              'px-4 py-2 rounded-lg text-sm font-semibold transition'
+            ]"
+          >
+            Chưa đánh giá
+          </button>
+          <button 
+            @click="changeTab('completed')" 
+            :class="[
+              activeTab === 'completed' ? 'bg-emerald-500 text-white' : 'text-brand-desc hover:text-brand-text',
+              'px-4 py-2 rounded-lg text-sm font-semibold transition'
+            ]"
+          >
+            Đã đánh giá
+          </button>
+        </div>
       </div>
     </div>
 
@@ -82,22 +92,30 @@
                 Graded
               </span>
             </td>
-            <td class="px-6 py-4 text-right space-x-3">
-              <!-- Action Button based on status -->
-              <router-link 
-                v-if="activeTab === 'pending'"
-                :to="{ name: 'ucrea-eval-form', params: { id: item.id } }"
-                class="inline-flex items-center justify-center px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white font-medium text-xs transition shadow-lg shadow-indigo-600/30"
-              >
-                Grade Test
-              </router-link>
-              <router-link 
-                v-else
-                :to="{ name: 'ucrea-eval-result', params: { id: item.id } }"
-                class="inline-flex items-center justify-center px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-medium text-xs transition shadow-lg shadow-emerald-600/30"
-              >
-                View Result
-              </router-link>
+            <td class="px-6 py-4 text-right">
+              <div class="flex justify-end items-center gap-2">
+                <router-link 
+                  v-if="activeTab === 'pending'"
+                  :to="{ name: 'ucrea-eval-form', params: { id: item.id } }"
+                  class="inline-flex items-center justify-center px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white font-medium text-xs transition shadow-lg shadow-indigo-600/30"
+                >
+                  Nhập điểm
+                </router-link>
+                <div v-else class="flex justify-end items-center gap-2">
+                  <router-link 
+                    :to="{ name: 'ucrea-eval-form', params: { id: item.id } }"
+                    class="inline-flex items-center justify-center px-3 py-1.5 rounded-lg border border-indigo-600 text-indigo-500 hover:bg-indigo-600 hover:text-white font-medium text-xs transition"
+                  >
+                    Sửa điểm
+                  </router-link>
+                  <router-link 
+                    :to="{ name: 'ucrea-eval-result', params: { id: item.id } }"
+                    class="inline-flex items-center justify-center px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-medium text-xs transition shadow-lg shadow-emerald-600/30"
+                  >
+                    Xem kết quả
+                  </router-link>
+                </div>
+              </div>
             </td>
           </tr>
           <tr v-if="results.length === 0">
@@ -109,7 +127,6 @@
     
     <!-- Pagination -->
     <div v-if="pagination.total > 0" class="flex items-center justify-between mt-4">
-       <!-- Simplified pagination for now, usually would use <Pagination /> component -->
        <div class="text-sm text-brand-desc">
          Showing {{ pagination.from }} to {{ pagination.to }} of {{ pagination.total }} entries
        </div>
@@ -117,6 +134,72 @@
          <button @click="onPageChange(pagination.current_page - 1)" :disabled="pagination.current_page === 1" class="px-3 py-1 rounded-md bg-brand-input border border-brand-border disabled:opacity-50 text-sm">Prev</button>
          <button @click="onPageChange(pagination.current_page + 1)" :disabled="pagination.current_page === pagination.last_page" class="px-3 py-1 rounded-md bg-brand-input border border-brand-border disabled:opacity-50 text-sm">Next</button>
        </div>
+    </div>
+
+    <!-- Create Evaluation Modal -->
+    <div v-if="showModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+      <div class="bg-brand-card border border-brand-border w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-200">
+        <!-- Modal Header -->
+        <div class="px-6 py-4 border-b border-brand-border bg-brand-header flex justify-between items-center">
+          <h3 class="text-lg font-bold text-brand-text">Thêm Mới Nhập Điểm UCREA</h3>
+          <button @click="closeCreateModal" class="text-brand-desc hover:text-brand-text text-xl font-bold">&times;</button>
+        </div>
+
+        <!-- Modal Body -->
+        <form @submit.prevent="submitCreate" class="p-6 space-y-4">
+          <!-- Student Selector -->
+          <div class="space-y-1.5">
+            <label class="block text-xs font-semibold text-brand-desc uppercase">Học sinh</label>
+            <select v-model="form.stu_nm" required class="w-full px-3 py-2 rounded-xl bg-brand-input border border-brand-border text-brand-text focus:outline-none focus:border-indigo-500 transition text-sm">
+              <option value="" disabled>-- Chọn học sinh --</option>
+              <option v-for="std in initData.students" :key="std.id" :value="std.name">{{ std.name }}</option>
+            </select>
+          </div>
+
+          <!-- Teacher Selector -->
+          <div class="space-y-1.5">
+            <label class="block text-xs font-semibold text-brand-desc uppercase">Giáo viên đánh giá</label>
+            <select v-model="form.memb_nm" required class="w-full px-3 py-2 rounded-xl bg-brand-input border border-brand-border text-brand-text focus:outline-none focus:border-indigo-500 transition text-sm">
+              <option value="" disabled>-- Chọn giáo viên --</option>
+              <option v-for="t in initData.teachers" :key="t.id" :value="t.name">{{ t.name }}</option>
+            </select>
+          </div>
+
+          <!-- Class Selector -->
+          <div class="space-y-1.5">
+            <label class="block text-xs font-semibold text-brand-desc uppercase">Lớp học</label>
+            <select v-model="form.class_nm" required class="w-full px-3 py-2 rounded-xl bg-brand-input border border-brand-border text-brand-text focus:outline-none focus:border-indigo-500 transition text-sm">
+              <option value="" disabled>-- Chọn lớp --</option>
+              <option v-for="c in initData.classes" :key="c.id" :value="c.name">{{ c.name }}</option>
+            </select>
+          </div>
+
+          <!-- Test Selector -->
+          <div class="space-y-1.5">
+            <label class="block text-xs font-semibold text-brand-desc uppercase">Bài Kiểm Tra UCREA</label>
+            <select v-model="form.test_id" required class="w-full px-3 py-2 rounded-xl bg-brand-input border border-brand-border text-brand-text focus:outline-none focus:border-indigo-500 transition text-sm">
+              <option value="" disabled>-- Chọn bài kiểm tra --</option>
+              <option v-for="t in initData.tests" :key="t.id" :value="t.id">{{ t.test_nm }} ({{ t.level_cd_nm || t.level_cd }})</option>
+            </select>
+          </div>
+
+          <!-- Date Selector -->
+          <div class="space-y-1.5">
+            <label class="block text-xs font-semibold text-brand-desc uppercase">Ngày đánh giá</label>
+            <input type="date" v-model="form.eval_dt" required class="w-full px-3 py-2 rounded-xl bg-brand-input border border-brand-border text-brand-text focus:outline-none focus:border-indigo-500 transition text-sm">
+          </div>
+
+          <!-- Modal Footer -->
+          <div class="pt-4 border-t border-brand-border flex justify-end gap-3">
+            <button type="button" @click="closeCreateModal" class="px-4 py-2 rounded-xl border border-brand-border text-brand-desc hover:bg-brand-input hover:text-brand-text transition text-sm font-semibold">
+              Hủy
+            </button>
+            <button type="submit" :disabled="creating" class="px-5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold transition text-sm shadow-lg shadow-indigo-600/30 disabled:opacity-50">
+              {{ creating ? 'Đang tạo...' : 'Tạo Đánh Giá' }}
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   </div>
 </template>
@@ -130,7 +213,7 @@ export default {
     return {
       results: [],
       loading: false,
-      activeTab: 'completed', // Can default to pending or completed
+      activeTab: 'completed',
       search: '',
       pagination: {
         current_page: 1,
@@ -139,6 +222,21 @@ export default {
         last_page: 1,
         from: 0,
         to: 0
+      },
+      showModal: false,
+      creating: false,
+      initData: {
+        students: [],
+        teachers: [],
+        classes: [],
+        tests: []
+      },
+      form: {
+        stu_nm: '',
+        memb_nm: '',
+        class_nm: '',
+        test_id: '',
+        eval_dt: new Date().toISOString().substr(0, 10)
       }
     }
   },
@@ -178,6 +276,52 @@ export default {
     changeTab(tab) {
       this.activeTab = tab;
       this.fetchData(1);
+    },
+    async openCreateModal() {
+      this.showModal = true;
+      try {
+        const response = await axios.get('/api/ucrea/init-data', {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+          }
+        });
+        if (response.data.status === 'success') {
+          this.initData = response.data.data;
+        }
+      } catch (error) {
+        console.error("Error fetching initialization data", error);
+        alert("Không thể tải dữ liệu khởi tạo. Vui lòng thử lại.");
+      }
+    },
+    closeCreateModal() {
+      this.showModal = false;
+      this.form = {
+        stu_nm: '',
+        memb_nm: '',
+        class_nm: '',
+        test_id: '',
+        eval_dt: new Date().toISOString().substr(0, 10)
+      };
+    },
+    async submitCreate() {
+      this.creating = true;
+      try {
+        const response = await axios.post('/api/ucrea/results', this.form, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+          }
+        });
+        if (response.data.status === 'success') {
+          const newId = response.data.data.id;
+          this.closeCreateModal();
+          this.$router.push({ name: 'ucrea-eval-form', params: { id: newId } });
+        }
+      } catch (error) {
+        console.error("Error creating assessment", error);
+        alert("Lỗi khi thêm mới đánh giá. Vui lòng thử lại.");
+      } finally {
+        this.creating = false;
+      }
     }
   }
 }

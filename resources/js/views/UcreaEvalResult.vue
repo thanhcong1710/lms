@@ -6,7 +6,10 @@
         <h2 class="text-2xl font-bold text-brand-text">UCREA Assessment Report</h2>
         <p class="text-sm text-brand-desc">Legacy report view format</p>
       </div>
-      <div class="flex space-x-3">
+      <div v-if="result" class="flex space-x-3">
+        <router-link :to="{ name: 'ucrea-eval-form', params: { id: result.general.id } }" class="px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold transition shadow-lg shadow-emerald-600/30 text-sm">
+          Sửa Điểm
+        </router-link>
         <button @click="exportPdf" class="px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white font-bold transition shadow-lg shadow-indigo-600/30 text-sm">
           In Báo Cáo
         </button>

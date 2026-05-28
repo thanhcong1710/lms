@@ -21,5 +21,7 @@ Route::apiResource('contracts', ContractController::class);
 Route::get('/tests', [LmsTestController::class, 'index']);
 
 Route::get('/ucrea/results', [UcreaEvaluationController::class, 'getResults']);
+Route::get('/ucrea/init-data', [UcreaEvaluationController::class, 'getInitData']);
+Route::post('/ucrea/results', [UcreaEvaluationController::class, 'createResult']);
 Route::get('/ucrea/results/{id}', [UcreaEvaluationController::class, 'getResultDetail']);
 Route::post('/ucrea/results/{id}/grade', [UcreaEvaluationController::class, 'saveGrade']);

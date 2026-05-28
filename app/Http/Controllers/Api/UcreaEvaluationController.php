@@ -111,7 +111,25 @@ class UcreaEvaluationController extends Controller
             DB::table('ucrea_student_result_details')->where('ucrea_student_result_id', $id)->delete();
 
             $insertData = [];
+            $scoresByKey = [];
+            $skillsGradeList = [];
+
+            $letterGrades = ['S', 'A', 'B', 'C', 'L'];
+            $scoreMap = ['S' => 100, 'A' => 85, 'B' => 70, 'C' => 55, 'L' => 30];
+
             foreach ($rubrics as $index => $r) {
+                // Find index of selected score option
+                $scoreIndex = array_search($r['score'], $r['options']);
+                if ($scoreIndex === false) {
+                    $grade = 'B';
+                } else {
+                    $grade = $letterGrades[$scoreIndex] ?? 'B';
+                }
+
+                $points = $scoreMap[$grade] ?? 70;
+                $scoresByKey[$r['key']] = $points;
+
+                // Add to details
                 $insertData[] = [
                     'ucrea_student_result_id' => $id,
                     'question_no' => strval($index + 1),
@@ -122,22 +140,78 @@ class UcreaEvaluationController extends Controller
                     'created_at' => now(),
                     'updated_at' => now(),
                 ];
+
+                // Add long skill name grade
+                $skillsGradeList[] = [
+                    'skill' => $r['skillName'] ?? $r['name'],
+                    'grade' => $grade
+                ];
             }
+
             if (!empty($insertData)) {
                 DB::table('ucrea_student_result_details')->insert($insertData);
             }
 
-            // Update status to Graded (IS002 is assumed Graded here)
+            // Set report name based on test_cd
+            $nameMap = ['TT001' => 'Đầu kỳ', 'TT002' => 'Giữa kỳ', 'TT003' => 'Cuối kỳ'];
+            $reportDataName = $nameMap[$result->test_cd] ?? 'Đầu kỳ';
+
+            $avgCoBan = (($scoresByKey['sk11'] ?? 70) + ($scoresByKey['sk12'] ?? 70) + ($scoresByKey['sk13'] ?? 70)) / 3;
+            $avgToanHoc = (($scoresByKey['kn11'] ?? 70) + ($scoresByKey['kn12'] ?? 70) + ($scoresByKey['kn13'] ?? 70) + ($scoresByKey['kn14'] ?? 70) + ($scoresByKey['kn15'] ?? 70)) / 5;
+            $avgLogic = (($scoresByKey['sk21'] ?? 70) + ($scoresByKey['sk22'] ?? 70) + ($scoresByKey['sk23'] ?? 70) + ($scoresByKey['sk24'] ?? 70)) / 4;
+            $avgSangTao = (($scoresByKey['sk31'] ?? 70) + ($scoresByKey['sk32'] ?? 70) + ($scoresByKey['sk33'] ?? 70) + ($scoresByKey['sk34'] ?? 70)) / 4;
+
+            $getGradeFromScore = function($avgScore) {
+                if ($avgScore >= 90) return 'S';
+                if ($avgScore >= 80) return 'A';
+                if ($avgScore >= 65) return 'B';
+                if ($avgScore >= 50) return 'C';
+                return 'L';
+            };
+
+            $gradeCoBan = $getGradeFromScore($avgCoBan);
+            $gradeToanHoc = $getGradeFromScore($avgToanHoc);
+            $gradeLogic = $getGradeFromScore($avgLogic);
+            $gradeSangTao = $getGradeFromScore($avgSangTao);
+
+            $skillsGradeList[] = ['skill' => 'Tư duy cơ bản', 'grade' => $gradeCoBan];
+            $skillsGradeList[] = ['skill' => 'Tư duy toán học', 'grade' => $gradeToanHoc];
+            $skillsGradeList[] = ['skill' => 'Tư duy logic', 'grade' => $gradeLogic];
+            $skillsGradeList[] = ['skill' => 'Tư duy sáng tạo', 'grade' => $gradeSangTao];
+
+            $reportDataObj = [
+                'name' => $reportDataName,
+                'kn11' => strval($scoresByKey['kn11'] ?? 70),
+                'kn12' => strval($scoresByKey['kn12'] ?? 70),
+                'kn13' => strval($scoresByKey['kn13'] ?? 70),
+                'kn14' => strval($scoresByKey['kn14'] ?? 70),
+                'kn15' => strval($scoresByKey['kn15'] ?? 70),
+                'kn21' => '0',
+                'kn22' => '0',
+                'kn23' => '0',
+                'kn24' => '0',
+                'sk11' => strval($scoresByKey['sk11'] ?? 70),
+                'sk12' => strval($scoresByKey['sk12'] ?? 70),
+                'sk13' => strval($scoresByKey['sk13'] ?? 70),
+                'sk21' => strval($scoresByKey['sk21'] ?? 70),
+                'sk22' => strval($scoresByKey['sk22'] ?? 70),
+                'sk23' => strval($scoresByKey['sk23'] ?? 70),
+                'sk24' => strval($scoresByKey['sk24'] ?? 70),
+                'sk31' => strval($scoresByKey['sk31'] ?? 70),
+                'sk32' => strval($scoresByKey['sk32'] ?? 70),
+                'sk33' => strval($scoresByKey['sk33'] ?? 70),
+                'sk34' => strval($scoresByKey['sk34'] ?? 70),
+            ];
+
+            // Update status to Graded (IS002 is assumed Graded here) along with calculated data
             DB::table('ucrea_student_results')->where('id', $id)->update([
                 'result_cd' => 'IS002',
-                'result_cd_nm' => 'Graded',
+                'result_cd_nm' => 'Nhập nhận xét',
                 'eval_dt' => now()->toDateString(),
+                'report_data' => json_encode($reportDataObj, JSON_UNESCAPED_UNICODE),
+                'skills_grade' => json_encode($skillsGradeList, JSON_UNESCAPED_UNICODE),
                 'updated_at' => now()
             ]);
-
-            // Here you would also calculate the radar chart and skill grades
-            // based on the S/A/B/C scores and save to report_data / skills_grade.
-            // For now, we leave them or update with dummy/calculated data.
 
             DB::commit();
 
@@ -146,5 +220,62 @@ class UcreaEvaluationController extends Controller
             DB::rollBack();
             return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
         }
+    }
+
+    /**
+     * Get initial data (students, teachers, classes, tests) for creating evaluation
+     */
+    public function getInitData()
+    {
+        $students = DB::table('students')->select('id', 'name')->orderBy('name')->get();
+        $teachers = DB::table('teachers')->select('id', 'ins_name as name')->orderBy('ins_name')->get();
+        $classes = DB::table('classes')->select('id', 'cls_name as name')->orderBy('cls_name')->get();
+        $tests = DB::table('ucrea_tests')->orderBy('test_nm')->get();
+
+        return response()->json([
+            'status' => 'success',
+            'data' => [
+                'students' => $students,
+                'teachers' => $teachers,
+                'classes' => $classes,
+                'tests' => $tests
+            ]
+        ]);
+    }
+
+    /**
+     * Create a new pending evaluation record
+     */
+    public function createResult(Request $request)
+    {
+        $test = DB::table('ucrea_tests')->where('id', $request->input('test_id'))->first();
+        if (!$test) {
+            return response()->json(['status' => 'error', 'message' => 'Không tìm thấy bài test được chọn'], 404);
+        }
+
+        $maxSeq = DB::table('ucrea_student_results')->max('result_seq');
+        $resultSeq = $maxSeq ? ($maxSeq + 1) : 1001;
+
+        $newId = DB::table('ucrea_student_results')->insertGetId([
+            'test_cd' => $test->test_cd,
+            'level_cd' => $test->level_cd,
+            'test_seq' => $test->test_seq,
+            'result_seq' => $resultSeq,
+            'memb_nm' => $request->input('memb_nm'),
+            'stu_nm' => $request->input('stu_nm'),
+            'class_nm' => $request->input('class_nm'),
+            'eval_dt' => $request->input('eval_dt'),
+            'result_cd' => 'IS001',
+            'result_cd_nm' => 'Chưa nhập',
+            'created_at' => now(),
+            'updated_at' => now()
+        ]);
+
+        return response()->json([
+            'status' => 'success',
+            'data' => [
+                'id' => $newId
+            ]
+        ]);
     }
 }
