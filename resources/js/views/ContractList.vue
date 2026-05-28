@@ -2,17 +2,17 @@
   <div class="space-y-6">
     <div class="flex items-center justify-between">
       <div>
-        <h2 class="text-2xl font-bold text-brand-text">Contracts & Enrollments</h2>
-        <p class="text-sm text-brand-desc">Manage student contracts, dates and status codes</p>
+        <h2 class="text-2xl font-bold text-brand-text">{{ $t('contracts.title') }}</h2>
+        <p class="text-sm text-brand-desc">{{ $t('contracts.desc') }}</p>
       </div>
       <button @click="openModal()" class="px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-brand-text text-sm font-semibold transition duration-150 shadow-lg shadow-indigo-600/20">
-        + Add Contract
+        {{ $t('contracts.add_btn') }}
       </button>
     </div>
 
     <!-- Search / Filter -->
     <div class="bg-brand-card/40 border border-brand-border p-4 rounded-xl flex items-center justify-between">
-      <input type="text" v-model="search" @input="fetchContracts(1)" placeholder="Search contracts..." class="px-4 py-2 rounded-xl bg-brand-input border border-brand-border text-brand-text placeholder-gray-600 focus:outline-none focus:border-indigo-500 transition duration-150 text-sm w-72">
+      <input type="text" v-model="search" @input="fetchContracts(1)" :placeholder="$t('contracts.search')" class="px-4 py-2 rounded-xl bg-brand-input border border-brand-border text-brand-text placeholder-gray-600 focus:outline-none focus:border-indigo-500 transition duration-150 text-sm w-72">
     </div>
 
     <!-- Table -->
@@ -20,15 +20,15 @@
       <table class="w-full text-left border-collapse">
         <thead>
           <tr class="border-b border-brand-border bg-brand-header text-xs font-semibold text-brand-desc uppercase">
-            <th class="px-6 py-4 w-16">STT</th>
-            <th class="px-6 py-4">Student</th>
-            <th class="px-6 py-4">Class</th>
-            <th class="px-6 py-4">Branch</th>
-            <th class="px-6 py-4">Start Date</th>
-            <th class="px-6 py-4">End Date</th>
-            <th class="px-6 py-4">Valid CD</th>
-            <th class="px-6 py-4">Status</th>
-            <th class="px-6 py-4 text-right">Actions</th>
+            <th class="px-6 py-4 w-16">{{ $t('common.stt') }}</th>
+            <th class="px-6 py-4">{{ $t('contracts.cols.student') }}</th>
+            <th class="px-6 py-4">{{ $t('contracts.cols.class') }}</th>
+            <th class="px-6 py-4">{{ $t('common.branch') }}</th>
+            <th class="px-6 py-4">{{ $t('contracts.cols.start_date') }}</th>
+            <th class="px-6 py-4">{{ $t('contracts.cols.end_date') }}</th>
+            <th class="px-6 py-4">{{ $t('contracts.cols.valid_cd') }}</th>
+            <th class="px-6 py-4">{{ $t('common.status') }}</th>
+            <th class="px-6 py-4 text-right">{{ $t('common.actions') }}</th>
           </tr>
         </thead>
         <tbody class="divide-y divide-brand-border text-sm text-brand-text/90">
@@ -46,8 +46,8 @@
               </span>
             </td>
             <td class="px-6 py-4 text-right space-x-2">
-              <button @click="openModal(contract)" class="text-sm text-indigo-400 hover:text-indigo-300 font-medium">Edit</button>
-              <button @click="deleteContract(contract.id)" class="text-sm text-red-400 hover:text-red-300 font-medium">Delete</button>
+              <button @click="openModal(contract)" class="text-sm text-indigo-400 hover:text-indigo-300 font-medium">{{ $t('common.edit') }}</button>
+              <button @click="deleteContract(contract.id)" class="text-sm text-red-400 hover:text-red-300 font-medium">{{ $t('common.delete') }}</button>
             </td>
           </tr>
         </tbody>
@@ -65,57 +65,57 @@
     <!-- Modal Form -->
     <div v-if="showModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
       <div class="bg-brand-card border border-brand-border rounded-2xl w-full max-w-lg p-6 shadow-2xl space-y-4">
-        <h3 class="text-lg font-bold text-brand-text">{{ editingId ? 'Edit Contract' : 'Add New Contract' }}</h3>
+        <h3 class="text-lg font-bold text-brand-text">{{ editingId ? $t('contracts.modal_edit') : $t('contracts.modal_add') }}</h3>
 
         <form @submit.prevent="saveContract" class="space-y-4">
           <div class="grid grid-cols-2 gap-4">
             <div>
-              <label class="block text-xs font-semibold text-brand-desc uppercase mb-2">Student Name</label>
+              <label class="block text-xs font-semibold text-brand-desc uppercase mb-2">{{ $t('contracts.cols.student') }}</label>
               <input type="text" v-model="form.student_name" required class="w-full px-4 py-2.5 rounded-xl bg-brand-input border border-brand-border text-brand-text placeholder-gray-600 focus:outline-none focus:border-indigo-500 text-sm">
             </div>
             <div>
-              <label class="block text-xs font-semibold text-brand-desc uppercase mb-2">Class Name</label>
+              <label class="block text-xs font-semibold text-brand-desc uppercase mb-2">{{ $t('contracts.cols.class') }}</label>
               <input type="text" v-model="form.class_name" required class="w-full px-4 py-2.5 rounded-xl bg-brand-input border border-brand-border text-brand-text placeholder-gray-600 focus:outline-none focus:border-indigo-500 text-sm">
             </div>
           </div>
           <div>
-            <label class="block text-xs font-semibold text-brand-desc uppercase mb-2">Branch Name</label>
+            <label class="block text-xs font-semibold text-brand-desc uppercase mb-2">{{ $t('common.branch') }}</label>
             <input type="text" v-model="form.branch_name" required class="w-full px-4 py-2.5 rounded-xl bg-brand-input border border-brand-border text-brand-text placeholder-gray-600 focus:outline-none focus:border-indigo-500 text-sm">
           </div>
           <div class="grid grid-cols-2 gap-4">
             <div>
-              <label class="block text-xs font-semibold text-brand-desc uppercase mb-2">Start Date</label>
+              <label class="block text-xs font-semibold text-brand-desc uppercase mb-2">{{ $t('contracts.cols.start_date') }}</label>
               <input type="date" v-model="form.enrolment_start_date" required class="w-full px-4 py-2.5 rounded-xl bg-brand-input border border-brand-border text-brand-text focus:outline-none focus:border-indigo-500 text-sm">
             </div>
             <div>
-              <label class="block text-xs font-semibold text-brand-desc uppercase mb-2">End Date</label>
+              <label class="block text-xs font-semibold text-brand-desc uppercase mb-2">{{ $t('contracts.cols.end_date') }}</label>
               <input type="date" v-model="form.enrolment_last_date" required class="w-full px-4 py-2.5 rounded-xl bg-brand-input border border-brand-border text-brand-text focus:outline-none focus:border-indigo-500 text-sm">
             </div>
           </div>
           <div class="grid grid-cols-2 gap-4">
             <div>
-              <label class="block text-xs font-semibold text-brand-desc uppercase mb-2">Valid CD</label>
+              <label class="block text-xs font-semibold text-brand-desc uppercase mb-2">{{ $t('contracts.cols.valid_cd') }}</label>
               <select v-model="form.valid_cd" class="w-full px-4 py-2.5 rounded-xl bg-brand-input border border-brand-border text-brand-text focus:outline-none focus:border-indigo-500 text-sm">
-                <option value="VC005">VC005 (Regular)</option>
-                <option value="VC001">VC001 (Trial)</option>
+                <option value="VC005">{{ $t('contracts.form.regular') }}</option>
+                <option value="VC001">{{ $t('contracts.form.trial') }}</option>
               </select>
             </div>
             <div>
-              <label class="block text-xs font-semibold text-brand-desc uppercase mb-2">Status</label>
+              <label class="block text-xs font-semibold text-brand-desc uppercase mb-2">{{ $t('common.status') }}</label>
               <select v-model="form.status" class="w-full px-4 py-2.5 rounded-xl bg-brand-input border border-brand-border text-brand-text focus:outline-none focus:border-indigo-500 text-sm">
-                <option value="SS001">Enrolled (SS001)</option>
-                <option value="SS002">Pending (SS002)</option>
+                <option value="SS001">{{ $t('contracts.form.enrolled') }}</option>
+                <option value="SS002">{{ $t('contracts.form.pending') }}</option>
               </select>
             </div>
           </div>
           <div>
-            <label class="block text-xs font-semibold text-brand-desc uppercase mb-2">Remark</label>
+            <label class="block text-xs font-semibold text-brand-desc uppercase mb-2">{{ $t('common.remark') }}</label>
             <textarea v-model="form.remark" rows="2" class="w-full px-4 py-2.5 rounded-xl bg-brand-input border border-brand-border text-brand-text placeholder-gray-600 focus:outline-none focus:border-indigo-500 text-sm"></textarea>
           </div>
 
           <div class="flex justify-end gap-3 pt-4 border-t border-brand-border">
-            <button type="button" @click="showModal = false" class="px-4 py-2 rounded-xl border border-brand-border text-brand-text/90 hover:bg-gray-800 text-sm transition">Cancel</button>
-            <button type="submit" class="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-brand-text text-sm font-semibold transition shadow-lg shadow-indigo-600/20">Save</button>
+            <button type="button" @click="showModal = false" class="px-4 py-2 rounded-xl border border-brand-border text-brand-text/90 hover:bg-gray-800 text-sm transition">{{ $t('common.cancel') }}</button>
+            <button type="submit" class="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-brand-text text-sm font-semibold transition shadow-lg shadow-indigo-600/20">{{ $t('common.save') }}</button>
           </div>
         </form>
       </div>

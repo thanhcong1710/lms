@@ -2,17 +2,17 @@
   <div class="space-y-6">
     <div class="flex items-center justify-between">
       <div>
-        <h2 class="text-2xl font-bold text-brand-text">Students</h2>
-        <p class="text-sm text-brand-desc">View and edit LMS student sync records</p>
+        <h2 class="text-2xl font-bold text-brand-text">{{ $t('students.title') }}</h2>
+        <p class="text-sm text-brand-desc">{{ $t('students.desc') }}</p>
       </div>
       <button @click="openModal()" class="px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-brand-text text-sm font-semibold transition duration-150 shadow-lg shadow-indigo-600/20">
-        + Add Student
+        {{ $t('students.add_btn') }}
       </button>
     </div>
 
     <!-- Search / Filter -->
     <div class="bg-brand-card/40 border border-brand-border p-4 rounded-xl flex items-center justify-between">
-      <input type="text" v-model="search" @input="fetchStudents(1)" placeholder="Search students..." class="px-4 py-2 rounded-xl bg-brand-input border border-brand-border text-brand-text placeholder-gray-600 focus:outline-none focus:border-indigo-500 transition duration-150 text-sm w-72">
+      <input type="text" v-model="search" @input="fetchStudents(1)" :placeholder="$t('students.search')" class="px-4 py-2 rounded-xl bg-brand-input border border-brand-border text-brand-text placeholder-gray-600 focus:outline-none focus:border-indigo-500 transition duration-150 text-sm w-72">
     </div>
 
     <!-- Table -->
@@ -20,13 +20,13 @@
       <table class="w-full text-left border-collapse">
         <thead>
           <tr class="border-b border-brand-border bg-brand-header text-xs font-semibold text-brand-desc uppercase">
-            <th class="px-6 py-4 w-16">STT</th>
-            <th class="px-6 py-4">Student Name</th>
-            <th class="px-6 py-4">LMS ID</th>
-            <th class="px-6 py-4">Accounting ID</th>
-            <th class="px-6 py-4">Date of Birth</th>
-            <th class="px-6 py-4">Gender</th>
-            <th class="px-6 py-4 text-right">Actions</th>
+            <th class="px-6 py-4 w-16">{{ $t('common.stt') }}</th>
+            <th class="px-6 py-4">{{ $t('students.cols.student_name') }}</th>
+            <th class="px-6 py-4">{{ $t('common.lms_id') }}</th>
+            <th class="px-6 py-4">{{ $t('students.cols.accounting_id') }}</th>
+            <th class="px-6 py-4">{{ $t('students.cols.dob') }}</th>
+            <th class="px-6 py-4">{{ $t('students.cols.gender') }}</th>
+            <th class="px-6 py-4 text-right">{{ $t('common.actions') }}</th>
           </tr>
         </thead>
         <tbody class="divide-y divide-brand-border text-sm text-brand-text/90">
@@ -38,13 +38,16 @@
             <td class="px-6 py-4">{{ student.date_of_birth }}</td>
             <td class="px-6 py-4">
               <span class="text-xs px-2 py-0.5 rounded font-semibold bg-gray-800 text-brand-text/90">
-                {{ student.gender === 'M' ? 'MALE' : 'FEMALE' }}
+                {{ student.gender === 'M' ? $t('students.form.male') : $t('students.form.female') }}
               </span>
             </td>
             <td class="px-6 py-4 text-right space-x-2">
-              <button @click="openModal(student)" class="text-sm text-indigo-400 hover:text-indigo-300 font-medium">Edit</button>
-              <button @click="deleteStudent(student.id)" class="text-sm text-red-400 hover:text-red-300 font-medium">Delete</button>
+              <button @click="openModal(student)" class="text-sm text-indigo-400 hover:text-indigo-300 font-medium">{{ $t('common.edit') }}</button>
+              <button @click="deleteStudent(student.id)" class="text-sm text-red-400 hover:text-red-300 font-medium">{{ $t('common.delete') }}</button>
             </td>
+          </tr>
+          <tr v-if="students.length === 0">
+            <td colspan="7" class="px-6 py-8 text-center text-brand-desc">{{ $t('students.no_data') }}</td>
           </tr>
         </tbody>
       </table>
@@ -61,40 +64,40 @@
     <!-- Modal Form -->
     <div v-if="showModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
       <div class="bg-brand-card border border-brand-border rounded-2xl w-full max-w-lg p-6 shadow-2xl space-y-4">
-        <h3 class="text-lg font-bold text-brand-text">{{ editingId ? 'Edit Student' : 'Add New Student' }}</h3>
+        <h3 class="text-lg font-bold text-brand-text">{{ editingId ? $t('students.modal_edit') : $t('students.modal_add') }}</h3>
 
         <form @submit.prevent="saveStudent" class="space-y-4">
           <div>
-            <label class="block text-xs font-semibold text-brand-desc uppercase mb-2">Student Name</label>
+            <label class="block text-xs font-semibold text-brand-desc uppercase mb-2">{{ $t('students.cols.student_name') }}</label>
             <input type="text" v-model="form.name" required class="w-full px-4 py-2.5 rounded-xl bg-brand-input border border-brand-border text-brand-text placeholder-gray-600 focus:outline-none focus:border-indigo-500 text-sm">
           </div>
           <div class="grid grid-cols-2 gap-4">
             <div>
-              <label class="block text-xs font-semibold text-brand-desc uppercase mb-2">LMS ID</label>
+              <label class="block text-xs font-semibold text-brand-desc uppercase mb-2">{{ $t('common.lms_id') }}</label>
               <input type="text" v-model="form.id_lms" required class="w-full px-4 py-2.5 rounded-xl bg-brand-input border border-brand-border text-brand-text placeholder-gray-600 focus:outline-none focus:border-indigo-500 text-sm">
             </div>
             <div>
-              <label class="block text-xs font-semibold text-brand-desc uppercase mb-2">Accounting ID</label>
+              <label class="block text-xs font-semibold text-brand-desc uppercase mb-2">{{ $t('students.cols.accounting_id') }}</label>
               <input type="text" v-model="form.accounting_id" required class="w-full px-4 py-2.5 rounded-xl bg-brand-input border border-brand-border text-brand-text placeholder-gray-600 focus:outline-none focus:border-indigo-500 text-sm">
             </div>
           </div>
           <div class="grid grid-cols-2 gap-4">
             <div>
-              <label class="block text-xs font-semibold text-brand-desc uppercase mb-2">Date of Birth</label>
+              <label class="block text-xs font-semibold text-brand-desc uppercase mb-2">{{ $t('students.cols.dob') }}</label>
               <input type="date" v-model="form.date_of_birth" required class="w-full px-4 py-2.5 rounded-xl bg-brand-input border border-brand-border text-brand-text focus:outline-none focus:border-indigo-500 text-sm">
             </div>
             <div>
-              <label class="block text-xs font-semibold text-brand-desc uppercase mb-2">Gender</label>
+              <label class="block text-xs font-semibold text-brand-desc uppercase mb-2">{{ $t('students.cols.gender') }}</label>
               <select v-model="form.gender" class="w-full px-4 py-2.5 rounded-xl bg-brand-input border border-brand-border text-brand-text focus:outline-none focus:border-indigo-500 text-sm">
-                <option value="M">Male</option>
-                <option value="F">Female</option>
+                <option value="M">{{ $t('students.form.male') }}</option>
+                <option value="F">{{ $t('students.form.female') }}</option>
               </select>
             </div>
           </div>
 
           <div class="flex justify-end gap-3 pt-4 border-t border-brand-border">
-            <button type="button" @click="showModal = false" class="px-4 py-2 rounded-xl border border-brand-border text-brand-text/90 hover:bg-gray-800 text-sm transition">Cancel</button>
-            <button type="submit" class="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-brand-text text-sm font-semibold transition shadow-lg shadow-indigo-600/20">Save</button>
+            <button type="button" @click="showModal = false" class="px-4 py-2 rounded-xl border border-brand-border text-brand-text/90 hover:bg-gray-800 text-sm transition">{{ $t('common.cancel') }}</button>
+            <button type="submit" class="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-brand-text text-sm font-semibold transition shadow-lg shadow-indigo-600/20">{{ $t('common.save') }}</button>
           </div>
         </form>
       </div>

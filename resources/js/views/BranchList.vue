@@ -2,17 +2,17 @@
   <div class="space-y-6">
     <div class="flex items-center justify-between">
       <div>
-        <h2 class="text-2xl font-bold text-brand-text">Branches (Centers)</h2>
-        <p class="text-sm text-brand-desc">View and manage LMS branch settings</p>
+        <h2 class="text-2xl font-bold text-brand-text">{{ $t('branches.title') }}</h2>
+        <p class="text-sm text-brand-desc">{{ $t('branches.desc') }}</p>
       </div>
       <button @click="openModal()" class="px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-brand-text text-sm font-semibold transition duration-150 shadow-lg shadow-indigo-600/20">
-        + Add Branch
+        {{ $t('branches.add_btn') }}
       </button>
     </div>
 
     <!-- Search / Filter -->
     <div class="bg-brand-card/40 border border-brand-border p-4 rounded-xl flex items-center justify-between">
-      <input type="text" v-model="search" @input="fetchBranches(1)" placeholder="Search branches by name, LMS ID..." class="px-4 py-2 rounded-xl bg-brand-input border border-brand-border text-brand-text placeholder-gray-600 focus:outline-none focus:border-indigo-500 transition duration-150 text-sm w-72">
+      <input type="text" v-model="search" @input="fetchBranches(1)" :placeholder="$t('branches.search')" class="px-4 py-2 rounded-xl bg-brand-input border border-brand-border text-brand-text placeholder-gray-600 focus:outline-none focus:border-indigo-500 transition duration-150 text-sm w-72">
     </div>
 
     <!-- Branches Table -->
@@ -20,13 +20,13 @@
       <table class="w-full text-left border-collapse">
         <thead>
           <tr class="border-b border-brand-border bg-brand-header text-xs font-semibold text-brand-desc uppercase">
-            <th class="px-6 py-4 w-16">STT</th>
-            <th class="px-6 py-4">Name</th>
-            <th class="px-6 py-4">LMS ID</th>
-            <th class="px-6 py-4">Email</th>
-            <th class="px-6 py-4">Hotline</th>
-            <th class="px-6 py-4">Status</th>
-            <th class="px-6 py-4 text-right">Actions</th>
+            <th class="px-6 py-4 w-16">{{ $t('common.stt') }}</th>
+            <th class="px-6 py-4">{{ $t('branches.form.name') }}</th>
+            <th class="px-6 py-4">{{ $t('common.lms_id') }}</th>
+            <th class="px-6 py-4">{{ $t('common.email') }}</th>
+            <th class="px-6 py-4">{{ $t('branches.form.hotline') }}</th>
+            <th class="px-6 py-4">{{ $t('common.status') }}</th>
+            <th class="px-6 py-4 text-right">{{ $t('common.actions') }}</th>
           </tr>
         </thead>
         <tbody class="divide-y divide-brand-border text-sm text-brand-text/90">
@@ -38,16 +38,16 @@
             <td class="px-6 py-4">{{ branch.hotline || 'N/A' }}</td>
             <td class="px-6 py-4">
               <span :class="branch.status === 'US001' ? 'bg-green-500/10 text-green-400 border border-green-500/20' : 'bg-red-500/10 text-red-400 border border-red-500/20'" class="px-2.5 py-1 rounded-full text-xs font-medium uppercase">
-                {{ branch.status === 'US001' ? 'Active' : 'Inactive' }}
+                {{ branch.status === 'US001' ? $t('common.active') : $t('common.inactive') }}
               </span>
             </td>
             <td class="px-6 py-4 text-right space-x-2">
-              <button @click="openModal(branch)" class="text-sm text-indigo-400 hover:text-indigo-300 transition font-medium">Edit</button>
-              <button @click="deleteBranch(branch.id)" class="text-sm text-red-400 hover:text-red-300 transition font-medium">Delete</button>
+              <button @click="openModal(branch)" class="text-sm text-indigo-400 hover:text-indigo-300 transition font-medium">{{ $t('common.edit') }}</button>
+              <button @click="deleteBranch(branch.id)" class="text-sm text-red-400 hover:text-red-300 transition font-medium">{{ $t('common.delete') }}</button>
             </td>
           </tr>
           <tr v-if="branches.length === 0">
-            <td colspan="7" class="px-6 py-8 text-center text-brand-desc">No branches found.</td>
+            <td colspan="7" class="px-6 py-8 text-center text-brand-desc">{{ $t('branches.no_data') }}</td>
           </tr>
         </tbody>
       </table>
@@ -64,38 +64,38 @@
     <!-- Modal Form -->
     <div v-if="showModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
       <div class="bg-brand-card border border-brand-border rounded-2xl w-full max-w-lg p-6 shadow-2xl space-y-4">
-        <h3 class="text-lg font-bold text-brand-text">{{ editingId ? 'Edit Branch' : 'Add New Branch' }}</h3>
+        <h3 class="text-lg font-bold text-brand-text">{{ editingId ? $t('branches.modal_edit') : $t('branches.modal_add') }}</h3>
 
         <form @submit.prevent="saveBranch" class="space-y-4">
           <div>
-            <label class="block text-xs font-semibold text-brand-desc uppercase mb-2">Branch Name</label>
+            <label class="block text-xs font-semibold text-brand-desc uppercase mb-2">{{ $t('branches.form.name') }}</label>
             <input type="text" v-model="form.name" required class="w-full px-4 py-2.5 rounded-xl bg-brand-input border border-brand-border text-brand-text placeholder-gray-600 focus:outline-none focus:border-indigo-500 text-sm">
           </div>
           <div>
-            <label class="block text-xs font-semibold text-brand-desc uppercase mb-2">LMS ID</label>
+            <label class="block text-xs font-semibold text-brand-desc uppercase mb-2">{{ $t('common.lms_id') }}</label>
             <input type="text" v-model="form.id_lms" required class="w-full px-4 py-2.5 rounded-xl bg-brand-input border border-brand-border text-brand-text placeholder-gray-600 focus:outline-none focus:border-indigo-500 text-sm">
           </div>
           <div class="grid grid-cols-2 gap-4">
             <div>
-              <label class="block text-xs font-semibold text-brand-desc uppercase mb-2">Email</label>
+              <label class="block text-xs font-semibold text-brand-desc uppercase mb-2">{{ $t('common.email') }}</label>
               <input type="email" v-model="form.email" class="w-full px-4 py-2.5 rounded-xl bg-brand-input border border-brand-border text-brand-text placeholder-gray-600 focus:outline-none focus:border-indigo-500 text-sm">
             </div>
             <div>
-              <label class="block text-xs font-semibold text-brand-desc uppercase mb-2">Hotline</label>
+              <label class="block text-xs font-semibold text-brand-desc uppercase mb-2">{{ $t('branches.form.hotline') }}</label>
               <input type="text" v-model="form.hotline" class="w-full px-4 py-2.5 rounded-xl bg-brand-input border border-brand-border text-brand-text placeholder-gray-600 focus:outline-none focus:border-indigo-500 text-sm">
             </div>
           </div>
           <div>
-            <label class="block text-xs font-semibold text-brand-desc uppercase mb-2">Status</label>
+            <label class="block text-xs font-semibold text-brand-desc uppercase mb-2">{{ $t('common.status') }}</label>
             <select v-model="form.status" class="w-full px-4 py-2.5 rounded-xl bg-brand-input border border-brand-border text-brand-text focus:outline-none focus:border-indigo-500 text-sm">
-              <option value="US001">Active</option>
-              <option value="US002">Inactive</option>
+              <option value="US001">{{ $t('common.active') }}</option>
+              <option value="US002">{{ $t('common.inactive') }}</option>
             </select>
           </div>
 
           <div class="flex justify-end gap-3 pt-4 border-t border-brand-border">
-            <button type="button" @click="showModal = false" class="px-4 py-2 rounded-xl border border-brand-border text-brand-text/90 hover:bg-gray-800 text-sm transition">Cancel</button>
-            <button type="submit" class="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-brand-text text-sm font-semibold transition shadow-lg shadow-indigo-600/20">Save</button>
+            <button type="button" @click="showModal = false" class="px-4 py-2 rounded-xl border border-brand-border text-brand-text/90 hover:bg-gray-800 text-sm transition">{{ $t('common.cancel') }}</button>
+            <button type="submit" class="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-brand-text text-sm font-semibold transition shadow-lg shadow-indigo-600/20">{{ $t('common.save') }}</button>
           </div>
         </form>
       </div>
