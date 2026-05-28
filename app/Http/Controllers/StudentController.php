@@ -7,9 +7,13 @@ use App\Models\Student;
 
 class StudentController extends Controller
 {
-    public function index()
+        public function index(Request $request)
     {
-        return response()->json(Student::all());
+        $limit = $request->query('per_page', 20);
+        if (!in_array($limit, [20, 50, 100])) {
+            $limit = 20;
+        }
+        return response()->json(Student::paginate($limit));
     }
 
     public function store(Request $request)

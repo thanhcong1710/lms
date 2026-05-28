@@ -12,7 +12,7 @@
 
     <!-- Search / Filter -->
     <div class="bg-brand-card/40 border border-brand-border p-4 rounded-xl flex items-center justify-between">
-      <input type="text" v-model="search" placeholder="Search teachers..." class="px-4 py-2 rounded-xl bg-brand-input border border-brand-border text-brand-text placeholder-gray-600 focus:outline-none focus:border-indigo-500 transition duration-150 text-sm w-72">
+      <input type="text" v-model="search" @input="fetchTeachers(1)" placeholder="Search teachers..." class="px-4 py-2 rounded-xl bg-brand-input border border-brand-border text-brand-text placeholder-gray-600 focus:outline-none focus:border-indigo-500 transition duration-150 text-sm w-72">
     </div>
 
     <!-- Table -->
@@ -20,6 +20,7 @@
       <table class="w-full text-left border-collapse">
         <thead>
           <tr class="border-b border-brand-border bg-brand-header text-xs font-semibold text-brand-desc uppercase">
+            <th class="px-6 py-4 w-16">STT</th>
             <th class="px-6 py-4">Name</th>
             <th class="px-6 py-4">LMS ID</th>
             <th class="px-6 py-4">Branch LMS ID</th>
@@ -30,7 +31,8 @@
           </tr>
         </thead>
         <tbody class="divide-y divide-brand-border text-sm text-brand-text/90">
-          <tr v-for="teacher in filteredTeachers" :key="teacher.id" class="hover:bg-gray-800/20 transition duration-150">
+          <tr v-for="(teacher, index) in teachers" :key="teacher.id" class="hover:bg-gray-800/20 transition duration-150">
+            <td class="px-6 py-4 text-brand-desc">{{ (pagination.current_page - 1) * pagination.per_page + index + 1 }}</td>
             <td class="px-6 py-4 font-medium text-brand-text">{{ teacher.ins_name }}</td>
             <td class="px-6 py-4 font-mono text-indigo-400">{{ teacher.id_lms }}</td>
             <td class="px-6 py-4">{{ teacher.branch_id_lms || 'N/A' }}</td>
@@ -53,6 +55,14 @@
         </tbody>
       </table>
     </div>
+    
+    <!-- Pagination -->
+    <Pagination 
+      v-if="pagination.total > 0"
+      :pagination="pagination"
+      @page-change="onPageChange"
+      @per-page-change="onPerPageChange"
+    />
 
     <!-- Modal Form -->
     <div v-if="showModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
@@ -112,12 +122,12 @@
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
   data() {
     return {
-      teachers: [
-        { id: 1, ins_name: 'Teacher Test 1', id_lms: 'giaovientest', branch_id_lms: 'HCM_PXL', email: 'teacher1@cmsedu.vn', phone: '0987654321', head: 'N', status: 'US001' }
-      ],
+      teachers: [],
       search: '',
       showModal: false,
       editingId: null,
@@ -129,8 +139,19 @@ export default {
         phone: '',
         head: 'N',
         status: 'US001'
+      },
+      pagination: {
+        current_page: 1,
+        per_page: 20,
+        total: 0,
+        last_page: 1,
+        from: 0,
+        to: 0
       }
     }
+  },
+  created() {
+    this.fetchTeachers(1);
   },
   computed: {
     filteredTeachers() {
@@ -139,6 +160,40 @@ export default {
     }
   },
   methods: {
+    async fetchTeachers(page = 1) {
+      try {
+        const response = await axios.get('/api/teachers', {
+          params: {
+            search: this.search,
+            page: page,
+            per_page: this.pagination.per_page
+          },
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+          }
+        });
+        if (response.data.data) {
+          this.teachers = response.data.data;
+          this.pagination = {
+            total: response.data.total,
+            per_page: response.data.per_page,
+            current_page: response.data.current_page,
+            last_page: response.data.last_page,
+            from: response.data.from,
+            to: response.data.to
+          };
+        }
+      } catch (error) {
+        console.error("Error fetching teachers", error);
+      }
+    },
+    onPageChange(page) {
+      this.fetchTeachers(page);
+    },
+    onPerPageChange(perPage) {
+      this.pagination.per_page = perPage;
+      this.fetchTeachers(1);
+    },
     openModal(teacher = null) {
       if (teacher) {
         this.editingId = teacher.id;

@@ -7,9 +7,13 @@ use App\Models\LmsClass;
 
 class ClassController extends Controller
 {
-    public function index()
+        public function index(Request $request)
     {
-        return response()->json(LmsClass::all());
+        $limit = $request->query('per_page', 20);
+        if (!in_array($limit, [20, 50, 100])) {
+            $limit = 20;
+        }
+        return response()->json(LmsClass::paginate($limit));
     }
 
     public function store(Request $request)

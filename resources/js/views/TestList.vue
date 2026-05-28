@@ -58,6 +58,7 @@
       <table class="w-full text-left border-collapse">
         <thead>
           <tr class="border-b border-brand-border bg-brand-header text-xs font-semibold text-brand-desc uppercase">
+            <th class="px-6 py-4 w-16">STT</th>
             <th class="px-6 py-4">Test Name</th>
             <th class="px-6 py-4">Grade / Level</th>
             <th class="px-6 py-4 text-center">Status</th>
@@ -65,7 +66,8 @@
           </tr>
         </thead>
         <tbody class="divide-y divide-brand-border text-sm text-brand-text/90">
-          <tr v-for="test in tests" :key="test.id" class="hover:bg-brand-card/40 transition">
+          <tr v-for="(test, index) in tests" :key="test.id" class="hover:bg-brand-card/40 transition">
+            <td class="px-6 py-4 text-brand-desc">{{ (pagination.current_page - 1) * pagination.per_page + index + 1 }}</td>
             <td class="px-6 py-4 font-semibold text-brand-text">{{ test.name }}</td>
             <td class="px-6 py-4">{{ test.level_cd || 'N/A' }}</td>
             <td class="px-6 py-4 text-center">
@@ -111,11 +113,19 @@
             </td>
           </tr>
           <tr v-if="tests.length === 0">
-            <td colspan="4" class="px-6 py-12 text-center text-brand-desc">No test sheets found matching criteria.</td>
+            <td colspan="5" class="px-6 py-12 text-center text-brand-desc">No test sheets found matching criteria.</td>
           </tr>
         </tbody>
       </table>
     </div>
+    
+    <!-- Pagination -->
+    <Pagination 
+      v-if="pagination.total > 0"
+      :pagination="pagination"
+      @page-change="onPageChange"
+      @per-page-change="onPerPageChange"
+    />
 
     <!-- PDF/Excel View Modal -->
     <div v-if="showModal && activeTest" class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
@@ -166,20 +176,30 @@ export default {
       activeTab: 'UCREA',
       search: '',
       showModal: false,
-      activeTest: null
+      activeTest: null,
+      pagination: {
+        current_page: 1,
+        per_page: 20,
+        total: 0,
+        last_page: 1,
+        from: 0,
+        to: 0
+      }
     }
   },
   created() {
     this.fetchTests();
   },
   methods: {
-    async fetchTests() {
+    async fetchTests(page = 1) {
       this.loading = true;
       try {
         const response = await axios.get('/api/tests', {
           params: {
             type: this.activeTab,
-            search: this.search
+            search: this.search,
+            page: page,
+            per_page: this.pagination.per_page
           },
           headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`
@@ -187,6 +207,7 @@ export default {
         });
         if (response.data.status === 'success') {
           this.tests = response.data.data;
+          this.pagination = response.data.pagination;
         }
       } catch (error) {
         console.error("Error fetching tests", error);
@@ -194,9 +215,16 @@ export default {
         this.loading = false;
       }
     },
+    onPageChange(page) {
+      this.fetchTests(page);
+    },
+    onPerPageChange(perPage) {
+      this.pagination.per_page = perPage;
+      this.fetchTests(1);
+    },
     changeTab(tab) {
       this.activeTab = tab;
-      this.fetchTests();
+      this.fetchTests(1);
     },
     getFilename(path) {
       if (!path) return '';

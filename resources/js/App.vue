@@ -10,6 +10,10 @@
       </div>
       
       <div class="flex items-center gap-2">
+        <!-- Language Switcher Mobile -->
+        <button @click="toggleLanguage" class="px-2 py-1 rounded-lg bg-brand-input hover:bg-brand-border font-medium text-xs text-brand-desc hover:text-brand-text transition">
+          {{ currentLocale === 'vi' ? 'VI' : 'EN' }}
+        </button>
         <!-- Theme Toggle -->
         <button @click="toggleTheme" class="p-2 rounded-xl bg-brand-input hover:bg-brand-border transition text-brand-desc hover:text-brand-text">
           <span v-if="theme === 'dark'">☀️</span>
@@ -51,25 +55,25 @@
         <!-- Navigation Links -->
         <nav class="space-y-1">
           <router-link to="/" @click="isMobileMenuOpen = false" class="flex items-center gap-3 px-4 py-3 rounded-xl transition hover:bg-brand-input hover:text-brand-text text-brand-desc" active-class="bg-indigo-600/10 text-indigo-500 border-l-4 border-indigo-600 font-medium">
-            <span>📊 Dashboard</span>
+            <span>📊 {{ $t('sidebar.dashboard') }}</span>
           </router-link>
           <router-link to="/branches" @click="isMobileMenuOpen = false" class="flex items-center gap-3 px-4 py-3 rounded-xl transition hover:bg-brand-input hover:text-brand-text text-brand-desc" active-class="bg-indigo-600/10 text-indigo-500 border-l-4 border-indigo-600 font-medium">
-            <span>🏢 Branches</span>
+            <span>🏢 {{ $t('sidebar.branches') }}</span>
           </router-link>
           <router-link to="/teachers" @click="isMobileMenuOpen = false" class="flex items-center gap-3 px-4 py-3 rounded-xl transition hover:bg-brand-input hover:text-brand-text text-brand-desc" active-class="bg-indigo-600/10 text-indigo-500 border-l-4 border-indigo-600 font-medium">
-            <span>👨‍🏫 Teachers</span>
+            <span>👨‍🏫 {{ $t('sidebar.teachers') }}</span>
           </router-link>
           <router-link to="/classes" @click="isMobileMenuOpen = false" class="flex items-center gap-3 px-4 py-3 rounded-xl transition hover:bg-brand-input hover:text-brand-text text-brand-desc" active-class="bg-indigo-600/10 text-indigo-500 border-l-4 border-indigo-600 font-medium">
-            <span>🏫 Classes</span>
+            <span>🏫 {{ $t('sidebar.classes') }}</span>
           </router-link>
           <router-link to="/students" @click="isMobileMenuOpen = false" class="flex items-center gap-3 px-4 py-3 rounded-xl transition hover:bg-brand-input hover:text-brand-text text-brand-desc" active-class="bg-indigo-600/10 text-indigo-500 border-l-4 border-indigo-600 font-medium">
-            <span>🎓 Students</span>
+            <span>🎓 {{ $t('sidebar.students') }}</span>
           </router-link>
           <router-link to="/contracts" @click="isMobileMenuOpen = false" class="flex items-center gap-3 px-4 py-3 rounded-xl transition hover:bg-brand-input hover:text-brand-text text-brand-desc" active-class="bg-indigo-600/10 text-indigo-500 border-l-4 border-indigo-600 font-medium">
-            <span>📄 Contracts</span>
+            <span>📄 {{ $t('sidebar.contracts') }}</span>
           </router-link>
           <router-link to="/tests" @click="isMobileMenuOpen = false" class="flex items-center gap-3 px-4 py-3 rounded-xl transition hover:bg-brand-input hover:text-brand-text text-brand-desc" active-class="bg-indigo-600/10 text-indigo-500 border-l-4 border-indigo-600 font-medium">
-            <span>📝 Tests</span>
+            <span>📝 {{ $t('sidebar.tests') }}</span>
           </router-link>
         </nav>
       </div>
@@ -86,7 +90,7 @@
           </div>
         </div>
         <button @click="logout" class="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl border border-red-500/20 text-red-500 hover:bg-red-500/10 transition text-sm font-medium">
-          Logout
+          {{ $t('header.logout') }}
         </button>
       </div>
     </aside>
@@ -95,18 +99,24 @@
     <main class="flex-1 flex flex-col min-w-0 pt-16 md:pt-0">
       <!-- Desktop header -->
       <header v-if="isAuthenticated" class="hidden md:flex h-16 border-b border-brand-border bg-brand-card/50 backdrop-blur-md items-center justify-between px-8 sticky top-0 z-40">
-        <div class="text-sm text-brand-desc">Welcome to CMS EDU LMS Management Portal</div>
+        <div class="text-sm text-brand-desc">{{ $t('header.welcome') }}</div>
         
         <div class="flex items-center gap-6">
+          <!-- Language Switcher Desktop -->
+          <div class="flex bg-brand-input border border-brand-border rounded-xl p-1">
+            <button @click="setLanguage('vi')" :class="['px-3 py-1 rounded-lg text-xs font-semibold transition', currentLocale === 'vi' ? 'bg-indigo-600 text-white shadow-md' : 'text-brand-desc hover:text-brand-text']">VI</button>
+            <button @click="setLanguage('en')" :class="['px-3 py-1 rounded-lg text-xs font-semibold transition', currentLocale === 'en' ? 'bg-indigo-600 text-white shadow-md' : 'text-brand-desc hover:text-brand-text']">EN</button>
+          </div>
+
           <!-- Theme Toggle -->
           <button @click="toggleTheme" class="p-2 rounded-xl bg-brand-input hover:bg-brand-border transition text-brand-desc hover:text-brand-text flex items-center justify-center">
-            <span v-if="theme === 'dark'">☀️ Light Mode</span>
-            <span v-else>🌙 Dark Mode</span>
+            <span v-if="theme === 'dark'">☀️ {{ $t('header.light_mode') }}</span>
+            <span v-else>🌙 {{ $t('header.dark_mode') }}</span>
           </button>
           
           <div class="flex items-center gap-2">
             <span class="h-2 w-2 rounded-full bg-green-500 animate-pulse"></span>
-            <span class="text-xs text-green-500 font-medium uppercase tracking-wider">System Live</span>
+            <span class="text-xs text-green-500 font-medium uppercase tracking-wider">{{ $t('header.system_live') }}</span>
           </div>
         </div>
       </header>
@@ -125,7 +135,8 @@ export default {
     return {
       isAuthenticated: false,
       isMobileMenuOpen: false,
-      theme: localStorage.getItem('theme') || 'dark'
+      theme: localStorage.getItem('theme') || 'dark',
+      currentLocale: localStorage.getItem('locale') || 'vi'
     }
   },
   watch: {
@@ -159,6 +170,15 @@ export default {
     toggleTheme() {
       this.theme = this.theme === 'dark' ? 'light' : 'dark';
       localStorage.setItem('theme', this.theme);
+    },
+    setLanguage(lang) {
+      this.currentLocale = lang;
+      this.$i18n.locale = lang;
+      localStorage.setItem('locale', lang);
+    },
+    toggleLanguage() {
+      const nextLang = this.currentLocale === 'vi' ? 'en' : 'vi';
+      this.setLanguage(nextLang);
     }
   }
 }

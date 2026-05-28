@@ -7,9 +7,13 @@ use App\Models\Branch;
 
 class BranchController extends Controller
 {
-    public function index()
+        public function index(Request $request)
     {
-        return response()->json(Branch::all());
+        $limit = $request->query('per_page', 20);
+        if (!in_array($limit, [20, 50, 100])) {
+            $limit = 20;
+        }
+        return response()->json(Branch::paginate($limit));
     }
 
     public function store(Request $request)

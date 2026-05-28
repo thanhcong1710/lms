@@ -7,9 +7,13 @@ use App\Models\Teacher;
 
 class TeacherController extends Controller
 {
-    public function index()
+        public function index(Request $request)
     {
-        return response()->json(Teacher::all());
+        $limit = $request->query('per_page', 20);
+        if (!in_array($limit, [20, 50, 100])) {
+            $limit = 20;
+        }
+        return response()->json(Teacher::paginate($limit));
     }
 
     public function store(Request $request)

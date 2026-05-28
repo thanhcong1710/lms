@@ -26,11 +26,24 @@ class LmsTestController extends Controller
             });
         }
 
-        $tests = $query->orderBy('id', 'desc')->get();
+        $limit = $request->query('per_page', 20);
+        if (!in_array($limit, [20, 50, 100])) {
+            $limit = 20;
+        }
+
+        $tests = $query->orderBy('id', 'desc')->paginate($limit);
 
         return response()->json([
             'status' => 'success',
-            'data' => $tests
+            'data' => $tests->items(),
+            'pagination' => [
+                'total' => $tests->total(),
+                'per_page' => $tests->perPage(),
+                'current_page' => $tests->currentPage(),
+                'last_page' => $tests->lastPage(),
+                'from' => $tests->firstItem(),
+                'to' => $tests->lastItem()
+            ]
         ]);
     }
 }
