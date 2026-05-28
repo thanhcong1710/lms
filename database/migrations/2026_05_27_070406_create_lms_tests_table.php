@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('pdf_url')->nullable();
             $table->string('local_pdf_path')->nullable();
+            $table->tinyInteger('status');
             $table->timestamps();
         });
     }

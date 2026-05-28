@@ -60,8 +60,7 @@
           <tr class="border-b border-brand-border bg-brand-header text-xs font-semibold text-brand-desc uppercase">
             <th class="px-6 py-4">Test Name</th>
             <th class="px-6 py-4">Grade / Level</th>
-            <th class="px-6 py-4">Grade Code</th>
-            <th class="px-6 py-4">Original Filename</th>
+            <th class="px-6 py-4 text-center">Status</th>
             <th class="px-6 py-4 text-right">Actions</th>
           </tr>
         </thead>
@@ -69,25 +68,37 @@
           <tr v-for="test in tests" :key="test.id" class="hover:bg-brand-card/40 transition">
             <td class="px-6 py-4 font-semibold text-brand-text">{{ test.name }}</td>
             <td class="px-6 py-4">{{ test.level_cd || 'N/A' }}</td>
-            <td class="px-6 py-4 font-mono text-indigo-500 text-xs">{{ test.test_cd || 'N/A' }}</td>
-            <td class="px-6 py-4 text-xs text-brand-desc max-w-xs truncate" :title="getFilename(test.pdf_url)">
-              {{ getFilename(test.pdf_url) }}
+            <td class="px-6 py-4 text-center">
+              <span v-if="test.status == 1" class="inline-flex items-center justify-center p-1.5 rounded-full bg-emerald-100 text-emerald-600" title="Active">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
+              </span>
+              <span v-else class="inline-flex items-center justify-center p-1.5 rounded-full bg-rose-100 text-rose-600" title="Inactive">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"></path></svg>
+              </span>
             </td>
             <td class="px-6 py-4 text-right space-x-3">
-              <button 
+              <a 
                 v-if="test.local_pdf_path" 
-                @click="openPdf(test)" 
-                class="px-3.5 py-1.5 rounded-lg bg-indigo-600/10 text-indigo-500 hover:bg-indigo-600 hover:text-white transition font-medium text-xs"
+                :href="`/${test.local_pdf_path}`" 
+                target="_blank"
+                title="Preview File"
+                class="inline-flex items-center justify-center p-2 rounded-lg bg-indigo-600/10 text-indigo-500 hover:bg-indigo-600 hover:text-white transition"
               >
-                Preview File
-              </button>
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                </svg>
+              </a>
               <a 
                 v-if="test.local_pdf_path"
-                :href="test.local_pdf_path" 
+                :href="`/${test.local_pdf_path}`" 
                 download
-                class="px-3.5 py-1.5 rounded-lg border border-brand-border text-brand-desc hover:text-brand-text hover:bg-brand-input transition font-medium text-xs inline-block"
+                title="Download File"
+                class="inline-flex items-center justify-center p-2 rounded-lg border border-brand-border text-brand-desc hover:text-brand-text hover:bg-brand-input transition"
               >
-                Download
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
               </a>
               <a 
                 v-else
@@ -100,7 +111,7 @@
             </td>
           </tr>
           <tr v-if="tests.length === 0">
-            <td colspan="5" class="px-6 py-12 text-center text-brand-desc">No test sheets found matching criteria.</td>
+            <td colspan="4" class="px-6 py-12 text-center text-brand-desc">No test sheets found matching criteria.</td>
           </tr>
         </tbody>
       </table>
