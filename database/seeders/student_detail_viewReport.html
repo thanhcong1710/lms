@@ -1,0 +1,1053 @@
+<!DOCTYPE HTML>
+<html lang="ko">
+	<head>
+		</head>
+	<script type="text/javascript">
+	//$(document).ready(function(){
+	//	$(document).on('keydown',function(e){
+	//		e = ( e || window.event );
+	//		if ( (e.keyCode > 111 && e.keyCode < 124) /* F1~F12 */ || e.keyCode == 17 || e.keyCode == 18) {
+	//			return  false;
+	//			e.preventDefault();
+	//			e.returnValue = false;
+	//		}
+	//	});
+	//});
+	</script>
+	<body oncontextmenu="return false" onselectstart="return false" ondragstart="return false">
+	<!-- <body> -->
+		
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kỹ năng tư duy sáng tạo cho trẻ</title>
+<link href="/css/bootstrap.min.css" rel="stylesheet">
+<link href="/fonts/css/font-awesome.min.css" rel="stylesheet">
+<link href="/css/icheck/_all.css" rel="stylesheet" />
+<link href="/css/custom.css" rel="stylesheet"><!-- last overlapping CSS -->
+<link href="/css/datepicker/bootstrap-datepicker.css" rel="stylesheet">
+<link href="/js/datatables/jquery.dataTables.min.css" rel="stylesheet">
+<link href="/css/datatables/dataTables.bootstrap.css" rel="stylesheet">
+<link href="/css/colorbox/colorbox.css" rel="stylesheet"> <!-- colorbox -->
+<link href="/css/progressbar/bootstrap-progressbar-3.3.0.css" rel="stylesheet"> <!-- bootstrap progress -->
+
+<link href="/css/toast/toastr.min.css" rel="stylesheet"> <!-- jquery Toast -->
+<!-- <link href="css/icheck/_all.css" rel="stylesheet" /> -->
+
+<script src="/js/jquery.min.js"></script><!--  jQuery v1.11.3  -->
+<script type="text/javascript" src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script><!--  jQuery-ui 1.12.1 -->
+<script src="/js/colorbox/jquery.colorbox.js"></script><!-- colorbox -->
+<script src="/js/jquery.form.min.js"></script>
+<script src="/js/bootstrap.min.js"></script><!-- bootstrap v3.3.6 -->
+<script src="/js/icheck/icheck.min.js"></script><!-- icheck -->
+<script src="/js/progressbar/bootstrap-progressbar.min.js"></script><!-- bootstrap progress js -->
+
+<script src="/js/common.js"></script><!-- common.js  -->
+<!-- <script src="js/icheck/icheck.js"></script>
+<!-- HTML5 요소 및 미디어 쿼리에 대한 IE8 지원을위한 html5shiv.js와 Respond.js -->
+<!--[if lt IE 9]>
+<script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+<![endif]-->
+<style>
+@font-face {
+	font-family: 'Noto Sans SC';
+	font-weight: normal;
+	src: url(/fonts/notosans/NotoSansSC-Light.woff) format('woff'); /* Modern Browsers */
+}
+
+@font-face {
+	font-family: 'Noto Sans SC';
+	font-weight: bold;
+	src: url(/fonts/notosans/NotoSansSC-Bold.woff) format('woff'); /* Modern Browsers */
+}
+
+/* RESET CSS */
+body, input, select, button, textarea, h1, h2, h3, h4, h5, h6, table {font:normal 10pt/ 20px 'palatino linotype', Helvetica, Apple-Gothic, Sans-serif; color:#333; }
+html, body, div, form, input, button, textarea, legend, fieldset, h1, h2, h3, h4, h5, h6, ul, ol, dl, li, dt, dd, blockquote, address, p, th, td, caption,figcaption,figure { margin:0; padding:0; }
+ol, ul, li { list-style:none; }
+address, em, optgroup{font-style:normal;}
+strong {font-weight:normal;}
+img, fieldset {max-width:100%; height:auto; vertical-align:top; border:0 none; }
+video {max-width:100%; min-width:100%; height:auto;}
+fieldset {display: table-cell;}
+input, select, textarea { vertical-align:middle; resize:none; position:relative; color:#333; border-radius:0;}
+input, textarea {-webkit-border-radius:0; /* -webkit-appearance:none; */}
+input[type="radio"] {position: relative; top:-2px;}
+input:focus {outline-style:none; box-shadow:none;}/* 크롬 초기화 */
+button { border:0 none; background:transparent; cursor:pointer; }
+hr { display:none; }
+.skip { width:0; height:0; visibility:hidden; font-size:0; line-height:0; position:absolute; top:0; left:0; overflow:hidden; }
+table caption {width:0; height:0; visibility:hidden; text-indent:-9999px; font-size:0; line-height:0; }
+table { border-collapse:collapse; border-spacing:0; }
+header, footer, section, article, aside, nav, hgroup, details, menu, figure, figcaption { display:block; }
+a { font-family:'palatino linotype', Helvetica, Apple-Gothic, Sans-serif; color:inherit; text-decoration:none;}
+a:hover,
+a:active,
+a:focus {color:#0079c2; text-decoration:underline;}
+a.link {text-decoration:underline;}
+
+/* common */
+.line_dotted {width:100%; margin:20px 0 5px; padding-bottom:5px; height:20px; border-bottom:1px dotted #2f5084; text-align: center;}
+/*td {letter-spacing: -0.5px;}*/
+.bg_r_fdf5f2 {background-color: #fdf5f2 !important;}
+.bg_r_fef6ef {background-color: #fef6ef !important;}
+.bg_g_f9faf6 {background-color: #f9faf6 !important;}
+.bg_g_eef3ee {background-color: #eef3ee !important;}
+.bg_b_f7f9fc {background-color: #f7f9fc !important;}
+.bg_b_dcdbdf {background-color: #dcdbdf !important;}
+
+.mt0 {margin-top:0 !important;}
+.co_red {color:#dc415c !important;}
+
+/* button */
+.btn-center-box {text-align: center; margin: 20px 0;}
+.btn-center-box>a {margin-left: 5px;}
+.btn-center-box>a:first-child {margin-left: 0;}
+a.btn {display: inline-block; padding: 6px 12px; margin-bottom: 0; font-size: 14px; font-weight: normal; line-height: 1.42857143; text-align: center; white-space: nowrap; vertical-align: middle; -ms-touch-action: manipulation; touch-action: manipulation; cursor: pointer; background-image: none; border: 1px solid transparent; border-radius: 4px; text-decoration: none;
+-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+		user-select: none;
+}
+a.btn-default {color: #333; background-color: #fff; border-color: #ccc;}
+.btn-default:hover,
+.btn-default:focus,
+.btn-default.focus,
+.btn-default:active,
+.btn-default.active,
+.open > .dropdown-toggle.btn-default {color: #333; background-color: #e6e6e6; border-color: #adadad;}
+
+/* contenst */
+body {background-color:#fff;}
+.container {width:900px;}
+
+.cont_page {position:relative; height:1300px;}
+.cont_page .header {position: relative; height:100px; background: #2f5084 !important; border-top: 4px solid #2f5084; border-bottom:2px solid #2f5084;}
+.cont_page .header .logo {position: absolute; top:30px; left:20px; width:114px;}
+.cont_page .header .title {position: absolute; top:30px; left:180px;}
+.cont_page .header .title p {font-size: 10pt; text-align: center; color: #fff !important; }
+.cont_page .header .title h1 {font-size: 15pt; color: #ffd81e !important;}
+.cont_page .header .info_box {position: absolute; bottom:15px; right:20px; overflow: hidden;  width: auto; min-width:190px; padding:0 30px; text-align: center; background: #fff !important; border-radius: 10px;}
+.cont_page .header .info_box>span {color: #2f5084 !important; font-size:11pt;}
+.cont_page .header .info_box>span.bullet {display: inline-block; margin: 0 7px; font-size:9pt; line-height:20px; vertical-align:top;}
+
+
+.cont_page .contents {margin:40px 20px 0; width:860px;}
+.cont_page .contents h2 {display: inline-block; font-size:14pt; padding-top: 7px;  margin-top:30px; border-top:2px solid #004f99; color: #222; font-weight:bold; text-align: center; letter-spacing:-1px;}
+.cont_page .contents h2.line_org {border-top: 2px solid #e95931;}
+
+.cont_page .footer {position:absolute; left:0; bottom:0; border-top:1px solid #c9ccd4; width:100%;}
+.cont_page .footer .copyright {text-align:right; padding-top:5px; color:#707990}
+
+.table_detail {width: 100%; border-top:1px solid #ababab; }
+.table_detail .br_none {border-right:0;}
+.table_detail th {padding:8px 0; color: #fff !important; border-bottom:1px solid #ababab; border-right:1px solid #ababab; text-align: center; background-color: #004f99 !important;}
+.table_detail th.subtitle {padding:3px 0;}
+.table_detail td {padding:12px 0; border-bottom:1px solid #ababab; border-right:1px solid #ababab; text-align: center;}
+.table_detail td.dsc {padding:10px; line-height:16px; text-align: left;}
+.table_detail.org_table th {background-color: #e95931 !important;}
+.table_detail.org_table tr {background-color: #fef6ef !important;}
+
+.table_top {width: 100%; border-top:1px solid #ababab;}
+.table_top th {padding:10px 0; border-bottom:1px solid #ababab; border-right:1px solid #ababab; text-align: center; font-weight: normal;}
+.table_top td {padding:10px 15px; border-bottom:1px solid #ababab; border-right:1px solid #ababab;}
+.table_top td:last-child {border-right:0;}
+
+/* 베트남 추가 */
+.chart_table_wrap {overflow:hidden; width:100%; margin-top:20px;}
+.chart_table_wrap:first-child {margin-top:0;}
+.chart_table_wrap .leftThin {float:left; width:310px;}
+.chart_table_wrap .rightThick {float:right; width:530px}
+.chart_table_wrap .leftThick {float:left; width:530px;}
+.chart_table_wrap .rightThin {float:right; width:310px}
+.chart_table_wrap .leftHalf {float:left; width:420px;}
+.chart_table_wrap .rightHalf {float:right; width:420px}
+
+@media print {
+	/*@page {
+		size: 21cm 29.7cm;
+		margin-top:2.5cm;
+		margin-right:2cm;
+		margin-bottom:1.5cm;
+		margin-left:2cm;
+	}*/
+	.non-printable { display:none; } /* 출력 안되는 영역 지정 */
+	div .breakhere { width:auto; height;0px; line-height:0px; page-break-before:always; } /* 페이지 나눔 */
+}
+</style>
+
+<script type="text/javascript">
+if (navigator.userAgent.indexOf('Chrome')>-1) {
+	window.resizeTo(1206, 842);
+}
+</script>
+</head>
+
+<body scroll="auto" style="overflow-x:hidden">
+
+<div class="container">
+	<div class="cont_page">
+		<div class="header">
+			<div class="logo">
+				<img src="/images/logo.png" alt="CMS edu">
+			</div>
+			<div class="title">
+				<p>Ucrea Assessment</p>
+				<h1>ĐÁNH GIÁ ĐẦU KỲ</h1>
+			</div>
+			<div class="info_box">
+				<span>Trịnh Vũ Tuệ Ch&acirc;u</span>
+				<span class="bullet">|</span>
+				<span>Nữ</span>
+				<span class="bullet">|</span>
+				<span>4Tuổi</span>
+				<span class="bullet">|</span>
+				<span>Trung t&acirc;m - Nguyễn Văn Cừ</span>
+			</div>
+		</div>
+
+		<div class="contents">
+			<h2 class="mt0">Lĩnh vực đánh giá</h2>
+			<div class="chart_table_wrap">
+				<div class="leftThick">
+					<table class="table_top">
+						<caption>Lĩnh vực đánh giá</caption>
+						<colgroup>
+							<col style="width:15%;">
+							<col style="width:85%;">
+						</colgroup>
+						<tbody>
+							<tr class="bg_r_fef6ef">
+								<th scope="row">Tư duy cơ bản </th>
+								<td>Đánh giá sự chú ý và tập trung, quan sát và ghi nhớ, đó là những nhân tố cơ bản cần thiết cho sự phát triển tư duy.</td>
+							</tr>
+							<tr class="bg_r_fef6ef">
+								<th scope="row">Tư duy toán học</th>
+								<td>Đánh giá năng lực về số và phép toán, không gian, đo lường, kiểu mẫu, thống kê; đó là những nhân tố cơ bản cần thiết cho sự phát triển tư duy.</td>
+							</tr>
+							<tr class="bg_r_fef6ef">
+								<th scope="row">Tư duy logic</th>
+								<td>Đánh giá sự hiểu biết, áp dụng, phân tích và tổng hợp; đó là các thành phần của kỹ năng tư duy logic, kỹ năng cốt lõi để phát triển tư duy.</td>
+							</tr>
+							<tr class="bg_r_fef6ef">
+								<th scope="row">Tư duy sáng tạo</th>
+								<td>Đánh giá sự lưu loát, linh hoạt, độc đáo và tinh tế, đó là những kỹ năng cần thiết cho tư duy đa dạng và sâu sắc.</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<div class="rightThin">
+					<table class="table_detail org_table">
+						<caption>Tiêu chuẩn và cấp độ</caption>
+						<colgroup>
+							<col style="width:32%;">
+							<col style="width:32%;">
+							<col style="width:36%;">
+						</colgroup>
+						<thead>
+							<tr>
+								<th scope="colgroup" colspan="3" style="padding:5px 0;">Tiêu chuẩn và cấp độ</th>
+							</tr>
+							<tr>
+								<th scope="col" class="subtitle">Tiêu chuẩn</th>
+								<th scope="col" class="subtitle">Cấp độ</th>
+								<th scope="col" class="subtitle">Điểm</th>
+							</tr>
+						</thead>
+						<tbody>
+						
+						
+						
+						<tr>
+							<td style="padding: 8px 0;">Vượt trội</td>
+							<td style="padding: 8px 0;">S</td>
+							<td style="padding: 8px 0;">91~100</td>
+						</tr>
+						
+						<tr>
+							<td style="padding: 8px 0;">Rất tốt</td>
+							<td style="padding: 8px 0;">A</td>
+							<td style="padding: 8px 0;">81~90</td>
+						</tr>
+						
+						<tr>
+							<td style="padding: 8px 0;">Tốt</td>
+							<td style="padding: 8px 0;">B</td>
+							<td style="padding: 8px 0;">61~80</td>
+						</tr>
+						
+						<tr>
+							<td style="padding: 8px 0;">Trung bình</td>
+							<td style="padding: 8px 0;">C</td>
+							<td style="padding: 8px 0;">41~60</td>
+						</tr>
+						
+						<tr>
+							<td style="padding: 8px 0;">Yếu</td>
+							<td style="padding: 8px 0;">L</td>
+							<td style="padding: 8px 0;">0~40</td>
+						</tr>
+						
+					</tbody>
+					</table>
+				</div>
+			</div>
+
+			<h2>Kết quả đánh giá</h2>
+			<div class="chart_table_wrap">
+				<div class="leftThin">
+					<div id="echart_bar2" style="height:285px;"></div>
+				</div>
+				<div class="rightThick" style="padding-top:35px;">
+					<table class="table_detail">
+						<caption>sk10</caption>
+						<colgroup>
+							<col style="width:12%;">
+							<col style="width:78%;">
+							<col style="width:10%;">
+						</colgroup>
+						<thead>
+							<tr>
+								<th scope="col">Lĩnh vực chi tiết</th>
+								<th scope="col">Nội dung chi tiết</th>
+								<th scope="col">Cấp độ</th> 
+							</tr>
+						</thead>
+						<tbody>
+							<tr class="bg_g_eef3ee">
+								<td>Năng lực chú ý</td>
+								<td class="dsc">Khả năng tập trung quan sát để giải quyết vấn đề.</td>
+								<td><span class="no-show">B</span></td>
+							</tr>
+							<tr>
+								<td>Năng lực quan sát</td>
+								<td class="dsc">Khả năng quan sát tỉ mỉ một sự vật nào đó.</td>
+								<td><span class="no-show">C</span></td>
+							</tr>
+							<tr class="bg_g_eef3ee">
+								<td>Năng lực ghi nhớ</td>
+								<td class="dsc">Khả năng ghi nhớ một thông tin mới về sự vật, sự việc.</td>
+								<td><span class="no-show">B</span></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<div class="chart_table_wrap">
+				<div class="leftThin">
+					<div id="echart_bar3" style="height:275px;"></div>
+				</div>
+				<div class="rightThick">
+					<table class="table_detail">
+						<caption>kn10</caption>
+						<colgroup>
+							<col style="width:12%;">
+							<col style="width:78%;">
+							<col style="width:10%;">
+						</colgroup>
+						<tbody>
+							<tr>
+								<th scope="col">Lĩnh vực chi tiết</th>
+								<th scope="col">Nội dung chi tiết</th>
+								<th scope="col">Cấp độ</th> 
+							</tr>
+							<tr class="bg_g_eef3ee">
+								<td>Số và tính toán</td>
+								<td class="dsc">Khả năng hiểu những khái niệm về tính toán cơ bản, hiểu được ý nghĩa của toán học trong đời sống sinh hoạt hàng ngày.</td>
+								<td><span class="no-show">B</span></td>
+							</tr>
+							<tr>
+								<td>Hình học không gian</td>
+								<td class="dsc">Khả năng nhận biết vị trí và hướng trong không gian và hiểu biết về hình dạng.</td>
+								<td><span class="no-show">B</span></td>
+							</tr>
+							<tr class="bg_g_eef3ee">
+								<td>Đo lường</td>
+								<td class="dsc">Khả năng thể hiện số lượng bằng cách sử dụng số và so sánh các đồ vật với nhau.</td>
+								<td><span class="no-show">B</span></td>
+							</tr>
+							<tr>
+								<td>Kiểu mẫu</td>
+								<td class="dsc">Khả năng nhận diện và dự đoán mối quan hệ mang tính quy luật của đồ vật.</td>
+								<td><span class="no-show">B</span></td>
+							</tr>
+							<tr class="bg_g_eef3ee">
+								<td>Dữ liệu</td>
+								<td class="dsc">Khả năng thu thập các nguồn lực khác nhau và sắp xếp chúng thành một danh mục hoặc lĩnh vực theo đặc điểm của chúng.</td>
+								<td><span class="no-show">B</span></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+		<div class="footer">
+			<p class="copyright">Copyright &copy; CMS Edu Co., Ltd. All rights reserved</p>
+		</div>
+	</div>
+
+	<div class="line_dotted non-printable">page 1</div>
+	<div class="breakhere"></div>
+
+	<div class="cont_page">
+		<div class="header">
+			<div class="logo">
+				<img src="/images/logo.png" alt="CMS edu">
+			</div>
+			<div class="title">
+				<p>Ucrea Assessment</p>
+				<h1>ĐÁNH GIÁ ĐẦU KỲ</h1>
+			</div>
+			<div class="info_box">
+				<span>Trịnh Vũ Tuệ Ch&acirc;u</span>
+				<span class="bullet">|</span>
+				<span>Nữ</span>
+				<span class="bullet">|</span>
+				<span>4Tuổi</span>
+				<span class="bullet">|</span>
+				<span>Trung t&acirc;m - Nguyễn Văn Cừ</span>
+			</div>
+		</div>
+
+		<div class="contents">
+			<div class="chart_table_wrap">
+				<div class="leftThick"  style="padding-top:25px;">
+					<table class="table_detail">
+						<caption>sk20</caption>
+						<colgroup>
+							<col style="width:12%;">
+							<col style="width:78%;">
+							<col style="width:10%;">
+						</colgroup>
+						<thead>
+							<tr>
+								<th scope="col">Lĩnh vực chi tiết</th>
+								<th scope="col">Nội dung chi tiết</th>
+								<th scope="col">Cấp độ</th> 
+							</tr>
+						</thead>
+						<tbody>
+							<tr class="bg_g_eef3ee">
+								<td>Hiểu biết</td>
+								<td class="dsc">Khả năng phân tích những dự kiện liên quan và hiểu về vấn đề cần giải quyết.</td>
+								<td><span class="no-show">B</span></td>
+							</tr>
+							<tr>
+								<td>Ứng dụng</td>
+								<td class="dsc">Khả năng vận dụng linh hoạt những vấn đề đã học vào thực hành thực tế.</td>
+								<td><span class="no-show">B</span></td>
+							</tr>
+							<tr class="bg_g_eef3ee">
+								<td>Phân tích</td>
+								<td class="dsc">Năng lực so sánh các thuộc tính và khái quát hóa vấn đề.</td>
+								<td><span class="no-show">B</span></td>
+							</tr>
+							<tr>
+								<td>Tổng hợp</td>
+								<td class="dsc">Khả năng phân tích tình huống và giải quyết toàn diện vấn đề.</td>
+								<td><span class="no-show">B</span></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<div class="rightThin">
+					<div id="echart_bar4" style="height:275px;"></div>
+				</div>
+			</div>
+			<div class="chart_table_wrap">
+				<div class="leftThick"  style="padding-top:25px;">
+					<table class="table_detail">
+						<caption>sk30</caption>
+						<colgroup>
+							<col style="width:12%;">
+							<col style="width:78%;">
+							<col style="width:10%;">
+						</colgroup>
+						<thead>
+							<tr>
+								<th scope="col">Lĩnh vực chi tiết</th>
+								<th scope="col">Nội dung chi tiết</th>
+								<th scope="col">Cấp độ</th> 
+							</tr>
+						</thead>
+						<tbody>
+							<tr class="bg_g_eef3ee">
+								<td>Sự trôi chảy</td>
+								<td class="dsc">Khả năng thể hiện nhiều ý tưởng mới lạ.</td>
+								<td><span class="no-show">C</span></td>
+							</tr>
+							<tr>
+								<td>Tính linh hoạt</td>
+								<td class="dsc">Khả năng tìm và giải quyết vấn đề và những ý tưởng đa dạng bằng cách vận dụng một đối tượng thống nhất.</td>
+								<td><span class="no-show">B</span></td>
+							</tr>
+							<tr class="bg_g_eef3ee">
+								<td>Tính độc đáo</td>
+								<td class="dsc">Khả năng đưa ra một ý tưởng độc đáo và mới lạ hoặc hoàn toàn khác biệt.</td>
+								<td><span class="no-show">C</span></td>
+							</tr>
+							<tr>
+								<td>Tính chính xác</td>
+								<td class="dsc">Khả năng bổ sung thêm những điểm chi tiết của ý tưởng có tính phức tạp cao.</td>
+								<td><span class="no-show">B</span></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<div class="rightThin">
+					<div id="echart_bar5" style="height:275px;"></div>
+				</div>
+			</div>
+
+			
+			
+			
+				
+			
+			
+			
+			
+			
+			
+				
+			
+			
+			
+			
+			
+			
+				
+			
+			
+			
+			
+			
+			
+				
+			
+			
+			
+			<h2>Đánh giá tổng quát</h2>
+			<div class="chart_table_wrap">
+				<div class="leftThin">
+					<div id="echart_bar" style="height:275px;"></div>
+				</div>
+				<div class="rightThick" style="padding-top:0px">
+					<table class="table_detail org_table">
+						<caption>whole</caption>
+						<colgroup>
+							<col style="width:13%;">
+							<col style="width:65%;">
+							<col style="width:10%;">
+							<col style="width:12%;">
+						</colgroup>
+						<thead>
+							<tr>
+								<th scope="col">Lĩnh vực</th>
+								<th scope="col">Nội dung</th>
+								<th scope="col">Trung bình</th>
+								<th scope="col">Bình quân của tất cả HS</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>Tư duy cơ bản</td>
+								
+								<td class="dsc">Tư duy cơ bản của học sinh Trịnh Vũ Tuệ Ch&acirc;u ở mức độ <span class="co_red">Tốt</span>. <!-- **이의 기초사고 능력은 S등급으로 탁월한 수준입니다 --></td>
+								<td>B</td>
+								<td>B</td>
+							</tr>
+							<tr>
+								<td>Tư duy toán học</td>
+								
+								<td class="dsc">Tư duy toán học của học sinh Trịnh Vũ Tuệ Ch&acirc;u ở mức độ <span class="co_red">Tốt</span>. <!-- **이의 기초사고 능력은 S등급으로 탁월한 수준입니다 --></td>
+								<td>B</td>
+								<td>B</td>
+							</tr>
+							<tr>
+								<td>Tư duy logic</td>
+								
+								<td class="dsc">Tư duy logic của học sinh Trịnh Vũ Tuệ Ch&acirc;u ở mức độ <span class="co_red">Tốt</span>. <!-- **이의 기초사고 능력은 S등급으로 탁월한 수준입니다 --></td>
+								<td>B</td>
+								<td>B</td>
+							</tr>
+							<tr>
+								<td>Tư duy sáng tạo</td>
+								
+								<td class="dsc">Tư duy sáng tạo của học sinh Trịnh Vũ Tuệ Ch&acirc;u ở mức độ <span class="co_red">Tốt</span>. <!-- **이의 기초사고 능력은 S등급으로 탁월한 수준입니다 --></td>
+								<td>B</td>
+								<td>B</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+
+		</div>
+		<div class="footer">
+			<p class="copyright">Copyright &copy; CMS Edu Co., Ltd. All rights reserved</p>
+		</div>
+	</div>
+
+	<div class="line_dotted non-printable">page 2</div>
+	<div class="non-printable">
+		<div class="x_contents">
+			<div class="btn-center-box">
+				
+				<a href="#confirm" id="btnConfirm" class="btn btn-default"
+					data-testCd="TT001"
+					data-levelCd="L4"
+					data-testSeq="1"
+					data-resultSeq="2312" style="width:100px">Kiểm tra lần cuối</a> 
+				
+				
+				<a href="#close" id="btnClose" class="btn btn-default" style="width:100px">Đóng</a> 
+			</div>
+			<div class='btn-center-box'>
+				<input type="checkbox" name="testType" class="flat" id="diag" value="TT001"> <label for="diag">ĐÁNH GIÁ ĐẦU KỲ</label>
+				<input type="checkbox" name="testType" class="flat" id="fmtv" value="TT002"> <label for="fmtv">ĐÁNH GIÁ GIỮA KỲ</label>
+				<input type="checkbox" name="testType" class="flat" id="smtv" value="TT003"> <label for="smtv">ĐÁNH GIÁ CUỐI KỲ</label>
+			</div>
+		</div>
+</div>
+	<div class="breakhere"></div>
+</div>
+<!-- //container -->
+
+<script src="../js/echart/echarts-all.js"></script>
+<script src="../js/echart/echarts-theme.js"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+	$('input.flat').iCheck({
+		checkboxClass: 'icheckbox_flat-blue',
+		radioClass: 'iradio_flat-blue'
+	});
+
+	
+	$("#diag").iCheck('check'); var tt001data = {'name':'Đầu kỳ','kn11':'80','kn12':'80','kn13':'80','kn14':'80','kn21':'0','kn22':'0','kn23':'0','kn24':'0','sk11':'76','sk12':'60','sk13':'80','sk21':'80','sk22':'80','sk23':'80','sk31':'60','sk32':'80','sk33':'60','sk34':'80'}
+	
+	
+	
+
+	$(".flat").on("ifChecked", function() {
+		showGraph();
+	}).on("ifUnchecked", function() {
+		showGraph();
+	});
+
+	var showGraph = function() {
+		var tmpData = new Object();
+
+		//var values = $('input:checkbox:checked').map(function () {return this.value;}).get();
+		var values = $("input[type='checkbox']").map(function () { if($(this).prop('checked')) { return this.value; } }).get();
+		var sk1, kn1, sk2, sk3;
+		sk1 = new Array(); kn1 = new Array(); sk2 = new Array(); sk3 = new Array();
+		for(var i = 0 ; i < values.length ; i++) {
+			try {
+				if(values[i] == 'TT001') {
+					sk1.push({name : tt001data.name,type : 'bar',data : [tt001data.sk11,tt001data.sk12,tt001data.sk13],barMaxWidth : '25'});
+					kn1.push({name : tt001data.name,type : 'bar',data : [tt001data.kn11,tt001data.kn12,tt001data.kn13,tt001data.kn14,tt001data.kn15],barMaxWidth : '25'});
+					sk2.push({name : tt001data.name,type : 'bar',data : [tt001data.sk21,tt001data.sk22,tt001data.sk23,tt001data.sk24],barMaxWidth : '25'});
+					sk3.push({name : tt001data.name,type : 'bar',data : [tt001data.sk31,tt001data.sk32,tt001data.sk33,tt001data.sk34],barMaxWidth : '25'});
+				} else if(values[i] == 'TT002') {
+					sk1.push({name : tt002data.name,type : 'bar',data : [tt002data.sk11,tt002data.sk12,tt002data.sk13],barMaxWidth : '25'});
+					kn1.push({name : tt002data.name,type : 'bar',data : [tt002data.kn11,tt002data.kn12,tt002data.kn13,tt002data.kn14,tt002data.kn15],barMaxWidth : '25'});
+					sk2.push({name : tt002data.name,type : 'bar',data : [tt002data.sk21,tt002data.sk22,tt002data.sk23,tt002data.sk24],barMaxWidth : '25'});
+					sk3.push({name : tt002data.name,type : 'bar',data : [tt002data.sk31,tt002data.sk32,tt002data.sk33,tt002data.sk34],barMaxWidth : '25'});
+				} else if(values[i] == 'TT003') {
+					sk1.push({name : tt003data.name,type : 'bar',data : [tt003data.sk11,tt003data.sk12,tt003data.sk13],barMaxWidth : '25'});
+					kn1.push({name : tt003data.name,type : 'bar',data : [tt003data.kn11,tt003data.kn12,tt003data.kn13,tt003data.kn14,tt003data.kn15],barMaxWidth : '25'});
+					sk2.push({name : tt003data.name,type : 'bar',data : [tt003data.sk21,tt003data.sk22,tt003data.sk23,tt003data.sk24],barMaxWidth : '25'});
+					sk3.push({name : tt003data.name,type : 'bar',data : [tt003data.sk31,tt003data.sk32,tt003data.sk33,tt003data.sk34],barMaxWidth : '25'});
+				}
+			} catch(e) { }
+		}
+		tmpData['sk1'] = sk1.length == 0 ? [] : sk1;
+		tmpData['kn1'] = kn1.length == 0 ? [] : kn1;
+		tmpData['sk2'] = sk2.length == 0 ? [] : sk2;
+		tmpData['sk3'] = sk3.length == 0 ? [] : sk3;
+		//alert(JSON.stringify(tmpData));
+		//console.log(JSON.stringify(tmpData));
+		refreshData(tmpData);
+	}
+
+	var refreshData = function(datas) {
+		$("#echart_bar2, #echart_bar3, #echart_bar4, #echart_bar5").removeAttr('_echarts_instance_').html('');
+		var myChart = echarts.init(document.getElementById('echart_bar2'), theme);
+		myChart.setOption({
+			title: {x: '45',y: '15',text: 'Tư duy cơ bản',textStyle: {fontSize: 16,color: '#000'}},
+			legend: {orient: 'vertical',x: '220',y: '15',itemGap: 3,padding: 10,data:['Đầu kỳ','Giữa kỳ','Cuối kỳ'],textStyle: {fontSize:12,color:'#000',fontWeight:'bold'}},
+			grid: {x:30, x2:0, y:85, y2:35},
+			tooltip: {show: false,trigger: "axis"},
+			calculable : false,
+			xAxis: [{type: "category",splitLine: {show: false},data:['Năng lực chú ý','Năng lực quan sát','Năng lực ghi nhớ'],axisLabel : {textStyle: {fontSize:10,color:'#000',fontWeight:'bold'}}}],
+			yAxis: [{type : 'value',axisLabel : {formatter: '{value}',textStyle: {fontSize:13,color:'#000',}},max: 100}],
+			toolbox: {show: false},
+			series: datas.sk1
+		});
+		var myChart = echarts.init(document.getElementById('echart_bar3'), theme);
+		myChart.setOption({
+			title: {x: '15',y: '15',text: 'Tư duy toán học',textStyle: {fontSize: 16,color: '#000'}},
+			legend: {orient: 'vertical',x: '220',y: '15',itemGap: 3,padding: 10,data:['Đầu kỳ','Giữa kỳ','Cuối kỳ'],textStyle: {fontSize:12,color:'#000',fontWeight:'bold'}},
+			grid: {x:30, x2:0, y:85, y2:30},
+			tooltip: {show: false,trigger: "axis"},
+			calculable: false,
+			xAxis: [{type: "category",splitLine: {show: false},data:['Số và tính toán','Hình học không gian','Đo lường','Kiểu mẫu'],axisLabel : {rotate:15,textStyle: {fontSize:8,color:'#000',fontWeight:'bold'}}}],
+			yAxis: [{type : 'value',axisLabel : {formatter: '{value}',textStyle: {fontSize:13,color:'#000',}},max: 100}],
+			toolbox: {show: false},
+			series: datas.kn1
+		});
+		var myChart = echarts.init(document.getElementById('echart_bar4'), theme);
+		myChart.setOption({
+			title: {x: '35',y: '15',text: 'Tư duy logic',textStyle: {fontSize: 16,color: '#000'}},
+			legend: {orient: 'vertical',x: '220',y: '15',itemGap: 3,padding: 10,data:['Đầu kỳ','Giữa kỳ','Cuối kỳ'],textStyle: {fontSize:12,color:'#000',fontWeight:'bold'}},
+			grid: {x:30, x2:0, y:80, y2:25},
+			tooltip: {show: false,trigger: "axis"},
+			xAxis: [{type: "category",data:["Hiểu biết","Ứng dụng","Phân tích"],axisLabel : {textStyle: {fontSize:10,color:'#000',fontWeight:'bold'}}}],
+			yAxis: [{type : 'value',axisLabel : {formatter: '{value}',textStyle: {fontSize:13,color:'#000',}},max: 100}],
+			toolbox: {show: false},
+			calculable: false,
+			series:datas.sk2
+		});
+		var myChart = echarts.init(document.getElementById('echart_bar5'), theme);
+		myChart.setOption({
+			title: {x: '25',y: '15',text: 'Tư duy sáng tạo',textStyle: {fontSize: 16,color: '#000'}},
+			legend: {orient: 'vertical',x: '220',y: '15',itemGap: 3,padding: 10,data:['Đầu kỳ','Giữa kỳ','Cuối kỳ'],textStyle: {fontSize:12,color:'#000',fontWeight:'bold'}},
+			grid: {x:30, x2:0, y:80, y2:25},
+			tooltip: {show: false,trigger: "axis"},
+			xAxis: [{type: "category",splitLine: {show: false},data:['Sự trôi chảy','Tính linh hoạt','Tính độc đáo','Tính chính xác'],axisLabel : {textStyle: {fontSize:9,color:'#000',fontWeight:'bold'}}}],
+			yAxis: [{type : 'value',axisLabel : {formatter: '{value}',textStyle: {fontSize:13,color:'#000',}},max: 100}],
+			toolbox: {show: false},
+			calculable: false,
+			series: datas.sk3
+		});
+	}
+
+	$("#comment,#btnModify").hide();
+	$("#btnToggle").on("click", function() {
+		$("#comment").toggle();
+		$("#btnModify").toggle();
+		var dis = $("#comment").css("display");
+
+		if(dis == "none") {
+			$(this).text("Hiện cửa sổ bình luận");
+		} else {
+			$(this).text("Ẩn cửa sổ bình luận");
+		}
+	});
+
+	$("#btnConfirm").on("click", function() {
+		if(true) {
+			if(!confirm("Tiếp tục không cần nhận xét của GV? \n\nBạn không thể chỉnh sửa sau bước này.")) { 
+				return;
+			}
+		} else {
+			if(!confirm("Bạn sẽ không thể chỉnh sửa và thêm nhận xét sau bước này. \n Tiếp tục?")) { 
+				return;
+			}
+		}
+
+		var datas = {
+			testCd      : $(this).attr("data-testCd")
+			, levelCd   : $(this).attr("data-levelCd")
+			, testSeq   : $(this).attr("data-testSeq")
+			, resultSeq : $(this).attr("data-resultSeq")
+		};
+		var option = {
+			url        : "/eval/testConfirmAction.do"
+			, data     : datas
+			, cache    : false
+			, callback : function(result) {
+				if (result.code == 1) {
+					alert("Đã xác nhận.");
+					opener.$("#btnSearch").click();
+					window.close();
+				} else if(result.code < 0) {
+					alert(result.message);
+				} else {
+					alert("Vui lòng thử lại."); 
+				}
+			}
+			, error    : function(result) {
+				alert("Vui lòng thử lại."); 
+			}
+		}
+		execute(option);
+	});
+
+	$("#btnModify").on("click", function() {
+		var datas = {
+			comment     : $("#comment").val()
+			, testCd    : $(this).attr("data-testCd")
+			, levelCd   : $(this).attr("data-levelCd")
+			, testSeq   : $(this).attr("data-testSeq")
+			, resultSeq : $(this).attr("data-resultSeq")
+		};
+		var option = {
+			url        : "/eval/commentRegAction.do"
+			, data     : datas
+			, cache    : false
+			, callback : function(result) {
+				if (result.code == 1) {
+					alert("Chỉnh sửa Đã thành công."); // 수정되었습니다.
+					window.close();
+				} else if(result.code == 0) {
+					alert(result.message);
+				} else {
+					alert("Chỉnh sửa đã thất bại."); // 수정에 실패하였습니다.
+				}
+			}
+			, error    : function(result) {
+				alert("Chỉnh sửa đã thất bại."); //수정에 실패하였습니다.
+			}
+		}
+		execute(option);
+	});
+
+	$("#btnClose").on("click", function() {
+		if(!confirm("Đóng cửa sổ?")) return; 
+
+		window.close();
+	});
+
+	
+	var beforePrint = function() {
+		console.log('이 Function은 프린트 이전에 호출됩니다.');
+	};
+	var afterPrint = function() {
+		//console.log('이 Function은 프린트 이후에 호출됩니다.');
+		var datas = {
+			testCd      : "TT001"
+			, levelCd   : "L4"
+			, testSeq   : "1"
+			, resultSeq : "2312"
+		}
+
+		var option = {
+			url        : "/common/doAfterPrintAction.do"
+			, data     : datas
+			, cache    : false
+			, callback : function(result) {
+				if (result.code == 1) {
+					alert("In Đã thành công.");
+					opener.$("#btnSearch").click();
+					window.close();
+				}
+			}
+		}
+		execute(option);
+	};
+
+	if (window.matchMedia) {
+		var mediaQueryList = window.matchMedia('print');
+		mediaQueryList.addListener(function(mql) {
+			if (mql.matches) {
+				//beforePrint();
+			} else {
+				//afterPrint();
+			}
+		});
+	}
+
+	//window.onbeforeprint = beforePrint;
+	//window.onafterprint = afterPrint;
+});
+</script>
+<script type="text/javascript">
+	//전체평가 그래프
+	var restoreStuNm = restoreHTML("Trịnh Vũ Tuệ Ch&acirc;u");
+	var myChart = echarts.init(document.getElementById('echart_bar'), theme);
+	myChart.setOption({
+		legend: {
+			orient: 'vertical', x: '15', y: '15', itemGap: 3, padding: 10,
+			data:[restoreStuNm,'Bình quân của tất cả HS'],
+			textStyle: { fontSize:13, color:'#000', fontWeight:'bold' }
+		},
+		grid: {x:40, x2:20, y:85, y2:45},
+		tooltip : {show: false,trigger: 'axis'},
+		toolbox: {show : false},
+		calculable : false,
+		xAxis : [
+			{
+				type : 'category',
+				data : ["Tư duy cơ bản","Tư duy toán học","Tư duy logic","Tư duy sáng tạo"],
+				axisLabel:{
+					rotate:15,
+					textStyle: {
+						fontSize:9,
+						color:'#000',
+						fontWeight:'bold'
+					}
+				}
+			}
+		],
+		yAxis : [{type : 'value',axisLabel : {formatter: '{value}',textStyle: {fontSize:13,color:'#000'}},max: 100}],
+		series : [
+			{
+				name:restoreStuNm + " Bình quân",
+				type:'bar',
+				data:[72,80,80,70],
+				barGap: '0',
+				barMaxWidth : '25'
+			},
+			{
+				name:'Bình quân của tất cả HS',
+				type:'bar',
+				data:[66,71,69,61],
+				barGap: '0',
+				barMaxWidth : '25'
+			}
+		]
+	});
+</script>
+<script type="text/javascript">
+	var myChart = echarts.init(document.getElementById('echart_bar2'), theme);
+	myChart.setOption({
+		title: {x: '45',y: '15',text: 'Tư duy cơ bản',textStyle: {fontSize: 16,color: '#000'}},
+		legend: {orient: 'vertical',x: '220',y: '15',itemGap: 3,padding: 10,data:['Đầu kỳ','Giữa kỳ','Cuối kỳ'],textStyle: {fontSize:12,color:'#000',fontWeight:'bold'}},
+		grid: {x:30, x2:0, y:85, y2:35},
+		tooltip: {show: false,trigger: "axis"},
+		calculable : false,
+		xAxis: [
+			{
+				type: "category",
+				splitLine: {show: false},
+				data:['Năng lực chú ý','Năng lực quan sát','Năng lực ghi nhớ'],
+				axisLabel : {textStyle: {fontSize:10,color:'#000',fontWeight:'bold'}}
+			}
+		],
+		yAxis: [{type : 'value',axisLabel : {formatter: '{value}',textStyle: {fontSize:13,color:'#000',}},max: 100}],
+		toolbox: {show: false},
+		series: [
+			{
+				name : 'Đầu kỳ',type : 'bar',data : [76,60,80],barMaxWidth : '25'
+			}
+		]
+	});
+</script>
+<script type="text/javascript">
+	var myChart = echarts.init(document.getElementById('echart_bar3'), theme);
+	myChart.setOption({
+		title: {x: '15',y: '15',text: 'Tư duy toán học',textStyle: {fontSize: 16,color: '#000'}},
+		legend: {orient: 'vertical',x: '220',y: '15',itemGap: 3,padding: 10,data:['Đầu kỳ','Giữa kỳ','Cuối kỳ'],textStyle: {fontSize:12,color:'#000',fontWeight:'bold'}},
+		grid: {x:30, x2:0, y:85, y2:30},
+		tooltip: {show: false,trigger: "axis"},
+		calculable: false,
+		xAxis: [
+			{
+				type: "category",
+				splitLine: {show: false},
+				data:['Số và tính toán','Hình học không gian','Đo lường','Kiểu mẫu','Dữ liệu'],
+				axisLabel : {rotate:8,textStyle: {fontSize:8,color:'#000',fontWeight:'bold'}}
+			}
+		],
+		yAxis: [{type : 'value',axisLabel : {formatter: '{value}',textStyle: {fontSize:13,color:'#000',}},max: 100}],
+		toolbox: {show: false},
+		series: [
+			{
+				name : 'Đầu kỳ',type : 'bar',data : [80,80,80,80,80],barMaxWidth : '25'
+			}
+			
+		]
+	});
+</script>
+<script type="text/javascript">
+	var myChart = echarts.init(document.getElementById('echart_bar4'), theme);
+	myChart.setOption({
+		title: {
+			x: '35',
+			y: '15',
+			text: 'Tư duy logic',
+			textStyle: {
+				fontSize: 16,
+				color: '#000'
+			}
+		},
+		legend: {orient: 'vertical',x: '220',y: '15',itemGap: 3,padding: 10,data:['Đầu kỳ','Giữa kỳ','Cuối kỳ'],textStyle: {fontSize:12,color:'#000',fontWeight:'bold'}},
+		grid: {x:30, x2:0, y:80, y2:25},
+		tooltip: {show: false,trigger: "axis"},
+		xAxis: [
+			{
+				type: "category",
+				data:["Hiểu biết","Ứng dụng","Phân tích","Tổng hợp"],
+				axisLabel : {
+					textStyle: {
+						fontSize:10,
+						color:'#000',
+						fontWeight:'bold'
+					}
+				}
+			}
+		],
+		yAxis: [
+			{
+				type : 'value',
+				axisLabel : {
+					formatter: '{value}',
+					textStyle: {
+						fontSize:13,
+						color:'#000',
+					}
+				},
+				max: 100
+			}
+		],
+		toolbox: {show: false},
+		calculable: false,
+		series: [
+			{
+				name : 'Đầu kỳ',type : 'bar',data : [80,80,80,80],barMaxWidth : '25'
+			}
+			
+		]
+	});
+</script>
+<script type="text/javascript">
+	var myChart = echarts.init(document.getElementById('echart_bar5'), theme);
+	myChart.setOption({
+		title: {x: '25',y: '15',text: 'Tư duy sáng tạo',textStyle: {fontSize: 16,color: '#000'}},
+		legend: {orient: 'vertical',x: '220',y: '15',itemGap: 3,padding: 10,data:['Đầu kỳ','Giữa kỳ','Cuối kỳ'],textStyle: {fontSize:12,color:'#000',fontWeight:'bold'}},
+		grid: {x:30, x2:0, y:80, y2:25},
+		tooltip: {show: false,trigger: "axis"},
+		xAxis: [
+			{
+				type: "category",
+				splitLine: {show: false},
+				data:['Sự trôi chảy','Tính linh hoạt','Tính độc đáo','Tính chính xác'],
+				axisLabel : {rotate:8,textStyle: {fontSize:8,color:'#000',fontWeight:'bold'}}
+			}
+		],
+		yAxis: [{type : 'value',axisLabel : {formatter: '{value}',textStyle: {fontSize:13,color:'#000',}},max: 100}],
+		toolbox: {show: false},
+		calculable: false,
+		series: [
+			{
+				name : 'Đầu kỳ',type : 'bar',data : [60,80,60,80],barMaxWidth : '25'
+			}
+		]
+	});
+</script>
+</body>
+</html></body>
+</html>

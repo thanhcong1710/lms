@@ -1,0 +1,1014 @@
+<!doctype html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang=""> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8" lang=""> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9" lang=""> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html lang="">
+<!--<![endif]-->
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LMS VN</title>
+<link href="/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+<link href="/favicon.png" rel="apple-touch-icon" />
+<link href="/css/bootstrap.min.css" rel="stylesheet">
+<link href="/fonts/css/font-awesome.min.css" rel="stylesheet">
+<link href="/css/icheck/_all.css" rel="stylesheet" />
+<link href="/css/custom.css" rel="stylesheet"><!-- last overlapping CSS -->
+<link href="/css/datepicker/bootstrap-datepicker.css" rel="stylesheet">
+<link href="/js/datatables/jquery.dataTables.min.css" rel="stylesheet">
+<link href="/css/datatables/dataTables.bootstrap.css" rel="stylesheet">
+<link href="/css/colorbox/colorbox.css" rel="stylesheet"> <!-- colorbox -->
+<link href="/css/progressbar/bootstrap-progressbar-3.3.0.css" rel="stylesheet"> <!-- bootstrap progress -->
+<link href="/css/toast/toastr.min.css" rel="stylesheet"> <!-- jquery Toast -->
+
+<script src="/js/jquery.min.js"></script><!--  jQuery v1.11.3  -->
+<script type="text/javascript" src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script><!--  jQuery-ui 1.12.1 -->
+<script src="/js/colorbox/jquery.colorbox.js"></script><!-- colorbox -->
+<script src="/js/jquery.form.min.js"></script>
+<script src="/js/bootstrap.min.js"></script><!-- bootstrap v3.3.6 -->
+<script src="/js/icheck/icheck.min.js"></script><!-- icheck -->
+<script src="/js/progressbar/bootstrap-progressbar.min.js"></script><!-- bootstrap progress js -->
+
+<!-- HTML5 ìì ë° ë¯¸ëì´ ì¿¼ë¦¬ì ëí IE8 ì§ìììí html5shiv.jsì Respond.js -->
+<!--[if lt IE 9]>
+<script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+<![endif]-->
+
+<!--  datatables -->
+<script src="/js/datatables/jquery.dataTables.js"></script>
+<script src="/js/datatables/dataTables.bootstrap.js"></script>
+<script src="/js/datatables/dataTables.select.min.js"></script>
+
+<!-- datepicker -->
+<script src="/js/datepicker/bootstrap-datepicker.js"></script>
+<script src="/js/datepicker/locales/bootstrap-datepicker.ko_KR.js"></script>
+<script src="/js/datepicker/locales/bootstrap-datepicker.zh_CN.js"></script>
+<script src="/js/datepicker/locales/bootstrap-datepicker.vi_VN.js"></script>
+
+<script src="/js/pdf/pdfobject.min.js"></script><!-- pdf -->
+<script src="/js/i18n/jquery.i18n.properties.js"></script><!-- i18n -->
+<script src="/js/toast/toastr.min.js"></script><!-- jquery toast -->
+<!-- <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script> -->
+
+<link href="/js/sweetalert/sweetalert.css" rel="stylesheet">
+<script src="/js/sweetalert/sweetalert.js"></script>
+
+<script src="/js/date.js"></script>
+<style>
+<!--
+table.dataTable thead th, table.dataTable tbody td, table.table_col tr th {
+vertical-align: middle;
+}
+-->
+</style>
+<script type="text/javascript">
+var userLang = "vi_VN";
+var lang2 = "";
+try {
+jQuery.i18n.properties({
+	name:'Messages',
+	path:'/js/i18n/properties/',
+	mode:'both',
+	language:userLang
+});
+lang2 = userLang.split('_')[1].toLowerCase();
+} catch (e) {
+
+}
+
+toastr.options = {
+	"closeButton": false,
+	"debug": false,
+	"newestOnTop": true,
+	"progressBar": true,
+	"positionClass": "toast-top-middle1",
+	"preventDuplicates": true,
+	"onclick": null,
+	"showDuration": "300",
+	"hideDuration": "1000",
+	"timeOut": "2000",
+	"extendedTimeOut": "1000",
+	"showEasing": "swing",
+	"hideEasing": "linear",
+	"showMethod": "fadeIn",
+	"hideMethod": "fadeOut"
+};
+(function($){
+	$.fn.tinyDraggable = function(options){
+		var settings = $.extend({ handle: null, exclude: null }, options);
+		return this.each(function(){
+			var dx, dy, el = $(this), handle = settings.handle? $(settings.handle, el): el;
+			handle.on({
+				mousedown: function(e){
+					if (settings.exclude && ~$.inArray(e.target, $(settings.exclude, el))) return;
+					var os = el.offset(); dx = e.pageX-os.left, dy = e.pageY-os.top;
+					$(document).on('mousemove.drag',
+						function(e){ el.offset({top: e.pageY-dy, left: e.pageX-dx});
+					});
+				},
+				mouseup: function(e){ $(document).off('mousemove.drag'); }
+			});
+		});
+	}
+}(jQuery));
+</script>
+<script src="/js/common.js"></script></head>
+<body class="nav-md">
+	<div class="container body">
+		<div class="main_container">
+			<div class="col-md-3 left_col">
+				<div class="left_col scroll-view">
+					<div class="navbar nav_title" style="border: 0;">
+						<a href="/" class="site_title"><span class="glyphicon glyphicon-home" aria-hidden="true"></span><!-- CTOC --></a>
+					</div>
+					<div class="clearfix"></div>
+					<!-- sidebar menu -->
+					<div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
+						<div class="menu_section">
+							<ul class="nav side-menu">
+								<li><a><i class="fa fa-user"></i>Quáº£n lÃ½ ngÆ°á»i dÃ¹ng<span class="fa fa-chevron-down"></span></a><ul class="nav child_menu" style="display: none">
+										<li><a href="/user/centerList.do">Trung tÃ¢m</a></li>
+									<li><a href="/user/teacherList.do">GiÃ¡o viÃªn</a></li>
+									</ul></li><li><a><i class="fa fa-test"></i>Quáº£n lÃ½ bÃ i kiá»m tra<span class="fa fa-chevron-down"></span></a><ul class="nav child_menu" style="display: none">
+										<li><a href="/test/paperList.do">BÃ i kiá»m tra</a></li>
+									<li><a href="/test/paperInfoList.do">ThÃ´ng tin bÃ i kiá»m tra</a></li>
+									</ul></li><li><a><i class="fa fa-cntr"></i>Quáº£n lÃ½ Trung tÃ¢m<span class="fa fa-chevron-down"></span></a><ul class="nav child_menu" style="display: none">
+										<li><a href="/cntr/classList.do">Quáº£n lÃ½ lá»p há»c</a></li>
+									<li><a href="/cntr/studentList.do">Quáº£n lÃ½ há»c sinh</a></li>
+									</ul></li><li><a><i class="fa fa-eval"></i>Quáº£n lÃ½ bÃ i kiá»m tra UCREA<span class="fa fa-chevron-down"></span></a><ul class="nav child_menu" style="display: none">
+										<li><a href="/eval/viewList.do">TÃ¬m kiáº¿m bÃ i kiá»m tra</a></li>
+									<li><a href="/eval/inputList.do">Nháº­p ÄÃ¡p Ã¡n bÃ i kiá»m tra</a></li>
+									<li><a href="/eval/resultList.do">Káº¿t quáº£ bÃ i kiá»m tra</a></li>
+									</ul></li><li><a><i class="fa fa-igel"></i>Quáº£n lÃ½ bÃ i kiá»m tra IG.BH<span class="fa fa-chevron-down"></span></a><ul class="nav child_menu" style="display: none">
+										<li><a href="/igel/viewList.do">TÃ¬m bÃ i kiá»m tra IG.BH</a></li>
+									<li><a href="/igel/diagList.do">BÃ i kiá»m tra Äáº§u vÃ o IG.BH</a></li>
+									<li><a href="/igel/smtvList.do">TÃ³m táº¯t káº¿t quáº£ ÄÃ¡nh giÃ¡ IG.BH</a></li>
+									</ul></li><li><a><i class="fa fa-cmnt"></i>Cá»ng Äá»ng<span class="fa fa-chevron-down"></span></a><ul class="nav child_menu" style="display: none">
+										<li><a href="/cmnt/noticeList.do">ChÃº Ã½</a></li>
+									<li><a href="/cmnt/faqList.do">CÃ¢u há»i thÆ°á»ng gáº·p</a></li>
+									<li><a href="/cmnt/bulletList.do">Báº£ng thÃ´ng bÃ¡o</a></li>
+									</ul></li><li><a><i class="fa fa-sysm"></i>Quáº£n lÃ½ há» thá»ng<span class="fa fa-chevron-down"></span></a><ul class="nav child_menu" style="display: none">
+										<li><a href="/sysm/igtestList.do">Quáº£n lÃ½ bÃ i kiá»m tra IG.BH</a></li>
+									</ul>
+						</div>
+					</div>
+					<!-- /sidebar menu -->
+
+					<!-- /menu footer buttons -->
+					<div class="sidebar-footer hidden-small">
+						<a href="/user/my.do" data-toggle="tooltip" data-placement="top" title="" data-original-title="My Page"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></a>
+						<a href="#" onclick="logout();" data-toggle="tooltip" data-placement="top" title="" data-original-title="ÄÄng xuáº¥t"><span class="glyphicon glyphicon-off" aria-hidden="true"></span></a>
+					</div>
+					<!-- /menu footer buttons -->
+				</div>
+			</div>
+			<!-- top navigation -->
+
+			<div class="top_nav">
+				<div class="nav_menu">
+					<nav class="" role="navigation">
+						<div class="nav toggle">
+							<a id="menu_toggle"><i class="fa fa-bars"></i></a>
+						</div>
+
+						<ul class="nav navbar-nav navbar-right">
+							<li class="">
+								<a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+									<span id="welcomeMsg"></span>
+									<span class=" fa fa-angle-down"></span>
+								</a>
+								<ul class="dropdown-menu dropdown-usermenu pull-right">
+									<li><a href="/user/my.do"> My Info</a></li>
+									<li><a href="#" onclick="logout();"><i class="fa fa-sign-out pull-right"></i> ÄÄng xuáº¥t</a></li>
+								</ul>
+							</li>
+							</ul>
+					</nav>
+				</div>
+			</div>
+			<!-- /top navigation -->
+
+			<!-- page content -->
+			<div class="right_col" role="main">
+				
+
+
+
+
+
+
+<style>
+<!--
+.iradio_flat-blue.disabled {
+	background-position: -88px 0;
+}
+.iradio_flat-blue.checked.disabled {
+	background-position: -110px 0;
+}
+-->
+</style>
+
+<link href="/css/jquery.stickyheader.css" rel="stylesheet"> <!-- stickyheader -->
+<script src="/js/jquery.stickyheader.js"></script> <!-- stickyheader -->
+<script src="/js/jquery.ba-throttle-debounce.min.js"></script> <!-- stickyheader -->
+
+<div class="location">
+	<span>Quáº£n lÃ½ bÃ i kiá»m tra UCREA</span>
+	<span class="glyphicon glyphicon-menu-right" aria-hidden="true"></span>
+	<h3>Nháº­p ÄÃ¡p Ã¡n bÃ i kiá»m tra</h3>
+</div>
+
+<div class="row">
+	<div class="x_panel">
+		<form id="form-register">
+		<input type="hidden" name="testCd" id="testCd" value="TT001">
+		<input type="hidden" name="levelCd" id="levelCd" value="L2">
+		<input type="hidden" name="testSeq" id="testSeq" value="1">
+		<input type="hidden" name="resultSeq" id="resultSeq" value="1753">
+		<div class="x_title">
+			<h4>Nháº­p ÄÃ¡p Ã¡n bÃ i kiá»m tra</h4> 
+			<table class="table table_row">
+				<caption>Ká»¹ nÄng tÆ° duy sÃ¡ng táº¡o cho tráº» table</caption>
+				<colgroup>
+					<col style="width:15%">
+					<col style="width:35%">
+					<col style="width:15%">
+					<col style="width:35%">
+				</colgroup>
+				<tbody>
+				<tr>
+					<th scope="row" class="column-title"><label for="exam_name">TÃªn bÃ i kiá»m tra</label></th>
+					<td>
+						Ucrea Lv2 PT
+					</td>
+					<th scope="row" class="column-title"><label for="exam_level">LEVEL</label></th>
+					<td>
+						3 y/o
+					</td>
+				</tr>
+				<tr>
+					<th scope="row" class="column-title"><label for="stu_name">Há»c sinh TÃªn</label></th>
+					<td>
+						Chu Äá»©c Ph&amp;aacute;t
+					</td>
+					<th scope="row" class="column-title"><label for="teach_name">GiÃ¡o viÃªn</label></th> 
+					<td>
+						Nguyá»n NhÆ° Long
+					</td>
+				</tr>
+			</tbody>
+			</table>
+
+			<table class="ui celled table bulk_action table_col home" style="width:100%;">
+				<caption>Ká»¹ nÄng tÆ° duy sÃ¡ng táº¡o cho tráº» table</caption>
+				<colgroup>
+					<col style="width:3%"><col style="width:6%"><col style="width:7%"><col style="width:5%"><col style="width:*" class="vToggle">
+					<col style="width:5%">
+					<col style="width:3%"><col style="width:5%"><col style="width:3%"><col style="width:5%">
+					<col style="width:3%"><col style="width:5%"><col style="width:3%"><col style="width:5%">
+					<col style="width:3%"><col style="width:5%">
+				</colgroup>
+				<thead>
+					
+					<tr>
+						<th scope="col" rowspan="2">Váº¥n Äá» sá»</th> 
+						<th scope="col" rowspan="2" colspan="2">LÄ©nh vá»±c kiá»m tra</th> 
+						<th scope="col" rowspan="2">LÄ©nh vá»±c chi tiáº¿t</th> 
+						<th scope="col" class="vToggle">Ná»i dung bÃ i kiá»m tra</th> 
+						<th scope="col" class="vToggle" rowspan="2">Thá»i gian ( giÃ¢y)</th> 
+						<th scope="col" colspan="8" rowspan="2">Äiá»m</th> 
+					</tr>
+					<tr>
+						<th scope="col" class="vToggle">Äiá»m chuáº©n</th> 
+					</tr>
+					
+					
+				</thead>
+				<tbody>
+					
+					
+					
+					<tr>
+						<td rowspan="2">1</td>
+						<td rowspan="2">Kháº£ nÄng suy nghÄ©</td>
+						<td rowspan="2">Ká»¹ nÄng tÆ° duy cÆ¡ báº£n</td>
+						<td rowspan="2">Ch&uacute; &yacute;</td>
+						<td class="text_left vToggle">.</td>
+						<td class="vToggle" rowspan="2">60
+							<input type="hidden" name="testSortNo[0]" value="1">
+							<input type="hidden" name="evalCd[0]" value="ES200^ES210^ES211">
+							<input type="hidden" name="score[0]" id="score_0" tabindex="1" value="" class="form-control input-score" data-ROWIDX="0" style="max-width: 90%;" maxlength="2">
+						</td>
+						<td rowspan="2" style="cursor: pointer;"><input type="radio" name="answer[0]" data-idx='0' class="flat" value="S" id="answerS0" ></td>
+						<td rowspan="2" style="cursor: pointer;">4</td>
+						<td rowspan="2" style="cursor: pointer;"><input type="radio" name="answer[0]" data-idx='0' class="flat" value="A" id="answerA0" ></td>
+						<td rowspan="2" style="cursor: pointer;">3</td>
+						<td rowspan="2" style="cursor: pointer;"><input type="radio" name="answer[0]" data-idx='0' class="flat" value="B" id="answerB0" ></td>
+						<td rowspan="2" style="cursor: pointer;">1-2</td>
+						<td rowspan="2" style="cursor: pointer;"><input type="radio" name="answer[0]" data-idx='0' class="flat" value="C" id="answerC0" ></td>
+						<td rowspan="2" style="cursor: pointer;">0</td>
+						
+					</tr>
+					<tr>
+						<td class="text_left vToggle">.</td>
+					</tr>
+					
+					
+					
+					<tr>
+						<td rowspan="2">2</td>
+						<td rowspan="2">Kháº£ nÄng suy nghÄ©</td>
+						<td rowspan="2">Ká»¹ nÄng tÆ° duy cÆ¡ báº£n</td>
+						<td rowspan="2">Quan s&aacute;t</td>
+						<td class="text_left vToggle">.</td>
+						<td class="vToggle" rowspan="2">
+							<input type="hidden" name="testSortNo[1]" value="2">
+							<input type="hidden" name="evalCd[1]" value="ES200^ES210^ES212">
+							<input type="hidden" name="score[1]" id="score_1" tabindex="2" value="" class="form-control input-score" data-ROWIDX="1" style="max-width: 90%;" maxlength="2">
+						</td>
+						<td rowspan="2" style="cursor: pointer;"><input type="radio" name="answer[1]" data-idx='1' class="flat" value="S" id="answerS1" ></td>
+						<td rowspan="2" style="cursor: pointer;">4-5</td>
+						<td rowspan="2" style="cursor: pointer;"><input type="radio" name="answer[1]" data-idx='1' class="flat" value="A" id="answerA1" ></td>
+						<td rowspan="2" style="cursor: pointer;">2-3</td>
+						<td rowspan="2" style="cursor: pointer;"><input type="radio" name="answer[1]" data-idx='1' class="flat" value="B" id="answerB1" ></td>
+						<td rowspan="2" style="cursor: pointer;">1</td>
+						<td rowspan="2" style="cursor: pointer;"><input type="radio" name="answer[1]" data-idx='1' class="flat" value="C" id="answerC1" ></td>
+						<td rowspan="2" style="cursor: pointer;">0</td>
+						
+					</tr>
+					<tr>
+						<td class="text_left vToggle">.</td>
+					</tr>
+					
+					
+					
+					<tr>
+						<td rowspan="2">3</td>
+						<td rowspan="2">Kháº£ nÄng suy nghÄ©</td>
+						<td rowspan="2">Ká»¹ nÄng tÆ° duy cÆ¡ báº£n</td>
+						<td rowspan="2">Ghi nhá»</td>
+						<td class="text_left vToggle">.</td>
+						<td class="vToggle" rowspan="2">
+							<input type="hidden" name="testSortNo[2]" value="3">
+							<input type="hidden" name="evalCd[2]" value="ES200^ES210^ES213">
+							<input type="hidden" name="score[2]" id="score_2" tabindex="3" value="" class="form-control input-score" data-ROWIDX="2" style="max-width: 90%;" maxlength="2">
+						</td>
+						<td rowspan="2" style="cursor: pointer;"><input type="radio" name="answer[2]" data-idx='2' class="flat" value="S" id="answerS2" ></td>
+						<td rowspan="2" style="cursor: pointer;">4</td>
+						<td rowspan="2" style="cursor: pointer;"><input type="radio" name="answer[2]" data-idx='2' class="flat" value="A" id="answerA2" ></td>
+						<td rowspan="2" style="cursor: pointer;">3</td>
+						<td rowspan="2" style="cursor: pointer;"><input type="radio" name="answer[2]" data-idx='2' class="flat" value="B" id="answerB2" ></td>
+						<td rowspan="2" style="cursor: pointer;">1-2</td>
+						<td rowspan="2" style="cursor: pointer;"><input type="radio" name="answer[2]" data-idx='2' class="flat" value="C" id="answerC2" ></td>
+						<td rowspan="2" style="cursor: pointer;">0</td>
+						
+					</tr>
+					<tr>
+						<td class="text_left vToggle">.</td>
+					</tr>
+					
+					
+					
+					<tr>
+						<td rowspan="2">4</td>
+						<td rowspan="2">Kháº£ nÄng suy nghÄ©</td>
+						<td rowspan="2">Ká»¹ nÄng tÆ° duy logic</td>
+						<td rowspan="2">Hiá»u</td>
+						<td class="text_left vToggle">.</td>
+						<td class="vToggle" rowspan="2">
+							<input type="hidden" name="testSortNo[3]" value="4">
+							<input type="hidden" name="evalCd[3]" value="ES200^ES220^ES221">
+							<input type="hidden" name="score[3]" id="score_3" tabindex="4" value="" class="form-control input-score" data-ROWIDX="3" style="max-width: 90%;" maxlength="2">
+						</td>
+						<td rowspan="2" style="cursor: pointer;"><input type="radio" name="answer[3]" data-idx='3' class="flat" value="S" id="answerS3" ></td>
+						<td rowspan="2" style="cursor: pointer;">3</td>
+						<td rowspan="2" style="cursor: pointer;"><input type="radio" name="answer[3]" data-idx='3' class="flat" value="A" id="answerA3" ></td>
+						<td rowspan="2" style="cursor: pointer;">2</td>
+						<td rowspan="2" style="cursor: pointer;"><input type="radio" name="answer[3]" data-idx='3' class="flat" value="B" id="answerB3" ></td>
+						<td rowspan="2" style="cursor: pointer;">1</td>
+						<td rowspan="2" style="cursor: pointer;"><input type="radio" name="answer[3]" data-idx='3' class="flat" value="C" id="answerC3" ></td>
+						<td rowspan="2" style="cursor: pointer;">0</td>
+						
+					</tr>
+					<tr>
+						<td class="text_left vToggle">.</td>
+					</tr>
+					
+					
+					
+					<tr>
+						<td rowspan="2">5</td>
+						<td rowspan="2">Kháº£ nÄng suy nghÄ©</td>
+						<td rowspan="2">Ká»¹ nÄng tÆ° duy logic</td>
+						<td rowspan="2">&Aacute;p dá»¥ng</td>
+						<td class="text_left vToggle">.</td>
+						<td class="vToggle" rowspan="2">
+							<input type="hidden" name="testSortNo[4]" value="5">
+							<input type="hidden" name="evalCd[4]" value="ES200^ES220^ES222">
+							<input type="hidden" name="score[4]" id="score_4" tabindex="5" value="" class="form-control input-score" data-ROWIDX="4" style="max-width: 90%;" maxlength="2">
+						</td>
+						<td rowspan="2" style="cursor: pointer;"><input type="radio" name="answer[4]" data-idx='4' class="flat" value="S" id="answerS4" ></td>
+						<td rowspan="2" style="cursor: pointer;">4</td>
+						<td rowspan="2" style="cursor: pointer;"><input type="radio" name="answer[4]" data-idx='4' class="flat" value="A" id="answerA4" ></td>
+						<td rowspan="2" style="cursor: pointer;">3</td>
+						<td rowspan="2" style="cursor: pointer;"><input type="radio" name="answer[4]" data-idx='4' class="flat" value="B" id="answerB4" ></td>
+						<td rowspan="2" style="cursor: pointer;">1-2</td>
+						<td rowspan="2" style="cursor: pointer;"><input type="radio" name="answer[4]" data-idx='4' class="flat" value="C" id="answerC4" ></td>
+						<td rowspan="2" style="cursor: pointer;">0</td>
+						
+					</tr>
+					<tr>
+						<td class="text_left vToggle">.</td>
+					</tr>
+					
+					
+					
+					<tr>
+						<td rowspan="2">6</td>
+						<td rowspan="2">Kháº£ nÄng suy nghÄ©</td>
+						<td rowspan="2">Ká»¹ nÄng tÆ° duy logic</td>
+						<td rowspan="2">Ph&acirc;n t&iacute;ch</td>
+						<td class="text_left vToggle">.</td>
+						<td class="vToggle" rowspan="2">
+							<input type="hidden" name="testSortNo[5]" value="6">
+							<input type="hidden" name="evalCd[5]" value="ES200^ES220^ES223">
+							<input type="hidden" name="score[5]" id="score_5" tabindex="6" value="" class="form-control input-score" data-ROWIDX="5" style="max-width: 90%;" maxlength="2">
+						</td>
+						<td rowspan="2" style="cursor: pointer;"><input type="radio" name="answer[5]" data-idx='5' class="flat" value="S" id="answerS5" ></td>
+						<td rowspan="2" style="cursor: pointer;">4</td>
+						<td rowspan="2" style="cursor: pointer;"><input type="radio" name="answer[5]" data-idx='5' class="flat" value="A" id="answerA5" ></td>
+						<td rowspan="2" style="cursor: pointer;">3</td>
+						<td rowspan="2" style="cursor: pointer;"><input type="radio" name="answer[5]" data-idx='5' class="flat" value="B" id="answerB5" ></td>
+						<td rowspan="2" style="cursor: pointer;">1-2</td>
+						<td rowspan="2" style="cursor: pointer;"><input type="radio" name="answer[5]" data-idx='5' class="flat" value="C" id="answerC5" ></td>
+						<td rowspan="2" style="cursor: pointer;">0</td>
+						
+					</tr>
+					<tr>
+						<td class="text_left vToggle">.</td>
+					</tr>
+					
+					
+					
+					<tr>
+						<td rowspan="2">7</td>
+						<td rowspan="2">Kiáº¿n thá»©c t&iacute;ch lÅ©y</td>
+						<td rowspan="2">Ká»¹ nÄng tÆ° duy to&aacute;n há»c</td>
+						<td rowspan="2">Con sá» v&agrave; hoáº¡t Äá»ng</td>
+						<td class="text_left vToggle">.</td>
+						<td class="vToggle" rowspan="2">
+							<input type="hidden" name="testSortNo[6]" value="7">
+							<input type="hidden" name="evalCd[6]" value="ES100^ES110^ES111">
+							<input type="hidden" name="score[6]" id="score_6" tabindex="7" value="" class="form-control input-score" data-ROWIDX="6" style="max-width: 90%;" maxlength="2">
+						</td>
+						<td rowspan="2" style="cursor: pointer;"><input type="radio" name="answer[6]" data-idx='6' class="flat" value="S" id="answerS6" ></td>
+						<td rowspan="2" style="cursor: pointer;">4</td>
+						<td rowspan="2" style="cursor: pointer;"><input type="radio" name="answer[6]" data-idx='6' class="flat" value="A" id="answerA6" ></td>
+						<td rowspan="2" style="cursor: pointer;">3</td>
+						<td rowspan="2" style="cursor: pointer;"><input type="radio" name="answer[6]" data-idx='6' class="flat" value="B" id="answerB6" ></td>
+						<td rowspan="2" style="cursor: pointer;">1-2</td>
+						<td rowspan="2" style="cursor: pointer;"><input type="radio" name="answer[6]" data-idx='6' class="flat" value="C" id="answerC6" ></td>
+						<td rowspan="2" style="cursor: pointer;">0</td>
+						
+					</tr>
+					<tr>
+						<td class="text_left vToggle">.</td>
+					</tr>
+					
+					
+					
+					<tr>
+						<td rowspan="2">8</td>
+						<td rowspan="2">Kiáº¿n thá»©c t&iacute;ch lÅ©y</td>
+						<td rowspan="2">Ká»¹ nÄng tÆ° duy to&aacute;n há»c</td>
+						<td rowspan="2">H&igrave;nh há»c</td>
+						<td class="text_left vToggle">.</td>
+						<td class="vToggle" rowspan="2">
+							<input type="hidden" name="testSortNo[7]" value="8">
+							<input type="hidden" name="evalCd[7]" value="ES100^ES110^ES112">
+							<input type="hidden" name="score[7]" id="score_7" tabindex="8" value="" class="form-control input-score" data-ROWIDX="7" style="max-width: 90%;" maxlength="2">
+						</td>
+						<td rowspan="2" style="cursor: pointer;"><input type="radio" name="answer[7]" data-idx='7' class="flat" value="S" id="answerS7" ></td>
+						<td rowspan="2" style="cursor: pointer;">3</td>
+						<td rowspan="2" style="cursor: pointer;"><input type="radio" name="answer[7]" data-idx='7' class="flat" value="A" id="answerA7" ></td>
+						<td rowspan="2" style="cursor: pointer;">2</td>
+						<td rowspan="2" style="cursor: pointer;"><input type="radio" name="answer[7]" data-idx='7' class="flat" value="B" id="answerB7" ></td>
+						<td rowspan="2" style="cursor: pointer;">1</td>
+						<td rowspan="2" style="cursor: pointer;"><input type="radio" name="answer[7]" data-idx='7' class="flat" value="C" id="answerC7" ></td>
+						<td rowspan="2" style="cursor: pointer;">0</td>
+						
+					</tr>
+					<tr>
+						<td class="text_left vToggle">.</td>
+					</tr>
+					
+					
+					
+					<tr>
+						<td rowspan="2">9</td>
+						<td rowspan="2">Kiáº¿n thá»©c t&iacute;ch lÅ©y</td>
+						<td rowspan="2">Ká»¹ nÄng tÆ° duy to&aacute;n há»c</td>
+						<td rowspan="2">Äo lÆ°á»ng</td>
+						<td class="text_left vToggle">.</td>
+						<td class="vToggle" rowspan="2">
+							<input type="hidden" name="testSortNo[8]" value="9">
+							<input type="hidden" name="evalCd[8]" value="ES100^ES110^ES113">
+							<input type="hidden" name="score[8]" id="score_8" tabindex="9" value="" class="form-control input-score" data-ROWIDX="8" style="max-width: 90%;" maxlength="2">
+						</td>
+						<td rowspan="2" style="cursor: pointer;"><input type="radio" name="answer[8]" data-idx='8' class="flat" value="S" id="answerS8" ></td>
+						<td rowspan="2" style="cursor: pointer;">4</td>
+						<td rowspan="2" style="cursor: pointer;"><input type="radio" name="answer[8]" data-idx='8' class="flat" value="A" id="answerA8" ></td>
+						<td rowspan="2" style="cursor: pointer;">3</td>
+						<td rowspan="2" style="cursor: pointer;"><input type="radio" name="answer[8]" data-idx='8' class="flat" value="B" id="answerB8" ></td>
+						<td rowspan="2" style="cursor: pointer;">1-2</td>
+						<td rowspan="2" style="cursor: pointer;"><input type="radio" name="answer[8]" data-idx='8' class="flat" value="C" id="answerC8" ></td>
+						<td rowspan="2" style="cursor: pointer;">0</td>
+						
+					</tr>
+					<tr>
+						<td class="text_left vToggle">.</td>
+					</tr>
+					
+					
+					
+					<tr>
+						<td rowspan="2">10</td>
+						<td rowspan="2">Kiáº¿n thá»©c t&iacute;ch lÅ©y</td>
+						<td rowspan="2">Ká»¹ nÄng tÆ° duy to&aacute;n há»c</td>
+						<td rowspan="2">Kiá»u Máº«u</td>
+						<td class="text_left vToggle">.</td>
+						<td class="vToggle" rowspan="2">
+							<input type="hidden" name="testSortNo[9]" value="10">
+							<input type="hidden" name="evalCd[9]" value="ES100^ES110^ES114">
+							<input type="hidden" name="score[9]" id="score_9" tabindex="10" value="" class="form-control input-score" data-ROWIDX="9" style="max-width: 90%;" maxlength="2">
+						</td>
+						<td rowspan="2" style="cursor: pointer;"><input type="radio" name="answer[9]" data-idx='9' class="flat" value="S" id="answerS9" ></td>
+						<td rowspan="2" style="cursor: pointer;">3</td>
+						<td rowspan="2" style="cursor: pointer;"><input type="radio" name="answer[9]" data-idx='9' class="flat" value="A" id="answerA9" ></td>
+						<td rowspan="2" style="cursor: pointer;">2</td>
+						<td rowspan="2" style="cursor: pointer;"><input type="radio" name="answer[9]" data-idx='9' class="flat" value="B" id="answerB9" ></td>
+						<td rowspan="2" style="cursor: pointer;">1</td>
+						<td rowspan="2" style="cursor: pointer;"><input type="radio" name="answer[9]" data-idx='9' class="flat" value="C" id="answerC9" ></td>
+						<td rowspan="2" style="cursor: pointer;">0</td>
+						
+					</tr>
+					<tr>
+						<td class="text_left vToggle">.</td>
+					</tr>
+					
+					
+					
+					<tr>
+						<td rowspan="2">11</td>
+						<td rowspan="2">Kháº£ nÄng suy nghÄ©</td>
+						<td rowspan="2">Ká»¹ nÄng tÆ° duy s&aacute;ng táº¡o</td>
+						<td rowspan="2">LÆ°u lo&aacute;t</td>
+						<td class="text_left vToggle">.</td>
+						<td class="vToggle" rowspan="2">
+							<input type="hidden" name="testSortNo[10]" value="11">
+							<input type="hidden" name="evalCd[10]" value="ES200^ES230^ES231">
+							<input type="hidden" name="score[10]" id="score_10" tabindex="11" value="" class="form-control input-score" data-ROWIDX="10" style="max-width: 90%;" maxlength="2">
+						</td>
+						<td rowspan="2" style="cursor: pointer;"><input type="radio" name="answer[10]" data-idx='10' class="flat" value="S" id="answerS10" ></td>
+						<td rowspan="2" style="cursor: pointer;">4</td>
+						<td rowspan="2" style="cursor: pointer;"><input type="radio" name="answer[10]" data-idx='10' class="flat" value="A" id="answerA10" ></td>
+						<td rowspan="2" style="cursor: pointer;">3</td>
+						<td rowspan="2" style="cursor: pointer;"><input type="radio" name="answer[10]" data-idx='10' class="flat" value="B" id="answerB10" ></td>
+						<td rowspan="2" style="cursor: pointer;">1-2</td>
+						<td rowspan="2" style="cursor: pointer;"><input type="radio" name="answer[10]" data-idx='10' class="flat" value="C" id="answerC10" ></td>
+						<td rowspan="2" style="cursor: pointer;">0</td>
+						
+					</tr>
+					<tr>
+						<td class="text_left vToggle">.</td>
+					</tr>
+					
+					
+					
+					<tr>
+						<td rowspan="2">11</td>
+						<td rowspan="2">Kháº£ nÄng suy nghÄ©</td>
+						<td rowspan="2">Ká»¹ nÄng tÆ° duy s&aacute;ng táº¡o</td>
+						<td rowspan="2">T&iacute;nh linh hoáº¡t</td>
+						<td class="text_left vToggle">.</td>
+						<td class="vToggle" rowspan="2">
+							<input type="hidden" name="testSortNo[11]" value="12">
+							<input type="hidden" name="evalCd[11]" value="ES200^ES230^ES232">
+							<input type="hidden" name="score[11]" id="score_11" tabindex="12" value="" class="form-control input-score" data-ROWIDX="11" style="max-width: 90%;" maxlength="2">
+						</td>
+						<td rowspan="2" style="cursor: pointer;"><input type="radio" name="answer[11]" data-idx='11' class="flat" value="S" id="answerS11" ></td>
+						<td rowspan="2" style="cursor: pointer;">1/2</td>
+						<td rowspan="2" style="cursor: pointer;"><input type="radio" name="answer[11]" data-idx='11' class="flat" value="A" id="answerA11" ></td>
+						<td rowspan="2" style="cursor: pointer;">1/3,2/3</td>
+						<td rowspan="2" style="cursor: pointer;"><input type="radio" name="answer[11]" data-idx='11' class="flat" value="B" id="answerB11" ></td>
+						<td rowspan="2" style="cursor: pointer;">1/4</td>
+						<td rowspan="2" style="cursor: pointer;"><input type="radio" name="answer[11]" data-idx='11' class="flat" value="C" id="answerC11" ></td>
+						<td rowspan="2" style="cursor: pointer;">1/8, 5/6 </td>
+						
+					</tr>
+					<tr>
+						<td class="text_left vToggle">.</td>
+					</tr>
+					
+					
+					
+					<tr>
+						<td rowspan="2">11</td>
+						<td rowspan="2">Kháº£ nÄng suy nghÄ©</td>
+						<td rowspan="2">Ká»¹ nÄng tÆ° duy s&aacute;ng táº¡o</td>
+						<td rowspan="2">T&iacute;nh linh hoáº¡t2</td>
+						<td class="text_left vToggle">.</td>
+						<td class="vToggle" rowspan="2">
+							<input type="hidden" name="testSortNo[12]" value="13">
+							<input type="hidden" name="evalCd[12]" value="ES200^ES230^ES233">
+							<input type="hidden" name="score[12]" id="score_12" tabindex="13" value="" class="form-control input-score" data-ROWIDX="12" style="max-width: 90%;" maxlength="2">
+						</td>
+						<td rowspan="2" style="cursor: pointer;"><input type="radio" name="answer[12]" data-idx='12' class="flat" value="S" id="answerS12" ></td>
+						<td rowspan="2" style="cursor: pointer;">Vitri 4</td>
+						<td rowspan="2" style="cursor: pointer;"><input type="radio" name="answer[12]" data-idx='12' class="flat" value="A" id="answerA12" ></td>
+						<td rowspan="2" style="cursor: pointer;">Vitri 3</td>
+						<td rowspan="2" style="cursor: pointer;"><input type="radio" name="answer[12]" data-idx='12' class="flat" value="B" id="answerB12" ></td>
+						<td rowspan="2" style="cursor: pointer;">Vitri 2</td>
+						<td rowspan="2" style="cursor: pointer;"><input type="radio" name="answer[12]" data-idx='12' class="flat" value="C" id="answerC12" ></td>
+						<td rowspan="2" style="cursor: pointer;">Vitri 1</td>
+						
+					</tr>
+					<tr>
+						<td class="text_left vToggle">.</td>
+					</tr>
+					
+					
+					
+					<tr>
+						<td rowspan="2">11</td>
+						<td rowspan="2">Kháº£ nÄng suy nghÄ©</td>
+						<td rowspan="2">Ká»¹ nÄng tÆ° duy s&aacute;ng táº¡o</td>
+						<td rowspan="2">Äá»c Ä&aacute;o</td>
+						<td class="text_left vToggle">.</td>
+						<td class="vToggle" rowspan="2">
+							<input type="hidden" name="testSortNo[13]" value="14">
+							<input type="hidden" name="evalCd[13]" value="ES200^ES230^ES234">
+							<input type="hidden" name="score[13]" id="score_13" tabindex="14" value="" class="form-control input-score" data-ROWIDX="13" style="max-width: 90%;" maxlength="2">
+						</td>
+						<td rowspan="2" style="cursor: pointer;"><input type="radio" name="answer[13]" data-idx='13' class="flat" value="S" id="answerS13" ></td>
+						<td rowspan="2" style="cursor: pointer;">3</td>
+						<td rowspan="2" style="cursor: pointer;"><input type="radio" name="answer[13]" data-idx='13' class="flat" value="A" id="answerA13" ></td>
+						<td rowspan="2" style="cursor: pointer;">2</td>
+						<td rowspan="2" style="cursor: pointer;"><input type="radio" name="answer[13]" data-idx='13' class="flat" value="B" id="answerB13" ></td>
+						<td rowspan="2" style="cursor: pointer;">1</td>
+						<td rowspan="2" style="cursor: pointer;"><input type="radio" name="answer[13]" data-idx='13' class="flat" value="C" id="answerC13" ></td>
+						<td rowspan="2" style="cursor: pointer;">0</td>
+						
+					</tr>
+					<tr>
+						<td class="text_left vToggle">.</td>
+					</tr>
+					
+					
+					
+					<tr>
+						<td rowspan="2">11</td>
+						<td rowspan="2">Kháº£ nÄng suy nghÄ©</td>
+						<td rowspan="2">Ká»¹ nÄng tÆ° duy s&aacute;ng táº¡o</td>
+						<td rowspan="2">X&acirc;y dá»±ng</td>
+						<td class="text_left vToggle">.</td>
+						<td class="vToggle" rowspan="2">
+							<input type="hidden" name="testSortNo[14]" value="15">
+							<input type="hidden" name="evalCd[14]" value="ES200^ES230^ES235">
+							<input type="hidden" name="score[14]" id="score_14" tabindex="15" value="" class="form-control input-score" data-ROWIDX="14" style="max-width: 90%;" maxlength="2">
+						</td>
+						<td rowspan="2" style="cursor: pointer;"><input type="radio" name="answer[14]" data-idx='14' class="flat" value="S" id="answerS14" ></td>
+						<td rowspan="2" style="cursor: pointer;">3</td>
+						<td rowspan="2" style="cursor: pointer;"><input type="radio" name="answer[14]" data-idx='14' class="flat" value="A" id="answerA14" ></td>
+						<td rowspan="2" style="cursor: pointer;">2</td>
+						<td rowspan="2" style="cursor: pointer;"><input type="radio" name="answer[14]" data-idx='14' class="flat" value="B" id="answerB14" ></td>
+						<td rowspan="2" style="cursor: pointer;">1</td>
+						<td rowspan="2" style="cursor: pointer;"><input type="radio" name="answer[14]" data-idx='14' class="flat" value="C" id="answerC14" ></td>
+						<td rowspan="2" style="cursor: pointer;">0</td>
+						
+					</tr>
+					<tr>
+						<td class="text_left vToggle">.</td>
+					</tr>
+					
+					
+				</tbody>
+			</table>
+		</div>
+		</form>
+
+		<div class="x_contents">
+			<div class="btn-center-box">
+				
+				<a href="#list" id="btnList" class="btn btn-primary" style="width:100px">Danh sÃ¡ch</a> 
+			</div>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+var datas;
+var range = (function() {
+	var option = {
+		url : "/common/getScoreRangeData.do"
+		, data : {levelCd : $("#levelCd").val(), testCd : $("#testCd").val()}
+		, type : 'get'
+		, async : false
+		, callback : function(result) {
+			if(!isEmpty(result)) {
+				datas = result;
+			}
+		}
+	};
+	execute(option);
+})();
+
+$(document).ready(function() {
+	$('body').attr({'oncontextmenu':'return false','onselectstart':'return false','ondragstart':'return false'});
+	$(document).on('keydown keyup',function(e){
+		e = ( e || window.event );
+		if ( (e.keyCode > 111 && e.keyCode < 124) /* F1~F12 */ || e.keyCode == 17 || e.keyCode == 18 ) {
+			return  false;
+			e.preventDefault();
+			e.returnValue = false;
+		}
+	});
+
+	$(":text").css("text-align","right");
+
+	$("table.home").stickyhead();
+
+	$(window).resize(function() {
+		//console.log($(window).width() , $(window).width() * 7/10);
+		if($(window).width() < 1360) {
+			$(".vToggle").hide();
+		} else {
+			$(".vToggle").show();
+		}
+	});
+
+	$("table.home tbody td").on("click",function (index) {
+		if($(this).index() < 6) return;
+		var rowIdx = $(this).index() / 2;
+		var _idx = '', _val = '';
+		if($(this).find('input:radio').length > 0) {
+			$(this).find('input:radio').iCheck('toggle');
+			_idx = $(this).find('input:radio').attr('data-idx');
+			_val = $(this).find('input:radio').val();
+		} else if($(this).prev().find('input:radio').length > 0) {
+			$(this).prev().find('input:radio').iCheck('toggle');
+			_idx = $(this).prev().find('input:radio').attr('data-idx');
+			_val = $(this).prev().find('input:radio').val();
+		}
+		setScoreValue(_idx, _val);
+	});
+
+	$("table.home input[type='radio']").on('ifClicked', function(e) {
+		setScoreValue(this.data-idx, this.value);
+	});
+
+	var setScoreValue = function(idx, value) {
+		//console.log('idx : ' + idx + ', value : ' + value);
+
+		var rankRange     = (datas.rankRange).split(",");
+		var scoreMaxRange = (datas.maxScoreRange).split(",");
+
+		var rankIdx = 0;
+		for(var x = 0 ; x < rankRange.length ; x++) {
+			if(rankRange[x] == value) {
+				rankIdx = x;
+				break;
+			}
+		}
+		//console.log(`rankRange[rankIdx] : ${rankRange[rankIdx]}\nscoreMaxRange[rankIdx] : ${scoreMaxRange[rankIdx]}`);
+
+		$("#score_"+idx).val(scoreMaxRange[rankIdx]);
+	}
+
+	var clickFlag = false;
+	$("#btnSave").on("click", function(e) {
+		e.preventDefault();
+
+		if(clickFlag) return;
+
+		var emptyFlag = false;
+		$.each($("table input[type='text']"), function(i,o) {
+			if($(this).val() == "") {
+				emptyFlag = true;
+				$(this).focus();
+				return false;
+			}
+		});
+
+		if(emptyFlag) {
+			//alert("Vui lÃ²ng kiá»m tra {0}.\n\n(Äiá»m)");
+			toastr['info']("Vui lÃ²ng kiá»m tra {0}.<br>(Äiá»m)");
+			return;
+		}
+
+		var _radioLength = $("table tbody").find("input[type='radio']:checked").map(function() {
+			return $(this).val();
+		}).toArray().length;
+
+		if(15 != _radioLength) {
+			//alert("Vui lÃ²ng kiá»m tra {0}.\n\n(Äiá»m)");
+			toastr['info']("Vui lÃ²ng kiá»m tra {0}.\n\n(Äiá»m)");
+			return;
+		}
+
+		swal({
+			title: "Are You Sure?",
+			text: "Báº¡n sáº½ LÆ°u?",
+			type: "warning", //input, info, warning, error, success
+			showCancelButton: true,
+			confirmButtonClass: "btn-info",
+			confirmButtonText: "LÆ°u",
+			cancelButtonText: "Bá» qua",
+			closeOnConfirm: false,
+			closeOnCancel: false,
+			showLoaderOnConfirm: true
+		}, function(isConfirm) {
+			if(isConfirm) {
+				clickFlag = true;
+				$(document).find('input:radio').iCheck('enable');
+				var option = {
+					url        : "inputRegAction.do"
+					, data     : $("#form-register").serialize()
+					, callback : function(result) {
+						if(result.code == 1) {
+							swal({title:"LÆ°u ÄÃ£ thÃ nh cÃ´ng.", type:"success", confirmButtonText: "Confirm", confirmButtonClass: "btn-success"}, function() {
+								location.href="inputList.do";
+							});
+						} else if(result.code > 0) {
+							swal({title:result.message, type:"error",confirmButtonText: "XÃ¡c nháº­n",confirmButtonClass: "btn-warning"});
+							isChecked = false;
+						} else {
+							swal({title:"LÆ°u ÄÃ£ tháº¥t báº¡i.", type:"error",confirmButtonText: "Confirm",confirmButtonClass: "btn-warning"});
+							isChecked = false;
+						}
+					}
+					, error    : function(result) {
+						swal({title:"LÆ°u ÄÃ£ tháº¥t báº¡i.", type:"error",confirmButtonText: "Confirm",confirmButtonClass: "btn-warning"});
+						isChecked = false;
+						clickFlag = false;
+						$(document).find('input:radio').iCheck('disable');
+					}
+				}
+				execute(option);
+			} else {
+				swal({title:"Bá» qua ÄÃ£ thÃ nh cÃ´ng.", type:"error",confirmButtonText: "XÃ¡c nháº­n",confirmButtonClass: "btn-warning"});
+			}
+		});
+	});
+
+	$("#btnList").on("click", function() {
+		location.href="inputList.do";
+	});
+});
+</script><!-- footer content -->
+				<footer class='cms_foot'>
+					<div class="pull-left" style="bottom: 10px;clear: both;display: block;padding: 5px 0 0 0;position: fixed;">LMS VN</div>
+					<div class="pull-right" style="bottom: 10px;clear: both;display: block;padding: 5px 0 0 0;position: fixed;right:10px">Copyright &copy; CMS Edu Co., Ltd. All rights reserved.</div>
+					<div class="clearfix"></div>
+				</footer>
+				<!-- /footer content -->
+			</div>
+		</div>
+	</div>
+
+	<div id="custom_notifications" class="cinputViewustom-notifications dsp_none">
+		<ul class="list-unstyled notifications clearfix" data-tabbed_notifications="notif-group"></ul>
+		<div class="clearfix"></div>
+		<div id="notif-group" class="tabbed_notifications"></div>
+	</div>
+
+	<!-- tags
+	<script src="/js/tags/jquery.tagsinput.min.js"></script>
+	-->
+	<!-- switchery
+	<script src="/js/switchery/switchery.min.js"></script>
+	-->
+	<!-- daterangepicker
+	<script src="/js/moment/moment.min.js" type="text/javascript"></script>
+	<script src="/js/datepicker/daterangepicker.js" type="text/javascript"></script>
+	-->
+	<!-- richtext editor
+	<script src="/js/editor/bootstrap-wysiwyg.js"></script>
+	<script src="/js/editor/external/jquery.hotkeys.js"></script>
+	<script src="/js/editor/external/google-code-prettify/prettify.js"></script>
+	-->
+	<!-- select2
+	<script src="/js/select/select2.full.js"></script>
+	-->
+	<!-- form validation
+	<script src="/js/parsley/parsley.min.js" type="text/javascript"></script>
+	-->
+	<!-- textarea resize
+	<script src="/js/textarea/autosize.min.js"></script>
+	<script>
+		autosize($('.resizable_textarea'));
+	</script>
+	-->
+	<!-- Autocomplete
+	<script src="/js/autocomplete/countries.js" type="text/javascript"></script>
+	<script src="/js/autocomplete/jquery.autocomplete.js"></script>
+	<script src="/js/jquery.tablemerge.js"></script>
+	-->
+
+	<script src="/js/custom.js"></script>
+
+	<!-- select2 -->
+	<script>
+		//$("#flagImg").attr('src',`https://lipis.github.io/flag-icon-css/flags/4x3/${lang2}.svg`);
+		$("#flagImg").attr('src',$.i18n.prop('flagUrl',lang2));
+		$("#welcomeMsg").html($.i18n.prop('message.welcome','CMS VN','CMS-VN'));
+
+		$(document).ready(function() {
+			$(".alphabet").on("keyup keypress", function() {
+				validateElement("alphabet",this);
+			});
+			$(".phone").on("keyup keypress", function() {
+				validateElement("phone",this);
+			});
+			$(".email").on("keyup keypress", function() {
+				validateElement("email",this);
+			});
+			$(".number").on("keyup keypress", function() {
+				validateElement("number",this);
+			});
+
+			$("#dataTb_paginate").parent("div").prev(".col-xs-5").remove().end().attr('class', 'col-xs-12');
+
+			// ë°ì´í° íì´ë¸ 1,2 ê³µíµ
+			$(".dataTables_paginate").css({
+				"float": "none"
+				,"text-align": "center"
+			});
+
+			$('.input-daterange').datepicker({
+				language: userLang, //en, ko, zh-CN
+				clearBtn: true,
+				todayHighlight: true,
+				autoclose: true,
+				orientation: "bottom auto",
+				format:'yyyy-mm-dd'
+			});
+			$('.xcxc').click(function() {
+				$('#descr').val($('#editor').html());
+			});
+		});
+
+		$(function() {
+			function initToolbarBootstrapBindings() {
+				var fonts = [ 'Serif', 'Sans', 'Arial',
+						'Arial Black', 'Courier', 'Courier New',
+						'Comic Sans MS', 'Helvetica', 'Impact',
+						'Lucida Grande', 'Lucida Sans', 'Tahoma',
+						'Times', 'Times New Roman', 'Verdana' ], fontTarget = $(
+						'[title=Font]').siblings('.dropdown-menu');
+				$.each(fonts, function(idx, fontName) {
+					fontTarget.append($('<li><a data-edit="fontName ' + fontName + '" style="font-family:\'' + fontName + '\'">' + fontName + '</a></li>'));
+				});
+				$('a[title]').tooltip({
+					container : 'body'
+				});
+				$('.dropdown-menu input').click(function() {
+					return false;
+				}).change( function() {
+					$(this).parent('.dropdown-menu').siblings('.dropdown-toggle').dropdown('toggle');
+				}).keydown('esc', function() {
+					this.value = '';
+					$(this).change();
+				});
+
+				$('[data-role=magic-overlay]').each(function() {
+					var overlay = $(this), target = $(overlay.data('target'));
+					overlay.css('opacity', 0).css('position','absolute').offset(target.offset()).width(target.outerWidth()).height(target.outerHeight());
+				});
+				if ("onwebkitspeechchange" in document.createElement("input")) {
+					var editorOffset = $('#editor').offset();
+					$('#voiceBtn').css('position', 'absolute').offset({
+										top : editorOffset.top,
+										left : editorOffset.left + $('#editor').innerWidth() - 35
+									});
+				} else {
+					$('#voiceBtn').hide();
+				}
+			};
+		});
+
+		var logout = function() {
+
+			if(!confirm("Báº¡n sáº½ ÄÄng xuáº¥t?")) return;
+
+			location.href= "/login/logout.do";
+
+		}
+	</script>
+	<!-- /editor -->
+
+</body>
+</html>

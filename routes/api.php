@@ -9,6 +9,7 @@ use App\Http\Controllers\ClassController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\ContractController;
 use App\Http\Controllers\LmsTestController;
+use App\Http\Controllers\Api\UcreaEvaluationController;
 
 Route::post('/login', [AuthController::class, 'login']);
 
@@ -18,3 +19,7 @@ Route::apiResource('classes', ClassController::class);
 Route::apiResource('students', StudentController::class);
 Route::apiResource('contracts', ContractController::class);
 Route::get('/tests', [LmsTestController::class, 'index']);
+
+Route::get('/ucrea/results', [UcreaEvaluationController::class, 'getResults']);
+Route::get('/ucrea/results/{id}', [UcreaEvaluationController::class, 'getResultDetail']);
+Route::post('/ucrea/results/{id}/grade', [UcreaEvaluationController::class, 'saveGrade']);
