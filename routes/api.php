@@ -33,3 +33,10 @@ Route::post('/igbh/results', [IgbhEvaluationController::class, 'createResult']);
 Route::get('/igbh/results/{id}', [IgbhEvaluationController::class, 'getResultDetail']);
 Route::post('/igbh/results/{id}/grade', [IgbhEvaluationController::class, 'saveGrade']);
 
+Route::get('/igbh/weekly/results', [\App\Http\Controllers\Api\IgbhWeeklyEvaluationController::class, 'getResults']);
+Route::get('/igbh/weekly/init-data', [\App\Http\Controllers\Api\IgbhWeeklyEvaluationController::class, 'getInitData']);
+Route::post('/igbh/weekly/results', [\App\Http\Controllers\Api\IgbhWeeklyEvaluationController::class, 'createResult']);
+Route::get('/igbh/weekly/results/{id}', [\App\Http\Controllers\Api\IgbhWeeklyEvaluationController::class, 'getResultDetail']);
+Route::post('/igbh/weekly/results/{id}/grade', [\App\Http\Controllers\Api\IgbhWeeklyEvaluationController::class, 'saveGrade']);
+
+

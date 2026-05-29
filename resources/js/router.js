@@ -13,6 +13,8 @@ import UcreaEvalForm from './views/UcreaEvalForm.vue';
 import IgbhEvalList from './views/IgbhEvalList.vue';
 import IgbhEvalResult from './views/IgbhEvalResult.vue';
 import IgbhEvalForm from './views/IgbhEvalForm.vue';
+import IgbhWeeklyEvalList from './views/IgbhWeeklyEvalList.vue';
+import IgbhWeeklyEvalForm from './views/IgbhWeeklyEvalForm.vue';
 
 const routes = [
     { path: '/login', name: 'login', component: Login },
@@ -29,6 +31,8 @@ const routes = [
     { path: '/igbh/evaluations', name: 'igbh-evaluations', component: IgbhEvalList, meta: { requiresAuth: true } },
     { path: '/igbh/evaluations/:id', name: 'igbh-eval-result', component: IgbhEvalResult, meta: { requiresAuth: true } },
     { path: '/igbh/evaluations/grade/:id', name: 'igbh-eval-form', component: IgbhEvalForm, meta: { requiresAuth: true } },
+    { path: '/igbh/weekly', name: 'igbh-weekly-evaluations', component: IgbhWeeklyEvalList, meta: { requiresAuth: true } },
+    { path: '/igbh/weekly/grade/:id?', name: 'igbh-weekly-eval-form', component: IgbhWeeklyEvalForm, meta: { requiresAuth: true } },
 ];
 
 

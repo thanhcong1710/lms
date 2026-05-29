@@ -81,6 +81,9 @@
           <router-link to="/igbh/evaluations" @click="isMobileMenuOpen = false" class="flex items-center gap-3 px-4 py-3 rounded-xl transition hover:bg-brand-input hover:text-brand-text text-brand-desc" active-class="bg-indigo-600/10 text-indigo-500 border-l-4 border-indigo-600 font-medium">
             <span>📊 IG.BH Eval</span>
           </router-link>
+          <router-link to="/igbh/weekly" @click="isMobileMenuOpen = false" class="flex items-center gap-3 px-4 py-3 rounded-xl transition hover:bg-brand-input hover:text-brand-text text-brand-desc" active-class="bg-indigo-600/10 text-indigo-500 border-l-4 border-indigo-600 font-medium">
+            <span>📅 IG.BH Weekly</span>
+          </router-link>
         </nav>
       </div>
 
@@ -120,10 +123,10 @@
             <span v-else>🌙 {{ $t('header.dark_mode') }}</span>
           </button>
           
-          <div class="flex items-center gap-2">
+          <!-- <div class="flex items-center gap-2">
             <span class="h-2 w-2 rounded-full bg-green-500 animate-pulse"></span>
             <span class="text-xs text-green-500 font-medium uppercase tracking-wider">{{ $t('header.system_live') }}</span>
-          </div>
+          </div> -->
         </div>
       </header>
 

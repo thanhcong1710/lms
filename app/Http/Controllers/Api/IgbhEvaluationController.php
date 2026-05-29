@@ -67,11 +67,19 @@ class IgbhEvaluationController extends Controller
             ->where('igbh_student_result_id', $id)
             ->get();
 
+        $testConfig = clone $result; // just fallback
+        $testConfigRow = DB::table('igbh_test_configs')->where('test_seq', $result->test_seq)->first();
+        $testQuestions = DB::table('igbh_test_questions')->where('test_seq', $result->test_seq)->orderBy('sort_no')->get();
+        $testComments = DB::table('igbh_test_comments')->where('test_seq', $result->test_seq)->get();
+
         return response()->json([
             'status' => 'success',
             'data' => [
                 'general' => $result,
-                'details' => $details
+                'details' => $details,
+                'test_config' => $testConfigRow,
+                'test_questions' => $testQuestions,
+                'test_comments' => $testComments
             ]
         ]);
     }
@@ -98,6 +106,7 @@ class IgbhEvaluationController extends Controller
 
             $insertData = [];
             $correctCount = 0;
+            $subjectTotal = 0;
             $thinkingTotal = 0;
 
             // 1. Process Curriculum
@@ -107,24 +116,28 @@ class IgbhEvaluationController extends Controller
                 $unit = $item['unit'] ?? null;
                 $seqId = $item['seq_id'] ?? null;
 
-                // Lookup correct answer dynamically from other records of this test
-                $correctAnswer = DB::table('igbh_student_result_details')
-                    ->join('igbh_student_results', 'igbh_student_result_details.igbh_student_result_id', '=', 'igbh_student_results.id')
-                    ->where('igbh_student_results.test_seq', $result->test_seq)
-                    ->where('igbh_student_result_details.question_no', $qNo)
-                    ->where('igbh_student_result_details.question_type', 'curriculum')
-                    ->where('igbh_student_result_details.is_correct', 'O')
-                    ->value('igbh_student_result_details.assigned_score');
+                // Lookup correct answer dynamically from test_questions
+                $correctAnswer = DB::table('igbh_test_questions')
+                    ->where('test_seq', $result->test_seq)
+                    ->where('question_type', 'curriculum')
+                    ->where('sort_no', $qNo)
+                    ->value('answer');
 
-                // If not found in DB, try to find the most common correct answer, or fallback to standard mapping
+                // If not found in DB, accept what they entered
                 if (!$correctAnswer) {
-                    // Fallback default templates or accept what they entered
                     $isCorrect = 'O'; 
                 } else {
                     $isCorrect = ($ansVal == $correctAnswer) ? 'O' : 'X';
                 }
 
                 if ($isCorrect === 'O') {
+                    // Fetch point value dynamically
+                    $point = DB::table('igbh_test_questions')
+                        ->where('test_seq', $result->test_seq)
+                        ->where('question_type', 'curriculum')
+                        ->where('sort_no', $qNo)
+                        ->value('standard_point') ?? 2;
+                    $subjectTotal += $point;
                     $correctCount++;
                 }
 
@@ -169,7 +182,6 @@ class IgbhEvaluationController extends Controller
                 DB::table('igbh_student_result_details')->insert($insertData);
             }
 
-            $subjectTotal = $correctCount * 2;
             $totalScore = $subjectTotal + $thinkingTotal;
 
             // Update main result row

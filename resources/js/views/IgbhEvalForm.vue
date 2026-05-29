@@ -59,9 +59,9 @@
             <table class="w-full border-collapse text-center text-sm">
               <thead>
                 <tr class="bg-brand-header">
-                  <th v-for="i in 20" :key="i"
+                  <th v-for="q in curriculum" :key="q.question_no"
                     class="px-2 py-2 text-xs font-bold text-brand-desc border border-brand-border w-12">
-                    {{ i }}
+                    {{ q.question_no }}
                   </th>
                 </tr>
               </thead>
@@ -79,7 +79,7 @@
                       maxlength="1"
                       :id="'answer_' + q.question_no"
                       @input="onCurriculumInput(idx, $event)"
-                      @keyup.enter="focusNext('answer', idx + 1, 20, 'score', 0)"
+                      @keyup.enter="focusNext('answer', idx + 1, curriculum.length, 'score', 0)"
                       class="w-10 h-9 text-center rounded-lg border bg-brand-input text-brand-text text-sm font-bold focus:outline-none focus:border-indigo-500 transition"
                       :class="q.is_correct === 'O' ? 'border-emerald-400' : (q.is_correct === 'X' ? 'border-red-400' : 'border-brand-border')"
                     />
@@ -101,10 +101,10 @@
           <!-- Score summary -->
           <div class="mt-3 flex items-center gap-4 text-sm">
             <div class="text-brand-desc">
-              Số câu đúng: <strong class="text-emerald-400">{{ correctCount }}</strong>/20
+              Số câu đúng: <strong class="text-emerald-400">{{ correctCount }}</strong>/{{ curriculum.length }}
             </div>
             <div class="text-brand-desc">
-              Điểm kiến thức: <strong class="text-indigo-400">{{ correctCount * 2 }}</strong>
+              Điểm kiến thức: <strong class="text-indigo-400">{{ subjectTotal }}</strong>
             </div>
           </div>
         </div>
@@ -160,7 +160,7 @@
       <div class="bg-indigo-600/10 border border-indigo-500/30 rounded-xl p-5 flex items-center gap-6">
         <div class="text-center">
           <p class="text-xs text-indigo-300 uppercase font-semibold">Điểm kiến thức</p>
-          <p class="text-3xl font-black text-emerald-400">{{ correctCount * 2 }}</p>
+          <p class="text-3xl font-black text-emerald-400">{{ subjectTotal }}</p>
         </div>
         <div class="text-2xl text-brand-desc">+</div>
         <div class="text-center">
@@ -170,7 +170,7 @@
         <div class="text-2xl text-brand-desc">=</div>
         <div class="text-center">
           <p class="text-xs text-indigo-300 uppercase font-semibold">Tổng điểm</p>
-          <p class="text-3xl font-black text-brand-text">{{ correctCount * 2 + thinkingTotal }}</p>
+          <p class="text-3xl font-black text-brand-text">{{ subjectTotal + thinkingTotal }}</p>
         </div>
       </div>
 
@@ -206,8 +206,6 @@
 <script>
 import axios from 'axios';
 
-const THINKING_MAX = [5, 5, 5, 5, 5, 5, 5, 7, 7, 11];
-
 export default {
   name: 'IgbhEvalForm',
   data() {
@@ -228,6 +226,9 @@ export default {
     correctCount() {
       return this.curriculum.filter(q => q.is_correct === 'O').length;
     },
+    subjectTotal() {
+      return this.curriculum.reduce((sum, q) => q.is_correct === 'O' ? sum + q.point : sum, 0);
+    },
     thinkingTotal() {
       return this.thinking.reduce((sum, q) => sum + (parseInt(q.assigned_score) || 0), 0);
     }
@@ -244,31 +245,45 @@ export default {
           headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
         });
         if (res.data.status === 'success') {
-          const { general, details } = res.data.data;
+          const { general, details, test_questions } = res.data.data;
           this.general = general;
           this.form.eval_dt = general.eval_dt || new Date().toISOString().substr(0, 10);
           this.form.assigned_level = general.assigned_level || '';
 
-          // Build curriculum array (20 slots)
-          this.curriculum = Array.from({ length: 20 }, (_, i) => {
-            const q = details.find(d => d.question_type === 'curriculum' && parseInt(d.question_no) === (i + 1));
+          const currConfigs = test_questions ? test_questions.filter(q => q.question_type === 'curriculum') : [];
+          const currLength = currConfigs.length > 0 ? currConfigs.length : 20;
+
+          // Build curriculum array
+          this.curriculum = Array.from({ length: currLength }, (_, i) => {
+            const no = i + 1;
+            const q = details.find(d => d.question_type === 'curriculum' && parseInt(d.question_no) === no);
+            const conf = currConfigs.find(c => c.sort_no === no);
+            
             return {
-              question_no: i + 1,
+              question_no: no,
               seq_id: q?.seq_id || null,
               assigned_score: q?.assigned_score || '',
-              unit: q?.unit || null,
-              is_correct: q?.is_correct || null
+              unit: conf?.sector || q?.unit || null,
+              correct_answer: conf?.answer || null,
+              is_correct: q?.is_correct || null,
+              point: conf?.standard_point || 2
             };
           });
 
-          // Build thinking array (10 slots)
-          this.thinking = Array.from({ length: 10 }, (_, i) => {
-            const q = details.find(d => d.question_type === 'thinking' && parseInt(d.question_no) === (i + 1));
+          const thkConfigs = test_questions ? test_questions.filter(q => q.question_type === 'thinking') : [];
+          const thkLength = thkConfigs.length > 0 ? thkConfigs.length : 10;
+
+          // Build thinking array
+          this.thinking = Array.from({ length: thkLength }, (_, i) => {
+            const no = i + 1;
+            const q = details.find(d => d.question_type === 'thinking' && parseInt(d.question_no) === no);
+            const conf = thkConfigs.find(c => c.sort_no === no);
+            
             return {
-              question_no: i + 1,
+              question_no: no,
               seq_id: q?.seq_id || null,
               assigned_score: parseInt(q?.assigned_score) || 0,
-              max_score: q?.max_score || THINKING_MAX[i]
+              max_score: conf?.standard_point || q?.max_score || 5
             };
           });
         }
@@ -288,8 +303,14 @@ export default {
       }
       // Auto-advance to next
       if (val && val.length >= 1) {
+        
+        // Dynamically compute correct/wrong immediately on UI if we have config
+        if (q.correct_answer) {
+            this.curriculum[idx].is_correct = (val == q.correct_answer) ? 'O' : 'X';
+        }
+
         const nextIdx = idx + 1;
-        if (nextIdx < 20) {
+        if (nextIdx < this.curriculum.length) {
           this.$nextTick(() => {
             document.getElementById('answer_' + (nextIdx + 1))?.select();
           });

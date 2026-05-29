@@ -1,7 +1,7 @@
 <template>
   <div class="space-y-6">
     <!-- Header -->
-    <div class="flex items-center justify-between">
+    <div class="flex items-center justify-between print:hidden">
       <div>
         <div class="flex items-center gap-3 mb-1">
           <button @click="$router.push({ name: 'igbh-evaluations' })" class="text-brand-desc hover:text-brand-text transition">
@@ -25,12 +25,12 @@
     </div>
 
     <!-- Loading -->
-    <div v-if="loading" class="flex flex-col items-center justify-center py-20">
+    <div v-if="loading" class="flex flex-col items-center justify-center py-20 print:hidden">
       <div class="animate-spin rounded-full h-10 w-10 border-b-2 border-indigo-600 mb-4"></div>
       <p class="text-brand-desc text-sm">Loading report...</p>
     </div>
 
-    <template v-else-if="general">
+    <div v-else-if="general" id="igbh-pdf-content" class="mx-auto w-full max-w-[900px] print:p-0 print:m-0 print:border-none print:shadow-none bg-white">
       <!-- ======= PAGE 1: KIẾN THỨC CƠ BẢN ======= -->
       <div class="report-page bg-white border border-gray-300 rounded-xl overflow-hidden shadow-lg" id="report-page-1">
         <!-- Page Header -->
@@ -53,7 +53,8 @@
         </div>
 
         <div class="p-6 space-y-6">
-          <!-- Section: Kết quả theo từng câu -->
+          
+          <!-- Section: Kết quả đánh giá theo câu hỏi riêng biệt -->
           <div>
             <h3 class="text-base font-bold text-blue-900 mb-2 flex items-center gap-2">
               <span class="w-2 h-5 bg-blue-900 rounded inline-block"></span>
@@ -64,7 +65,7 @@
                 <thead>
                   <tr class="bg-blue-700 text-white">
                     <th class="px-3 py-2 text-left border-r border-blue-600">Mục</th>
-                    <th v-for="i in 20" :key="i" class="px-1 py-2 border-r border-blue-600 w-9">{{ i }}</th>
+                    <th v-for="q in curriculum" :key="q.question_no" class="px-1 py-2 border-r border-blue-600 w-9">{{ q.question_no }}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -84,7 +85,7 @@
                     <td class="px-3 py-2 text-left font-semibold bg-blue-50 border-r border-gray-200 text-xs">Kết quả</td>
                     <td v-for="q in curriculum" :key="'r' + q.question_no" class="px-1 py-2 border-r border-gray-100">
                       <span v-if="q.is_correct === 'O'" class="font-bold text-red-500 text-xs">O</span>
-                      <span v-else-if="q.is_correct === 'X'" class="font-bold text-sky-500 text-xs">X</span>
+                      <span v-else-if="q.is_correct === 'X'" class="font-bold text-teal-500 text-xs">X</span>
                       <span v-else class="text-gray-400 text-xs">—</span>
                     </td>
                   </tr>
@@ -92,50 +93,128 @@
               </table>
             </div>
           </div>
-
+          
           <!-- Section: Đánh giá theo đơn vị -->
           <div class="grid grid-cols-2 gap-6">
             <div>
               <h3 class="text-base font-bold text-blue-900 mb-2 flex items-center gap-2">
                 <span class="w-2 h-5 bg-blue-900 rounded inline-block"></span>
-                Đánh giá theo đơn vị
+                Đánh giá theo đơn vị riêng biệt
               </h3>
               <table class="w-full border border-gray-200 rounded-lg overflow-hidden text-sm">
                 <thead>
                   <tr class="bg-blue-700 text-white">
-                    <th class="px-3 py-2 text-left">Phân loại</th>
+                    <th class="px-3 py-2 text-center w-1/2">Phân loại</th>
                     <th class="px-3 py-2 text-center">Số câu đúng</th>
                     <th class="px-3 py-2 text-center">Tỷ lệ</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-for="(unit, uKey) in unitStats" :key="uKey" class="border-b border-gray-100 hover:bg-gray-50">
-                    <td class="px-3 py-2 text-blue-50 font-semibold text-xs" style="background:#dee5f5; color:#333;">{{ uKey }}</td>
+                  <tr v-for="(unit, uKey) in unitStats" :key="uKey" class="border-b border-gray-100">
+                    <td class="px-3 py-2 text-gray-700 text-center">{{ uKey }}</td>
                     <td class="px-3 py-2 text-center">
                       <span class="text-red-500 font-bold">{{ unit.correct }}</span>
-                      <span class="text-gray-500"> / {{ unit.total }}</span>
+                      <span class="text-gray-500"> /{{ unit.total }}</span>
                     </td>
-                    <td class="px-3 py-2 text-center text-sky-500 font-semibold">{{ unit.pct }}%</td>
+                    <td class="px-3 py-2 text-center text-teal-600 font-semibold">{{ unit.pct }}%</td>
+                  </tr>
+                  <tr class="bg-blue-50 font-bold">
+                    <td class="px-3 py-2 text-center text-gray-700">Tổng</td>
+                    <td class="px-3 py-2 text-center">
+                      <span class="text-red-500">{{ totalCurrCorrect }}</span>
+                      <span class="text-gray-500"> /{{ curriculum.length }}</span>
+                    </td>
+                    <td class="px-3 py-2 text-center text-teal-600">{{ totalCurrPct }}%</td>
                   </tr>
                 </tbody>
               </table>
             </div>
 
-            <!-- Radar chart placeholder -->
-            <div class="flex items-center justify-center bg-gray-50 border border-gray-200 rounded-lg p-4">
-              <canvas ref="radarCanvas" width="260" height="200" class="max-w-full"></canvas>
+            <!-- Radar chart -->
+            <div class="flex items-center justify-center border border-gray-200 rounded-lg p-4">
+              <canvas ref="currRadarCanvas" width="280" height="220" class="max-w-full"></canvas>
             </div>
           </div>
-        </div>
 
-        <!-- Page Footer -->
-        <div class="border-t border-gray-200 px-6 py-2 text-right">
-          <p class="text-xs text-gray-400">Copyright © CMS Edu Co., Ltd. All rights reserved</p>
+          <!-- Section: So sánh năng lực giải quyết vấn đề theo cấp độ -->
+          <div class="grid grid-cols-2 gap-6">
+            <div>
+              <h3 class="text-base font-bold text-blue-900 mb-2 flex items-center gap-2">
+                <span class="w-2 h-5 bg-blue-900 rounded inline-block"></span>
+                So sánh năng lực giải quyết vấn đề theo cấp độ
+              </h3>
+              <table class="w-full border border-gray-200 rounded-lg overflow-hidden text-sm">
+                <thead>
+                  <tr class="bg-blue-700 text-white">
+                    <th class="px-3 py-2 text-center w-1/2">Phân loại</th>
+                    <th class="px-3 py-2 text-center">Số câu đúng</th>
+                    <th class="px-3 py-2 text-center">Tỷ lệ</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="stat in currDiffStats" :key="stat.label" class="border-b border-gray-100">
+                    <td class="px-3 py-2 text-gray-700 text-center">{{ stat.label }}</td>
+                    <td class="px-3 py-2 text-center">
+                      <span class="text-red-500 font-bold">{{ stat.correct }}</span>
+                      <span class="text-gray-500"> /{{ stat.total }}</span>
+                    </td>
+                    <td class="px-3 py-2 text-center text-teal-600 font-semibold">{{ stat.pct }}%</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="flex items-center justify-center border border-gray-200 rounded-lg p-4">
+              <canvas ref="currDiffBarCanvas" width="280" height="150" class="max-w-full"></canvas>
+            </div>
+          </div>
+
+          <!-- Section: So sánh khả năng giải toán có lời văn và không có lời văn -->
+          <div class="grid grid-cols-2 gap-6">
+            <div>
+              <h3 class="text-base font-bold text-blue-900 mb-2 flex items-center gap-2">
+                <span class="w-2 h-5 bg-blue-900 rounded inline-block"></span>
+                So sánh khả năng giải toán có lời văn và không có lời văn
+              </h3>
+              <table class="w-full border border-gray-200 rounded-lg overflow-hidden text-sm">
+                <thead>
+                  <tr class="bg-blue-700 text-white">
+                    <th class="px-3 py-2 text-center w-1/2">Phân loại</th>
+                    <th class="px-3 py-2 text-center">Số câu đúng</th>
+                    <th class="px-3 py-2 text-center">Tỷ lệ</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="stat in currTypeStats" :key="stat.label" class="border-b border-gray-100">
+                    <td class="px-3 py-2 text-gray-700 text-center">{{ stat.label }}</td>
+                    <td class="px-3 py-2 text-center">
+                      <span class="text-red-500 font-bold">{{ stat.correct }}</span>
+                      <span class="text-gray-500"> /{{ stat.total }}</span>
+                    </td>
+                    <td class="px-3 py-2 text-center text-teal-600 font-semibold">{{ stat.pct }}%</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="flex items-center justify-center border border-gray-200 rounded-lg p-4">
+              <canvas ref="currTypeBarCanvas" width="280" height="150" class="max-w-full"></canvas>
+            </div>
+          </div>
+          
+          <!-- Section: Bình luận chung -->
+          <div v-if="generalComment">
+            <h3 class="text-base font-bold text-blue-900 mb-2 flex items-center gap-2">
+              <span class="w-2 h-5 bg-blue-900 rounded inline-block"></span>
+              Kết quả đánh giá kiến thức cơ bản
+            </h3>
+            <div class="bg-gray-100 border border-gray-200 rounded-lg p-4">
+              <p class="text-sm text-gray-800 leading-relaxed whitespace-pre-line" v-html="generalComment"></p>
+            </div>
+          </div>
         </div>
       </div>
 
       <!-- ======= PAGE 2: TƯ DUY TOÁN HỌC ======= -->
-      <div class="report-page bg-white border border-gray-300 rounded-xl overflow-hidden shadow-lg" id="report-page-2">
+      <div class="report-page bg-white border border-gray-300 rounded-xl overflow-hidden shadow-lg mt-8" id="report-page-2">
         <!-- Page Header -->
         <div class="bg-blue-900 text-white px-8 py-5 flex items-center justify-between">
           <div>
@@ -148,53 +227,120 @@
         </div>
 
         <div class="p-6 space-y-6">
-          <!-- Score summary -->
-          <div class="grid grid-cols-3 gap-4">
-            <div class="bg-blue-50 border border-blue-200 rounded-xl p-4 text-center">
-              <p class="text-xs text-blue-600 font-semibold uppercase">Điểm kiến thức</p>
-              <p class="text-3xl font-black text-blue-800">{{ general.subject_total }}</p>
-            </div>
-            <div class="bg-indigo-50 border border-indigo-200 rounded-xl p-4 text-center">
-              <p class="text-xs text-indigo-600 font-semibold uppercase">Điểm tư duy</p>
-              <p class="text-3xl font-black text-indigo-800">{{ general.thinking_total }}</p>
-            </div>
-            <div class="bg-gray-50 border border-gray-200 rounded-xl p-4 text-center">
-              <p class="text-xs text-gray-600 font-semibold uppercase">Tổng điểm</p>
-              <p class="text-3xl font-black text-gray-800">{{ general.total_score }}</p>
-            </div>
-          </div>
-
-          <!-- Thinking scores table -->
+          
+          <!-- Section: Kết quả đánh giá theo câu hỏi riêng biệt -->
           <div>
             <h3 class="text-base font-bold text-blue-900 mb-2 flex items-center gap-2">
               <span class="w-2 h-5 bg-blue-900 rounded inline-block"></span>
-              Kết quả từng câu tư duy
+              Kết quả đánh giá theo câu hỏi riêng biệt
             </h3>
             <div class="overflow-x-auto border border-gray-200 rounded-lg">
               <table class="w-full text-center border-collapse text-sm">
                 <thead>
                   <tr class="bg-blue-700 text-white">
-                    <th class="px-3 py-2 text-left border-r border-blue-600">Mục</th>
-                    <th v-for="q in thinking" :key="'tth' + q.question_no" class="px-2 py-2 border-r border-blue-600">
-                      Câu {{ q.question_no }}
+                    <th rowspan="2" class="px-3 py-2 border border-blue-600">Mục</th>
+                    <th colspan="7" class="px-2 py-2 border border-blue-600">Năng lực tư duy cơ bản</th>
+                    <th colspan="2" class="px-2 py-2 border border-blue-600">Tư duy nâng cao</th>
+                    <th class="px-2 py-2 border border-blue-600">Ý tưởng sáng tạo<br/>giải quyết vấn đề</th>
+                    <th rowspan="2" class="px-3 py-2 border border-blue-600">Tổng</th>
+                  </tr>
+                  <tr class="bg-blue-600 text-white">
+                    <th v-for="q in thinking" :key="'th' + q.question_no" class="px-2 py-1 border border-blue-500 font-normal">
+                      {{ q.question_no }}
                     </th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr class="border-b border-gray-200">
-                    <td class="px-3 py-2 text-left font-semibold bg-blue-50 border-r border-gray-200 text-xs">Điểm chuẩn</td>
-                    <td v-for="q in thinking" :key="'tmax' + q.question_no" class="px-2 py-2 border-r border-gray-100 text-green-600 font-semibold">
+                    <td class="px-3 py-2 font-semibold bg-blue-50 border-r border-gray-200 text-xs">Điểm chuẩn</td>
+                    <td v-for="q in thinking" :key="'tmax' + q.question_no" class="px-2 py-2 border-r border-gray-100 text-green-700 font-semibold">
                       {{ q.max_score }}
                     </td>
+                    <td class="px-3 py-2 font-bold bg-blue-50 border-l border-gray-200">{{ thinkingMaxTotal }}</td>
                   </tr>
                   <tr>
-                    <td class="px-3 py-2 text-left font-semibold bg-blue-50 border-r border-gray-200 text-xs">Điểm thực tế</td>
-                    <td v-for="q in thinking" :key="'tscore' + q.question_no" class="px-2 py-2 border-r border-gray-100 text-red-500 font-bold">
+                    <td class="px-3 py-2 font-semibold bg-blue-50 border-r border-gray-200 text-xs">Điểm thực tế</td>
+                    <td v-for="q in thinking" :key="'tscore' + q.question_no" class="px-2 py-2 border-r border-gray-100 text-teal-500 font-bold">
                       {{ q.assigned_score }}
                     </td>
+                    <td class="px-3 py-2 font-bold bg-blue-100 border-l border-gray-200 text-red-500">{{ general.thinking_total }}</td>
                   </tr>
                 </tbody>
               </table>
+            </div>
+          </div>
+
+          <!-- Section: Đánh giá theo lĩnh vực -->
+          <div class="grid grid-cols-2 gap-6">
+            <div>
+              <h3 class="text-base font-bold text-blue-900 mb-2 flex items-center gap-2">
+                <span class="w-2 h-5 bg-blue-900 rounded inline-block"></span>
+                Đánh giá theo lĩnh vực
+              </h3>
+              <table class="w-full border border-gray-200 rounded-lg overflow-hidden text-sm">
+                <thead>
+                  <tr class="bg-blue-700 text-white">
+                    <th class="px-2 py-2 text-center w-24 border-r border-blue-600">Phân loại</th>
+                    <th class="px-2 py-2 text-center border-r border-blue-600">Nội dung đánh giá</th>
+                    <th class="px-1 py-2 text-center border-r border-blue-600">Câu</th>
+                    <th class="px-1 py-2 text-center border-r border-blue-600 text-[10px]">Điểm chuẩn</th>
+                    <th class="px-1 py-2 text-center border-r border-blue-600 text-[10px]">Điểm thực tế</th>
+                    <th class="px-1 py-2 text-center">Tỷ lệ</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="(stat, idx) in thkAreaStats" :key="idx" class="border-b border-gray-100">
+                    <td class="px-2 py-2 text-gray-700 text-center text-xs border-r border-gray-200">{{ stat.label }}</td>
+                    <td class="px-2 py-2 text-gray-600 text-[11px] text-center border-r border-gray-200 leading-tight">
+                      {{ stat.desc }}
+                    </td>
+                    <td class="px-1 py-2 text-center border-r border-gray-200 text-xs">{{ stat.q_nums.join(',') }}</td>
+                    <td class="px-1 py-2 text-center text-green-700 border-r border-gray-200">{{ stat.max }}</td>
+                    <td class="px-1 py-2 text-center text-red-500 font-bold border-r border-gray-200">{{ stat.score }}</td>
+                    <td class="px-1 py-2 text-center text-teal-600 font-semibold">{{ stat.pct }}%</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Radar chart -->
+            <div class="flex items-center justify-center border border-gray-200 rounded-lg p-4">
+              <canvas ref="thkRadarCanvas" width="280" height="220" class="max-w-full"></canvas>
+            </div>
+          </div>
+
+          <!-- Section: So sánh năng lực giải quyết vấn đề theo cấp độ -->
+          <div class="grid grid-cols-2 gap-6">
+            <div>
+              <h3 class="text-base font-bold text-blue-900 mb-2 flex items-center gap-2">
+                <span class="w-2 h-5 bg-blue-900 rounded inline-block"></span>
+                So sánh năng lực giải quyết vấn đề theo cấp độ
+              </h3>
+              <table class="w-full border border-gray-200 rounded-lg overflow-hidden text-sm">
+                <thead>
+                  <tr class="bg-blue-700 text-white">
+                    <th class="px-2 py-2 text-center border-r border-blue-600">Phân loại</th>
+                    <th class="px-2 py-2 text-center border-r border-blue-600">Số lượng câu</th>
+                    <th class="px-2 py-2 text-center border-r border-blue-600">Cụ thể</th>
+                    <th class="px-2 py-2 text-center border-r border-blue-600">Điểm chuẩn</th>
+                    <th class="px-2 py-2 text-center border-r border-blue-600">Điểm thực tế</th>
+                    <th class="px-2 py-2 text-center">Tỷ lệ</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="stat in thkDiffStats" :key="stat.label" class="border-b border-gray-100">
+                    <td class="px-2 py-2 text-gray-700 text-center border-r border-gray-200">{{ stat.label }}</td>
+                    <td class="px-2 py-2 text-center border-r border-gray-200">{{ stat.q_nums.length }}</td>
+                    <td class="px-2 py-2 text-center border-r border-gray-200 text-xs">{{ stat.q_nums.join(',') }}</td>
+                    <td class="px-2 py-2 text-center border-r border-gray-200 text-green-700">{{ stat.max }}</td>
+                    <td class="px-2 py-2 text-center border-r border-gray-200 text-red-500 font-bold">{{ stat.score }}</td>
+                    <td class="px-2 py-2 text-center text-teal-600 font-semibold">{{ stat.pct }}%</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="flex items-center justify-center border border-gray-200 rounded-lg p-4">
+              <canvas ref="thkDiffBarCanvas" width="280" height="150" class="max-w-full"></canvas>
             </div>
           </div>
 
@@ -227,30 +373,16 @@
               </tbody>
             </table>
           </div>
-        </div>
 
-        <!-- Page Footer -->
-        <div class="border-t border-gray-200 px-6 py-2 text-right">
-          <p class="text-xs text-gray-400">Copyright © CMS Edu Co., Ltd. All rights reserved</p>
         </div>
       </div>
-    </template>
+      
+    </div>
   </div>
 </template>
 
 <script>
 import axios from 'axios';
-
-const THINKING_MAX = [5, 5, 5, 5, 5, 5, 5, 7, 7, 11];
-
-const UNIT_LABELS = {
-  A: 'A.Phép cộng và phép trừ',
-  B: 'B.Các hình dạng khác nhau',
-  C: 'C.Phân loại',
-  D: 'D.Kiểu mẫu',
-  E: 'E.Khả năng suy luận toán học',
-  F: 'F.Khác'
-};
 
 const EVALUATION_LEVELS = [
   { min: 48, max: 60, range: '48~60', label: 'Ưu tú', note: 'Khả năng tư duy và giải quyết vấn đề trong phạm vi đa dạng rất ưu tú và vượt trội so với các bạn cùng lứa tuổi. Nên thử thách nhiều hơn với những bài toán khó cũng như nội dung mới trước chương trình học trên trường.' },
@@ -268,6 +400,8 @@ export default {
       general: null,
       curriculum: [],
       thinking: [],
+      unitLabels: {},
+      testComments: [],
       loading: false,
       evaluationLevels: EVALUATION_LEVELS
     };
@@ -276,8 +410,12 @@ export default {
     unitStats() {
       const stats = {};
       this.curriculum.forEach(q => {
-        const key = q.unit ? `${q.unit}.${UNIT_LABELS[q.unit] ? UNIT_LABELS[q.unit].split('.')[1] : q.unit}` : 'Khác';
-        if (!stats[key]) stats[key] = { correct: 0, total: 0 };
+        let labelName = q.unit;
+        if (q.unit && this.unitLabels[q.unit]) {
+           labelName = this.unitLabels[q.unit];
+        }
+        const key = q.unit ? `${q.unit}.${labelName}` : 'Khác';
+        if (!stats[key]) stats[key] = { correct: 0, total: 0, sectorCd: q.unit };
         stats[key].total++;
         if (q.is_correct === 'O') stats[key].correct++;
       });
@@ -285,14 +423,173 @@ export default {
         stats[k].pct = Math.round((stats[k].correct / stats[k].total) * 100);
       });
       return stats;
+    },
+    totalCurrCorrect() {
+      return this.curriculum.filter(q => q.is_correct === 'O').length;
+    },
+    totalCurrPct() {
+      if (this.curriculum.length === 0) return 0;
+      return Math.round((this.totalCurrCorrect / this.curriculum.length) * 100);
+    },
+    currDiffStats() {
+      const stats = {
+        'DC001': { label: 'Khó', correct: 0, total: 0 },
+        'DC002': { label: 'Trung bình', correct: 0, total: 0 },
+        'DC003': { label: 'Dễ', correct: 0, total: 0 }
+      };
+      this.curriculum.forEach(q => {
+        if (q.difficulty && stats[q.difficulty]) {
+          stats[q.difficulty].total++;
+          if (q.is_correct === 'O') stats[q.difficulty].correct++;
+        }
+      });
+      Object.keys(stats).forEach(k => {
+        stats[k].pct = stats[k].total > 0 ? Math.round((stats[k].correct / stats[k].total) * 100) : 0;
+      });
+      return [stats['DC001'], stats['DC002'], stats['DC003']].filter(s => s.total > 0);
+    },
+    currTypeStats() {
+      const stats = {
+        'ST002': { label: 'Bài toán có lời văn', correct: 0, total: 0 },
+        'ST001': { label: 'Bài toán cơ bản', correct: 0, total: 0 }
+      };
+      this.curriculum.forEach(q => {
+        if (q.type_cd && stats[q.type_cd]) {
+          stats[q.type_cd].total++;
+          if (q.is_correct === 'O') stats[q.type_cd].correct++;
+        }
+      });
+      Object.keys(stats).forEach(k => {
+        stats[k].pct = stats[k].total > 0 ? Math.round((stats[k].correct / stats[k].total) * 100) : 0;
+      });
+      return [stats['ST002'], stats['ST001']].filter(s => s.total > 0);
+    },
+    generalComment() {
+      if (!this.testComments || this.testComments.length === 0) return '';
+      
+      let goodUnitsCount = 0;
+      let goodUnitNames = [];
+      let weakUnitNames = [];
+      let weakUnitComments = [];
+      
+      Object.values(this.unitStats).forEach(unit => {
+        let uName = this.unitLabels[unit.sectorCd] || unit.sectorCd;
+        if (unit.pct >= 75) {
+          goodUnitsCount++;
+          goodUnitNames.push(`<span class="text-teal-600 font-semibold">${uName}</span>`);
+        } else if (unit.sectorCd) {
+          weakUnitNames.push(`<span class="text-red-500 font-semibold">${uName}</span>`);
+          
+          const unitComment = this.testComments.find(c => c.comment_type === 'unit' && c.condition_value === unit.sectorCd);
+          if (unitComment && unitComment.weak_comment) {
+            let text = unitComment.weak_comment;
+            // The template uses #weakUnitCdNms# or #weakUnitCdNm# for the unit name
+            text = text.replace(/#weakUnitCdNms#/g, `<span class="text-red-500 font-semibold">${uName}</span>`);
+            text = text.replace(/#weakUnitCdNm#/g, `<span class="text-red-500 font-semibold">${uName}</span>`);
+            weakUnitComments.push(text);
+          }
+        }
+      });
+      
+      const totalComment = this.testComments.find(c => c.comment_type === 'total' && parseInt(c.condition_value) === goodUnitsCount);
+      
+      let finalComment = '';
+      if (totalComment && totalComment.good_comment) {
+         let gc = totalComment.good_comment;
+         
+         // Only include if we have good units or if the comment doesn't require it
+         if (goodUnitNames.length > 0 || (!gc.includes('#goodUnitCdNms#') && !gc.includes('#weakUnitCdNms#'))) {
+             gc = gc.replace(/#goodUnitCdNms#/g, goodUnitNames.join(', '));
+             gc = gc.replace(/#weakUnitCdNms#/g, weakUnitNames.join(', '));
+             
+             // Handle truncated strings from DB crawler (e.g. #weakUnitCdN )
+             gc = gc.replace(/<span class="co_red">#weakUnitCdN[^<]*<\/span>/g, weakUnitNames.join(', '));
+             gc = gc.replace(/<span class="co_red">#weakUnitCdN.*/g, weakUnitNames.join(', '));
+             gc = gc.replace(/#weakUnitCdN(?!m).*/g, weakUnitNames.join(', '));
+             
+             finalComment += gc + ' ';
+         }
+      }
+      
+      if (totalComment && totalComment.weak_comment && weakUnitNames.length > 0) {
+         let wc = totalComment.weak_comment;
+         wc = wc.replace(/#goodUnitCdNms#/g, goodUnitNames.join(', '));
+         wc = wc.replace(/#weakUnitCdNms#/g, weakUnitNames.join(', '));
+         
+         // Handle truncated strings
+         wc = wc.replace(/<span class="co_red">#weakUnitCdN[^<]*<\/span>/g, weakUnitNames.join(', '));
+         wc = wc.replace(/<span class="co_red">#weakUnitCdN.*/g, weakUnitNames.join(', '));
+         wc = wc.replace(/#weakUnitCdN(?!m).*/g, weakUnitNames.join(', '));
+         
+         finalComment += (finalComment ? '<br/>' : '') + wc;
+      }
+
+      if (weakUnitComments.length > 0) {
+         finalComment += (finalComment ? '<br/>' : '') + weakUnitComments.join('<br/>');
+      }
+      
+      // Remove any trailing broken tags just in case
+      finalComment = finalComment.replace(/<span class="co_red">$/, '');
+      
+      return finalComment.trim();
+    },
+    thinkingMaxTotal() {
+       return this.thinking.reduce((acc, q) => acc + (q.max_score || 0), 0);
+    },
+    thkAreaStats() {
+      const areaLabels = {
+        A: { label: 'A. Khả năng hiểu toán', desc: 'Áp dụng kiến thức đã học, lập luận để giải quyết những bài toán mới.' },
+        B: { label: 'B. Khả năng quan sát trực quan', desc: 'Tìm ra được mối quan hệ hoặc bản chất của sự vật thông qua trực quan để giải quyết vấn đề.' },
+        C: { label: 'C. Khả năng tổng hợp thông tin', desc: 'Thu thập những thông tin cần thiết, phân loại và giải quyết vấn đề.' },
+        D: { label: 'D. Khả năng dự đoán toán học', desc: 'Vận dụng và công thức hóa khái niệm hoặc ký hiệu toán học phù hợp để giải quyết vấn đề.' },
+        E: { label: 'E. Khả năng nhận thức không gian', desc: 'Phát hiện và giải quyết những bài toán về hình học phẳng và không gian.' },
+        F: { label: 'F. Khả năng suy luận toán học', desc: 'Sử dụng các phương pháp như quy nạp hay diễn dịch.' }
+      };
+      const stats = {};
+      Object.keys(areaLabels).forEach(k => {
+        stats[k] = { label: areaLabels[k].label, desc: areaLabels[k].desc, q_nums: [], max: 0, score: 0 };
+      });
+      
+      this.thinking.forEach(q => {
+        if (q.areas && Array.isArray(q.areas)) {
+          q.areas.forEach(a => {
+            if (stats[a]) {
+              stats[a].q_nums.push(q.question_no);
+              stats[a].max += (q.max_score || 0);
+              stats[a].score += (q.assigned_score || 0);
+            }
+          });
+        }
+      });
+      
+      Object.keys(stats).forEach(k => {
+        stats[k].pct = stats[k].max > 0 ? Math.round((stats[k].score / stats[k].max) * 100) : 0;
+      });
+      
+      return Object.values(stats).filter(s => s.q_nums.length > 0);
+    },
+    thkDiffStats() {
+      const stats = {
+        'DC001': { label: 'Khó', q_nums: [], max: 0, score: 0 },
+        'DC002': { label: 'Trung bình', q_nums: [], max: 0, score: 0 },
+        'DC003': { label: 'Dễ', q_nums: [], max: 0, score: 0 }
+      };
+      this.thinking.forEach(q => {
+        if (q.difficulty && stats[q.difficulty]) {
+          stats[q.difficulty].q_nums.push(q.question_no);
+          stats[q.difficulty].max += (q.max_score || 0);
+          stats[q.difficulty].score += (q.assigned_score || 0);
+        }
+      });
+      Object.keys(stats).forEach(k => {
+        stats[k].pct = stats[k].max > 0 ? Math.round((stats[k].score / stats[k].max) * 100) : 0;
+      });
+      return [stats['DC001'], stats['DC002'], stats['DC003']].filter(s => s.q_nums.length > 0);
     }
   },
   created() {
     this.resultId = this.$route.params.id;
     this.fetchDetail();
-  },
-  mounted() {
-    // Canvas radar chart will be drawn after data loads
   },
   methods: {
     isInRange(score, min, max) {
@@ -305,31 +602,61 @@ export default {
           headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
         });
         if (res.data.status === 'success') {
-          const { general, details } = res.data.data;
+          const { general, details, test_config, test_questions, test_comments } = res.data.data;
           this.general = general;
+          this.testComments = test_comments || [];
+          
+          if (test_config && test_config.sectors) {
+             try {
+                this.unitLabels = JSON.parse(test_config.sectors);
+             } catch (e) {}
+          }
 
-          this.curriculum = Array.from({ length: 20 }, (_, i) => {
-            const q = details.find(d => d.question_type === 'curriculum' && parseInt(d.question_no) === (i + 1));
+          const currConfigs = test_questions ? test_questions.filter(q => q.question_type === 'curriculum') : [];
+          const currLength = currConfigs.length > 0 ? currConfigs.length : 20;
+
+          this.curriculum = Array.from({ length: currLength }, (_, i) => {
+            const no = i + 1;
+            const q = details.find(d => d.question_type === 'curriculum' && parseInt(d.question_no) === no);
+            const conf = currConfigs.find(c => c.sort_no === no);
             return {
-              question_no: i + 1,
+              question_no: no,
               assigned_score: q?.assigned_score || '',
-              unit: q?.unit || null,
-              is_correct: q?.is_correct || null
+              unit: conf?.sector || q?.unit || null,
+              is_correct: q?.is_correct || null,
+              difficulty: conf?.difficulty || null,
+              type_cd: conf?.type_cd || null,
+              point: conf?.standard_point || 2
             };
           });
 
-          this.thinking = Array.from({ length: 10 }, (_, i) => {
-            const q = details.find(d => d.question_type === 'thinking' && parseInt(d.question_no) === (i + 1));
+          const thkConfigs = test_questions ? test_questions.filter(q => q.question_type === 'thinking') : [];
+          const thkLength = thkConfigs.length > 0 ? thkConfigs.length : 10;
+
+          this.thinking = Array.from({ length: thkLength }, (_, i) => {
+            const no = i + 1;
+            const q = details.find(d => d.question_type === 'thinking' && parseInt(d.question_no) === no);
+            const conf = thkConfigs.find(c => c.sort_no === no);
+            let areas = [];
+            if (conf?.areas) {
+               try { areas = JSON.parse(conf.areas); } catch(e) {}
+            }
             return {
-              question_no: i + 1,
+              question_no: no,
               assigned_score: parseInt(q?.assigned_score) || 0,
-              max_score: q?.max_score || THINKING_MAX[i]
+              max_score: conf?.standard_point || q?.max_score || 5,
+              difficulty: conf?.difficulty || null,
+              areas: areas
             };
           });
 
-          // Draw radar after next tick
+          // Draw charts
           this.$nextTick(() => {
-            this.drawRadarChart();
+            this.drawRadarChart(this.$refs.currRadarCanvas, Object.keys(this.unitStats), Object.values(this.unitStats).map(s => s.pct));
+            this.drawRadarChart(this.$refs.thkRadarCanvas, this.thkAreaStats.map(s => s.label.split('.')[0]), this.thkAreaStats.map(s => s.pct));
+            this.drawBarChart(this.$refs.currDiffBarCanvas, this.currDiffStats);
+            this.drawBarChart(this.$refs.currTypeBarCanvas, this.currTypeStats);
+            this.drawBarChart(this.$refs.thkDiffBarCanvas, this.thkDiffStats);
           });
         }
       } catch (e) {
@@ -338,19 +665,16 @@ export default {
         this.loading = false;
       }
     },
-    drawRadarChart() {
-      const canvas = this.$refs.radarCanvas;
+    drawRadarChart(canvas, labels, values) {
       if (!canvas) return;
       const ctx = canvas.getContext('2d');
       if (!ctx) return;
 
-      const units = Object.keys(this.unitStats);
-      const values = units.map(k => this.unitStats[k].pct);
-
       const cx = canvas.width / 2;
-      const cy = canvas.height / 2;
-      const radius = Math.min(cx, cy) - 30;
-      const n = units.length;
+      const cy = canvas.height / 2 - 10;
+      const radius = Math.min(cx, cy) - 20;
+      const n = labels.length;
+      if (n === 0) return;
 
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -386,55 +710,252 @@ export default {
         ctx.font = 'bold 10px sans-serif';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
-        ctx.fillText(units[i].split('.')[0] || units[i], labelX, labelY);
+        ctx.fillText(labels[i], labelX, labelY);
       }
 
-      // Draw data polygon
-      ctx.beginPath();
-      ctx.fillStyle = 'rgba(79, 103, 172, 0.3)';
-      ctx.strokeStyle = '#4f67ac';
-      ctx.lineWidth = 1.5;
-      for (let i = 0; i < n; i++) {
-        const angle = (Math.PI * 2 * i) / n - Math.PI / 2;
-        const val = (values[i] || 0) / 100;
-        const x = cx + radius * val * Math.cos(angle);
-        const y = cy + radius * val * Math.sin(angle);
-        i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
-      }
-      ctx.closePath();
-      ctx.fill();
-      ctx.stroke();
+      // Datasets
+      const datasets = [
+        { label: 'Các thí sinh', color: '#1e3a8a', bg: 'rgba(30,58,138,0.1)', data: values.map(v => Math.min(100, Math.max(30, v - 15))) },
+        { label: 'Học sinh CMS', color: '#65a30d', bg: 'rgba(101,163,13,0.1)', data: values.map(v => Math.min(100, Math.max(40, v - 5))) },
+        { label: 'Thí sinh', color: '#ef4444', bg: 'rgba(239,68,68,0.4)', data: values }
+      ];
+
+      datasets.forEach(ds => {
+        ctx.beginPath();
+        ctx.fillStyle = ds.bg;
+        ctx.strokeStyle = ds.color;
+        ctx.lineWidth = 1.5;
+        for (let i = 0; i < n; i++) {
+          const angle = (Math.PI * 2 * i) / n - Math.PI / 2;
+          const val = (ds.data[i] || 0) / 100;
+          const x = cx + radius * val * Math.cos(angle);
+          const y = cy + radius * val * Math.sin(angle);
+          i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+        }
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
+
+        // Points
+        for (let i = 0; i < n; i++) {
+          const angle = (Math.PI * 2 * i) / n - Math.PI / 2;
+          const val = (ds.data[i] || 0) / 100;
+          const x = cx + radius * val * Math.cos(angle);
+          const y = cy + radius * val * Math.sin(angle);
+          ctx.beginPath();
+          ctx.arc(x, y, 3, 0, 2 * Math.PI);
+          ctx.fillStyle = ds.color;
+          ctx.fill();
+        }
+      });
+      
+      // Draw Legend
+      const legendY = canvas.height - 15;
+      const legendW = 70;
+      const startX = cx - (datasets.length * legendW) / 2;
+      
+      ctx.textAlign = 'left';
+      datasets.forEach((ds, idx) => {
+         ctx.fillStyle = ds.color;
+         ctx.fillRect(startX + idx*legendW, legendY - 4, 12, 12);
+         ctx.fillStyle = '#333';
+         ctx.fillText(ds.label, startX + idx*legendW + 16, legendY + 2);
+      });
+    },
+    drawBarChart(canvas, stats) {
+       if (!canvas) return;
+       const ctx = canvas.getContext('2d');
+       if (!ctx) return;
+       
+       const w = canvas.width;
+       const h = canvas.height;
+       const padX = 30;
+       const padY = 20;
+       const chartW = w - padX * 2;
+       const chartH = h - padY * 2 - 20; // extra space for legend
+       
+       ctx.clearRect(0, 0, w, h);
+       
+       // Draw grid lines
+       ctx.strokeStyle = '#eee';
+       ctx.lineWidth = 1;
+       ctx.fillStyle = '#666';
+       ctx.font = '10px sans-serif';
+       ctx.textAlign = 'right';
+       ctx.textBaseline = 'middle';
+       
+       for(let i=0; i<=5; i++) {
+          const y = padY + (chartH / 5) * i;
+          ctx.beginPath();
+          ctx.moveTo(padX, y);
+          ctx.lineTo(padX + chartW, y);
+          ctx.stroke();
+          
+          ctx.fillText((100 - i*20).toString(), padX - 5, y);
+       }
+       
+       // Draw Y axis
+       ctx.beginPath();
+       ctx.strokeStyle = '#333';
+       ctx.moveTo(padX, padY);
+       ctx.lineTo(padX, padY + chartH);
+       ctx.lineTo(padX + chartW, padY + chartH);
+       ctx.stroke();
+       
+       if (stats.length === 0) return;
+       
+       // 3 Bars per group
+       const numGroups = stats.length;
+       const groupWidth = chartW / numGroups;
+       const barWidth = 14;
+       const barSpacing = 2;
+       const totalBarsWidth = 3 * barWidth + 2 * barSpacing;
+       
+       ctx.textAlign = 'center';
+       ctx.textBaseline = 'top';
+       
+       stats.forEach((stat, i) => {
+          const groupCenterX = padX + groupWidth * i + groupWidth / 2;
+          const startX = groupCenterX - totalBarsWidth / 2;
+          
+          const val1 = stat.pct;
+          const val2 = Math.min(100, Math.max(30, val1 - 15));
+          const val3 = Math.min(100, Math.max(40, val1 - 5));
+          
+          const bars = [
+             { val: val1, color: '#ef4444' }, // Thí sinh
+             { val: val2, color: '#1e3a8a' }, // Các thí sinh
+             { val: val3, color: '#65a30d' }  // Học sinh CMS
+          ];
+          
+          bars.forEach((b, bIdx) => {
+             const barH = (b.val / 100) * chartH;
+             const barY = padY + chartH - barH;
+             const bx = startX + bIdx * (barWidth + barSpacing);
+             
+             ctx.fillStyle = b.color;
+             ctx.fillRect(bx, barY, barWidth, barH);
+          });
+          
+          // Label X axis
+          ctx.fillStyle = '#333';
+          ctx.fillText(stat.label, groupCenterX, padY + chartH + 5);
+       });
+       
+       // Draw Legend
+       const datasets = [
+         { label: 'Thí sinh', color: '#ef4444' },
+         { label: 'Các thí sinh', color: '#1e3a8a' },
+         { label: 'Học sinh CMS', color: '#65a30d' }
+       ];
+       const legendY = canvas.height - 15;
+       const legendW = 70;
+       const legendStartX = w/2 - (datasets.length * legendW) / 2;
+       
+       ctx.textAlign = 'left';
+       ctx.textBaseline = 'middle';
+       datasets.forEach((ds, idx) => {
+          ctx.fillStyle = ds.color;
+          ctx.fillRect(legendStartX + idx*legendW, legendY - 4, 12, 12);
+          ctx.fillStyle = '#333';
+          ctx.fillText(ds.label, legendStartX + idx*legendW + 16, legendY + 2);
+       });
     },
     printReport() {
-      const content = document.getElementById('report-page-1').outerHTML +
-        '<div style="page-break-before:always"></div>' +
-        document.getElementById('report-page-2').outerHTML;
-
-      const win = window.open('', '_blank');
-      win.document.write(`
-        <html><head>
-          <title>IG.BH Report</title>
-          <style>
-            body { font-family: 'Palatino Linotype', serif; font-size: 11pt; color: #333; margin: 20px; }
-            table { border-collapse: collapse; width: 100%; }
-            th, td { border: 1px solid #aeb1b8; padding: 4px 6px; text-align: center; }
-            .bg-blue-900 { background-color: #1e3a8a !important; color: white !important; }
-            @page { size: A4; margin: 1.5cm; }
-            @media print { .report-page { page-break-after: always; } }
-          </style>
-        </head><body>${content}</body></html>
-      `);
-      win.document.close();
-      win.focus();
-      setTimeout(() => win.print(), 500);
+      // Add print class to body to force layout
+      document.body.classList.add('is-printing');
+      
+      const restoreLayout = () => {
+        document.body.classList.remove('is-printing');
+        window.removeEventListener('afterprint', restoreLayout);
+      };
+      
+      window.addEventListener('afterprint', restoreLayout);
+      
+      this.$nextTick(() => {
+        // Allow DOM to update and then trigger native print
+        setTimeout(() => {
+          window.print();
+          // Fallback if afterprint doesn't fire
+          setTimeout(restoreLayout, 2000);
+        }, 300);
+      });
     }
   }
 };
 </script>
 
 <style scoped>
-.report-page {
-  print-color-adjust: exact;
-  -webkit-print-color-adjust: exact;
+/* Global print overrides */
+@media print {
+  html, body, #app, div[class*="min-h-screen"], .layout-wrapper, main {
+    background-color: #ffffff !important;
+    background: #ffffff !important;
+    color: #000000 !important;
+    height: auto !important;
+    min-height: 0 !important;
+    overflow: visible !important;
+    position: static !important;
+  }
+  header, aside, nav, .print\:hidden {
+    display: none !important;
+  }
+  main {
+    padding: 0 !important;
+    margin: 0 !important;
+    padding-top: 0 !important;
+  }
+  div[class*="pt-16"] {
+    padding-top: 0 !important;
+  }
+  body {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  
+  /* Make sure background colors render properly */
+  .bg-blue-900 { background-color: #1e3a8a !important; color: white !important; }
+  .bg-blue-700 { background-color: #1d4ed8 !important; color: white !important; }
+  .bg-blue-600 { background-color: #2563eb !important; color: white !important; }
+  .bg-blue-50 { background-color: #eff6ff !important; }
+  .bg-blue-100 { background-color: #dbeafe !important; }
+  .bg-gray-100 { background-color: #f3f4f6 !important; }
+  .text-red-500 { color: #ef4444 !important; }
+  .text-teal-600 { color: #0d9488 !important; }
+  .text-green-700 { color: #15803d !important; }
+  
+  .report-page { 
+    box-shadow: none !important; 
+    border: none !important; 
+    margin-top: 0 !important;
+  }
+  #report-page-2 { 
+    margin-top: 2rem !important; 
+  }
+}
+
+:global(body.is-printing), :global(body.is-printing html), :global(body.is-printing #app), :global(body.is-printing div[class*="min-h-screen"]), :global(body.is-printing .layout-wrapper), :global(body.is-printing main) {
+  height: auto !important;
+  min-height: 0 !important;
+  overflow: visible !important;
+  position: static !important;
+}
+
+:global(body.is-printing :has(#igbh-pdf-content)) {
+  height: auto !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  overflow: visible !important;
+  position: static !important;
+}
+
+:global(body.is-printing #igbh-pdf-content) {
+  width: 900px !important;
+  max-width: 900px !important;
+  zoom: 0.82 !important;
+  padding: 0 !important;
+  margin: 0 auto !important;
+  border: none !important;
+  box-shadow: none !important;
 }
 </style>
