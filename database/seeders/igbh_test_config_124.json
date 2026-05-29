@@ -1,0 +1,269 @@
+{
+    "testSeq": 124,
+    "curriculum": [
+        {
+            "no": 1,
+            "sector": "",
+            "difficulty": "DC002",
+            "type": "ST001",
+            "answer": "4",
+            "point": 2
+        },
+        {
+            "no": 2,
+            "sector": "",
+            "difficulty": "DC001",
+            "type": "ST001",
+            "answer": "5",
+            "point": 2
+        },
+        {
+            "no": 3,
+            "sector": "",
+            "difficulty": "DC001",
+            "type": "ST001",
+            "answer": "3",
+            "point": 2
+        },
+        {
+            "no": 4,
+            "sector": "",
+            "difficulty": "DC002",
+            "type": "ST002",
+            "answer": "1",
+            "point": 2
+        },
+        {
+            "no": 5,
+            "sector": "",
+            "difficulty": "DC002",
+            "type": "ST002",
+            "answer": "2",
+            "point": 2
+        },
+        {
+            "no": 6,
+            "sector": "",
+            "difficulty": "DC003",
+            "type": "ST002",
+            "answer": "4",
+            "point": 2
+        },
+        {
+            "no": 7,
+            "sector": "",
+            "difficulty": "DC001",
+            "type": "ST002",
+            "answer": "4",
+            "point": 2
+        },
+        {
+            "no": 8,
+            "sector": "",
+            "difficulty": "DC003",
+            "type": "ST001",
+            "answer": "3",
+            "point": 2
+        },
+        {
+            "no": 9,
+            "sector": "",
+            "difficulty": "DC002",
+            "type": "ST002",
+            "answer": "3",
+            "point": 2
+        },
+        {
+            "no": 10,
+            "sector": "",
+            "difficulty": "DC002",
+            "type": "ST002",
+            "answer": "3",
+            "point": 2
+        },
+        {
+            "no": 11,
+            "sector": "",
+            "difficulty": "DC003",
+            "type": "ST002",
+            "answer": "4",
+            "point": 2
+        },
+        {
+            "no": 12,
+            "sector": "",
+            "difficulty": "DC002",
+            "type": "ST001",
+            "answer": "4",
+            "point": 2
+        },
+        {
+            "no": 13,
+            "sector": "",
+            "difficulty": "DC003",
+            "type": "ST001",
+            "answer": "3",
+            "point": 2
+        },
+        {
+            "no": 14,
+            "sector": "",
+            "difficulty": "DC002",
+            "type": "ST002",
+            "answer": "1",
+            "point": 2
+        },
+        {
+            "no": 15,
+            "sector": "",
+            "difficulty": "DC001",
+            "type": "ST002",
+            "answer": "1",
+            "point": 2
+        },
+        {
+            "no": 16,
+            "sector": "",
+            "difficulty": "DC001",
+            "type": "ST001",
+            "answer": "4",
+            "point": 2
+        },
+        {
+            "no": 17,
+            "sector": "",
+            "difficulty": "DC003",
+            "type": "ST001",
+            "answer": "3",
+            "point": 2
+        },
+        {
+            "no": 18,
+            "sector": "",
+            "difficulty": "DC003",
+            "type": "ST001",
+            "answer": "3",
+            "point": 2
+        },
+        {
+            "no": 19,
+            "sector": "",
+            "difficulty": "DC002",
+            "type": "ST002",
+            "answer": "1",
+            "point": 2
+        },
+        {
+            "no": 20,
+            "sector": "",
+            "difficulty": "DC001",
+            "type": "ST001",
+            "answer": "4",
+            "point": 2
+        }
+    ],
+    "thinking": [
+        {
+            "no": 1,
+            "areas": [
+                "A",
+                "C",
+                "F"
+            ],
+            "difficulty": "DC003",
+            "point": 5
+        },
+        {
+            "no": 2,
+            "areas": [
+                "A",
+                "D",
+                "F"
+            ],
+            "difficulty": "DC003",
+            "point": 5
+        },
+        {
+            "no": 3,
+            "areas": [
+                "C",
+                "D"
+            ],
+            "difficulty": "DC003",
+            "point": 5
+        },
+        {
+            "no": 4,
+            "areas": [
+                "B",
+                "C"
+            ],
+            "difficulty": "DC002",
+            "point": 5
+        },
+        {
+            "no": 5,
+            "areas": [
+                "B",
+                "D",
+                "E"
+            ],
+            "difficulty": "DC002",
+            "point": 5
+        },
+        {
+            "no": 6,
+            "areas": [
+                "A",
+                "C"
+            ],
+            "difficulty": "DC002",
+            "point": 5
+        },
+        {
+            "no": 7,
+            "areas": [
+                "A",
+                "D",
+                "F"
+            ],
+            "difficulty": "DC002",
+            "point": 5
+        },
+        {
+            "no": 8,
+            "areas": [
+                "A",
+                "C",
+                "D"
+            ],
+            "difficulty": "DC001",
+            "point": 7
+        },
+        {
+            "no": 9,
+            "areas": [
+                "B",
+                "F"
+            ],
+            "difficulty": "DC001",
+            "point": 7
+        },
+        {
+            "no": 10,
+            "areas": [
+                "B",
+                "E"
+            ],
+            "difficulty": "DC001",
+            "point": 11
+        }
+    ],
+    "sectors": {
+        "A": "Ph&eacute;p cộng v&agrave; ph&eacute;p trừ",
+        "B": "C&aacute;c h&igrave;nh dạng kh&aacute;c nhau",
+        "C": "Ph&acirc;n loại",
+        "D": "Kiểu mẫu",
+        "E": "Ph&eacute;p nh&acirc;n"
+    }
+}

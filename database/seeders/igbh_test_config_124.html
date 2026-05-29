@@ -1,0 +1,1449 @@
+<!doctype html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang=""> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8" lang=""> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9" lang=""> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html lang="">
+<!--<![endif]-->
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LMS VN</title>
+<link href="/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+<link href="/favicon.png" rel="apple-touch-icon" />
+<link href="/css/bootstrap.min.css" rel="stylesheet">
+<link href="/fonts/css/font-awesome.min.css" rel="stylesheet">
+<link href="/css/icheck/_all.css" rel="stylesheet" />
+<link href="/css/custom.css" rel="stylesheet"><!-- last overlapping CSS -->
+<link href="/css/datepicker/bootstrap-datepicker.css" rel="stylesheet">
+<link href="/js/datatables/jquery.dataTables.min.css" rel="stylesheet">
+<link href="/css/datatables/dataTables.bootstrap.css" rel="stylesheet">
+<link href="/css/colorbox/colorbox.css" rel="stylesheet"> <!-- colorbox -->
+<link href="/css/progressbar/bootstrap-progressbar-3.3.0.css" rel="stylesheet"> <!-- bootstrap progress -->
+<link href="/css/toast/toastr.min.css" rel="stylesheet"> <!-- jquery Toast -->
+
+<script src="/js/jquery.min.js"></script><!--  jQuery v1.11.3  -->
+<script type="text/javascript" src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script><!--  jQuery-ui 1.12.1 -->
+<script src="/js/colorbox/jquery.colorbox.js"></script><!-- colorbox -->
+<script src="/js/jquery.form.min.js"></script>
+<script src="/js/bootstrap.min.js"></script><!-- bootstrap v3.3.6 -->
+<script src="/js/icheck/icheck.min.js"></script><!-- icheck -->
+<script src="/js/progressbar/bootstrap-progressbar.min.js"></script><!-- bootstrap progress js -->
+
+<!-- HTML5 요소 및 미디어 쿼리에 대한 IE8 지원을위한 html5shiv.js와 Respond.js -->
+<!--[if lt IE 9]>
+<script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+<![endif]-->
+
+<!--  datatables -->
+<script src="/js/datatables/jquery.dataTables.js"></script>
+<script src="/js/datatables/dataTables.bootstrap.js"></script>
+<script src="/js/datatables/dataTables.select.min.js"></script>
+
+<!-- datepicker -->
+<script src="/js/datepicker/bootstrap-datepicker.js"></script>
+<script src="/js/datepicker/locales/bootstrap-datepicker.ko_KR.js"></script>
+<script src="/js/datepicker/locales/bootstrap-datepicker.zh_CN.js"></script>
+<script src="/js/datepicker/locales/bootstrap-datepicker.vi_VN.js"></script>
+
+<script src="/js/pdf/pdfobject.min.js"></script><!-- pdf -->
+<script src="/js/i18n/jquery.i18n.properties.js"></script><!-- i18n -->
+<script src="/js/toast/toastr.min.js"></script><!-- jquery toast -->
+<!-- <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script> -->
+
+<link href="/js/sweetalert/sweetalert.css" rel="stylesheet">
+<script src="/js/sweetalert/sweetalert.js"></script>
+
+<script src="/js/date.js"></script>
+<style>
+<!--
+table.dataTable thead th, table.dataTable tbody td, table.table_col tr th {
+vertical-align: middle;
+}
+-->
+</style>
+<script type="text/javascript">
+var userLang = "vi_VN";
+var lang2 = "";
+try {
+jQuery.i18n.properties({
+	name:'Messages',
+	path:'/js/i18n/properties/',
+	mode:'both',
+	language:userLang
+});
+lang2 = userLang.split('_')[1].toLowerCase();
+} catch (e) {
+
+}
+
+toastr.options = {
+	"closeButton": false,
+	"debug": false,
+	"newestOnTop": true,
+	"progressBar": true,
+	"positionClass": "toast-top-middle1",
+	"preventDuplicates": true,
+	"onclick": null,
+	"showDuration": "300",
+	"hideDuration": "1000",
+	"timeOut": "2000",
+	"extendedTimeOut": "1000",
+	"showEasing": "swing",
+	"hideEasing": "linear",
+	"showMethod": "fadeIn",
+	"hideMethod": "fadeOut"
+};
+(function($){
+	$.fn.tinyDraggable = function(options){
+		var settings = $.extend({ handle: null, exclude: null }, options);
+		return this.each(function(){
+			var dx, dy, el = $(this), handle = settings.handle? $(settings.handle, el): el;
+			handle.on({
+				mousedown: function(e){
+					if (settings.exclude && ~$.inArray(e.target, $(settings.exclude, el))) return;
+					var os = el.offset(); dx = e.pageX-os.left, dy = e.pageY-os.top;
+					$(document).on('mousemove.drag',
+						function(e){ el.offset({top: e.pageY-dy, left: e.pageX-dx});
+					});
+				},
+				mouseup: function(e){ $(document).off('mousemove.drag'); }
+			});
+		});
+	}
+}(jQuery));
+</script>
+<script src="/js/common.js"></script></head>
+<body class="nav-md">
+	<div class="container body">
+		<div class="main_container">
+			<div class="col-md-3 left_col">
+				<div class="left_col scroll-view">
+					<div class="navbar nav_title" style="border: 0;">
+						<a href="/" class="site_title"><span class="glyphicon glyphicon-home" aria-hidden="true"></span><!-- CTOC --></a>
+					</div>
+					<div class="clearfix"></div>
+					<!-- sidebar menu -->
+					<div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
+						<div class="menu_section">
+							<ul class="nav side-menu">
+								<li><a><i class="fa fa-user"></i>Quản lý người dùng<span class="fa fa-chevron-down"></span></a><ul class="nav child_menu" style="display: none">
+										<li><a href="/user/centerList.do">Trung tâm</a></li>
+									<li><a href="/user/teacherList.do">Giáo viên</a></li>
+									</ul></li><li><a><i class="fa fa-test"></i>Quản lý bài kiểm tra<span class="fa fa-chevron-down"></span></a><ul class="nav child_menu" style="display: none">
+										<li><a href="/test/paperList.do">Bài kiểm tra</a></li>
+									<li><a href="/test/paperInfoList.do">Thông tin bài kiểm tra</a></li>
+									</ul></li><li><a><i class="fa fa-cntr"></i>Quản lý Trung tâm<span class="fa fa-chevron-down"></span></a><ul class="nav child_menu" style="display: none">
+										<li><a href="/cntr/classList.do">Quản lý lớp học</a></li>
+									<li><a href="/cntr/studentList.do">Quản lý học sinh</a></li>
+									</ul></li><li><a><i class="fa fa-eval"></i>Quản lý bài kiểm tra UCREA<span class="fa fa-chevron-down"></span></a><ul class="nav child_menu" style="display: none">
+										<li><a href="/eval/viewList.do">Tìm kiếm bài kiểm tra</a></li>
+									<li><a href="/eval/inputList.do">Nhập đáp án bài kiểm tra</a></li>
+									<li><a href="/eval/resultList.do">Kết quả bài kiểm tra</a></li>
+									</ul></li><li><a><i class="fa fa-igel"></i>Quản lý bài kiểm tra IG.BH<span class="fa fa-chevron-down"></span></a><ul class="nav child_menu" style="display: none">
+										<li><a href="/igel/viewList.do">Tìm bài kiểm tra IG.BH</a></li>
+									<li><a href="/igel/diagList.do">Bài kiểm tra đầu vào IG.BH</a></li>
+									<li><a href="/igel/smtvList.do">Tóm tắt kết quả đánh giá IG.BH</a></li>
+									</ul></li><li><a><i class="fa fa-cmnt"></i>Cộng đồng<span class="fa fa-chevron-down"></span></a><ul class="nav child_menu" style="display: none">
+										<li><a href="/cmnt/noticeList.do">Chú ý</a></li>
+									<li><a href="/cmnt/faqList.do">Câu hỏi thường gặp</a></li>
+									<li><a href="/cmnt/bulletList.do">Bảng thông báo</a></li>
+									</ul></li><li><a><i class="fa fa-sysm"></i>Quản lý hệ thống<span class="fa fa-chevron-down"></span></a><ul class="nav child_menu" style="display: none">
+										<li><a href="/sysm/igtestList.do">Quản lý bài kiểm tra IG.BH</a></li>
+									</ul>
+						</div>
+					</div>
+					<!-- /sidebar menu -->
+
+					<!-- /menu footer buttons -->
+					<div class="sidebar-footer hidden-small">
+						<a href="/user/my.do" data-toggle="tooltip" data-placement="top" title="" data-original-title="My Page"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></a>
+						<a href="#" onclick="logout();" data-toggle="tooltip" data-placement="top" title="" data-original-title="Đăng xuất"><span class="glyphicon glyphicon-off" aria-hidden="true"></span></a>
+					</div>
+					<!-- /menu footer buttons -->
+				</div>
+			</div>
+			<!-- top navigation -->
+
+			<div class="top_nav">
+				<div class="nav_menu">
+					<nav class="" role="navigation">
+						<div class="nav toggle">
+							<a id="menu_toggle"><i class="fa fa-bars"></i></a>
+						</div>
+
+						<ul class="nav navbar-nav navbar-right">
+							<li class="">
+								<a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+									<span id="welcomeMsg"></span>
+									<span class=" fa fa-angle-down"></span>
+								</a>
+								<ul class="dropdown-menu dropdown-usermenu pull-right">
+									<li><a href="/user/my.do"> My Info</a></li>
+									<li><a href="#" onclick="logout();"><i class="fa fa-sign-out pull-right"></i> Đăng xuất</a></li>
+								</ul>
+							</li>
+							</ul>
+					</nav>
+				</div>
+			</div>
+			<!-- /top navigation -->
+
+			<!-- page content -->
+			<div class="right_col" role="main">
+				
+
+
+
+
+
+
+<style>
+<!--
+table tfoot td {
+	text-align: center;
+}
+-->
+</style>
+
+<script src="/js/bootstrap-waitingfor.js"></script>
+
+<div class="location">
+	<span>Quản lý hệ thống</span>
+	<span class="glyphicon glyphicon-menu-right" aria-hidden="true"></span>
+	<h3>Quản lý IG.BH Meta</h3>
+</div>
+
+<div class="row">
+	<div class="x_panel">
+		<form id="form-register">
+		<input type="hidden" name="testSeq" value="124">
+		<div class="x_title">
+			<h4>ĐÁNH GIÁ ĐẦU KỲ Thông tin Nhập</h4>
+			<div class="x_line">
+				<table class="table table_row" style="width:100%;">
+					<colgroup>
+						<col style="width: 16%" />
+						<col style="width: 16%" />
+						<col style="width: 16%" />
+						<col style="width: 16%" />
+						<col style="width: 16%" />
+						<col style="width: 16%" />
+					</colgroup>
+					<tr>
+						<th scope="row">Tên bài kiểm tra</th>
+						<td>PT lớp 2 Q3</td>
+						<th scope="row">Đơn vị</th>
+						<td>lớp 2</td>
+						<th scope="row">Ngày bắt đầu/ngày kết thúc</th>
+						<td>2025-12-08 ~ 2026-03-15</td>
+					</tr>
+					<tr>
+						<th scope="row">Cấp</th>
+						<td>Lớp 2</td>
+						<th scope="row">Năm đánh giá</th>
+						<td>2022</td>
+						<th scope="row">Quý </th>
+						<td>Sep-Nov</td>
+					</tr>
+					<tr>
+						<th scope="row" class="column-title"><label for="fileSpan0">Thư mục</label></th>
+						<td colspan="5">
+							<span id="fileSpan0">
+								<input type="hidden" name="attachSeq" value="1" />
+								<input type="hidden" name="attachId" value="33d6288b-5c6b-4dbc-8cfd-cbc5b6e51ac8" />
+								
+								<a href="#preview" class="pdfView" data-attachId="33d6288b-5c6b-4dbc-8cfd-cbc5b6e51ac8^1">Lớp 2_Quý III (màu).PDF</a> (10683986 kb)
+								<input type="checkbox" class="flat" name="delCheck" id="delCheck" value="Y">&nbsp;<label for="delCheck">Xóa</label>
+								
+								<input type="file" name="files[0]" id="files_0" class="form-control" style="max-width:450px; font-size:11px; display: none;" accept="application/pdf">
+							</span>
+						</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+
+		<div role="tabpanel" data-example-id="togglable-tabs">
+			<ul id="myTab" class="nav nav-tabs bar_tabs" role="tablist">
+				<li role="presentation" class="active"><a href="#tab1" role="tab" id="subject-tab" data-toggle="tab" aria-expanded="true">  Các vấn đề dựa trên chương trình giảng dạy</a></li>
+				<li role="presentation" class=""><a href="#tab2" role="tab" id="comment-tab" data-toggle="tab" aria-expanded="true">  Các vấn đề dựa trên chương trình giảng dạy Bình luận</a></li>
+				<li role="presentation" class=""><a href="#tab3" role="tab" id="thinking-tab" data-toggle="tab" aria-expanded="false">  Các vấn đề kỹ năng tư duy Toán học</a></li>
+			</ul>
+
+			<div id="myTabContent" class="tab-content">
+				<div role="tabpanel" class="tab-pane fade active in" id="tab1" aria-labelledby="subject-tab">
+					<div class="x_line">
+						<table class="table" style="width:100%;">
+							<caption>TABLE</caption>
+							<colgroup></colgroup>
+							<thead>
+							<tr>
+								<th colspan="5">Đơn vị</th>
+							</tr>
+							</thead>
+							<tbody>
+							<tr>
+							
+								<td>A.<input type="text" class="form-control" style="width: 80%; display:inline-block;" name="sectorNm" data-sectorSortNo="1" value="Ph&eacute;p cộng v&agrave; ph&eacute;p trừ"><input type="hidden" name="sectorSortNo" value="1"></td>
+							
+								<td>B.<input type="text" class="form-control" style="width: 80%; display:inline-block;" name="sectorNm" data-sectorSortNo="2" value="C&aacute;c h&igrave;nh dạng kh&aacute;c nhau"><input type="hidden" name="sectorSortNo" value="2"></td>
+							
+								<td>C.<input type="text" class="form-control" style="width: 80%; display:inline-block;" name="sectorNm" data-sectorSortNo="3" value="Ph&acirc;n loại"><input type="hidden" name="sectorSortNo" value="3"></td>
+							
+								<td>D.<input type="text" class="form-control" style="width: 80%; display:inline-block;" name="sectorNm" data-sectorSortNo="4" value="Kiểu mẫu"><input type="hidden" name="sectorSortNo" value="4"></td>
+							
+								<td>E.<input type="text" class="form-control" style="width: 80%; display:inline-block;" name="sectorNm" data-sectorSortNo="5" value="Ph&eacute;p nh&acirc;n"><input type="hidden" name="sectorSortNo" value="5"></td>
+							
+							</tr>
+							</tbody>
+						</table>
+
+						<table class="ui celled table bulk_action table_col tbodyth stickyTable table1" style="width:100%;">
+							<caption>TABLE</caption>
+							<colgroup>
+								<col style="width:7.72%">
+								<col style="width:7.69%">
+								<col style="width:7.69%">
+								<col style="width:7.69%">
+								<col style="width:7.69%">
+
+								<col style="width:7.69%">
+								<col style="width:7.69%">
+								<col style="width:7.69%">
+								<col style="width:7.69%">
+								<col style="width:7.69%">
+
+								<col style="width:7.69%">
+								<col style="width:7.69%">
+								<col style="width:7.69%">
+							</colgroup>
+							<thead>
+							<tr>
+								<th scope="col" rowspan="2">Số</th>
+								<th scope="colgroup" colspan="5">Đơn vị</th>
+								<th scope="colgroup" colspan="3">Difficulty</th>
+								<th scope="colgroup" colspan="2">Non-word and word problems</th>
+								<th scope="col" rowspan="2">Correct Answer</th>
+								<th scope="col" rowspan="2">Điểm chuẩn</th>
+							</tr>
+							<tr>
+								<th scope="col">A.<span class="unit_1">Ph&eacute;p cộng v&agrave; ph&eacute;p trừ</span></th><th scope="col">B.<span class="unit_2">C&aacute;c h&igrave;nh dạng kh&aacute;c nhau</span></th><th scope="col">C.<span class="unit_3">Ph&acirc;n loại</span></th><th scope="col">D.<span class="unit_4">Kiểu mẫu</span></th><th scope="col">E.<span class="unit_5">Ph&eacute;p nh&acirc;n</span></th>
+								<th scope="col">High</th>
+								<th scope="col">Medium</th>
+								<th scope="col">Low</th>
+								<th scope="col">Non-word problems</th>
+								<th scope="col">word problems</th>
+							</tr>
+							</thead>
+							<tbody>
+							
+							<tr>
+								<td>1 <input type="hidden" name="sbjSeq" value="901"><input type="hidden" name="sbjSortNo" value="1"></td>
+								<td><input type="radio" class="flat-red"    name="sbjSectorCd0"     id="sbjSectorCd0A"       value="SC001"  data-shortCd="A"> </td><td><input type="radio" class="flat-red"    name="sbjSectorCd0"     id="sbjSectorCd0B"       value="SC002" checked="checked" data-shortCd="B"> </td><td><input type="radio" class="flat-red"    name="sbjSectorCd0"     id="sbjSectorCd0C"       value="SC003"  data-shortCd="C"> </td><td><input type="radio" class="flat-red"    name="sbjSectorCd0"     id="sbjSectorCd0D"       value="SC004"  data-shortCd="D"> </td><td><input type="radio" class="flat-red"    name="sbjSectorCd0"     id="sbjSectorCd0E"       value="SC005"  data-shortCd="E"> </td>
+								<td><input type="radio" class="flat-green"  name="sbjDifficultyCd0" id="sbjDifficultyCd0DC001" value="DC001"  ></td><td><input type="radio" class="flat-green"  name="sbjDifficultyCd0" id="sbjDifficultyCd0DC002" value="DC002" checked="checked" ></td><td><input type="radio" class="flat-green"  name="sbjDifficultyCd0" id="sbjDifficultyCd0DC003" value="DC003"  ></td>
+								<td><input type="radio" class="flat-orange" name="sbjTypeCd0"       id="sbjTypeCd0ST001"       value="ST001" checked="checked" ></td><td><input type="radio" class="flat-orange" name="sbjTypeCd0"       id="sbjTypeCd0ST002"       value="ST002"  ></td>
+								<td><input type="text" class="form-control" style="width:100%" maxlength="1" name="sbjAnswer" id="sbjAnswer1" value="4" tabindex="1"></td>
+								<td><input type="text" class="form-control" style="width:100%" maxlength="1" name="sbjPoint" id="sbjPoint1" value="2" tabindex="21"></td>
+							</tr>
+							
+							<tr>
+								<td>2 <input type="hidden" name="sbjSeq" value="902"><input type="hidden" name="sbjSortNo" value="2"></td>
+								<td><input type="radio" class="flat-red"    name="sbjSectorCd1"     id="sbjSectorCd1A"       value="SC001" checked="checked" data-shortCd="A"> </td><td><input type="radio" class="flat-red"    name="sbjSectorCd1"     id="sbjSectorCd1B"       value="SC002"  data-shortCd="B"> </td><td><input type="radio" class="flat-red"    name="sbjSectorCd1"     id="sbjSectorCd1C"       value="SC003"  data-shortCd="C"> </td><td><input type="radio" class="flat-red"    name="sbjSectorCd1"     id="sbjSectorCd1D"       value="SC004"  data-shortCd="D"> </td><td><input type="radio" class="flat-red"    name="sbjSectorCd1"     id="sbjSectorCd1E"       value="SC005"  data-shortCd="E"> </td>
+								<td><input type="radio" class="flat-green"  name="sbjDifficultyCd1" id="sbjDifficultyCd1DC001" value="DC001" checked="checked" ></td><td><input type="radio" class="flat-green"  name="sbjDifficultyCd1" id="sbjDifficultyCd1DC002" value="DC002"  ></td><td><input type="radio" class="flat-green"  name="sbjDifficultyCd1" id="sbjDifficultyCd1DC003" value="DC003"  ></td>
+								<td><input type="radio" class="flat-orange" name="sbjTypeCd1"       id="sbjTypeCd1ST001"       value="ST001" checked="checked" ></td><td><input type="radio" class="flat-orange" name="sbjTypeCd1"       id="sbjTypeCd1ST002"       value="ST002"  ></td>
+								<td><input type="text" class="form-control" style="width:100%" maxlength="1" name="sbjAnswer" id="sbjAnswer2" value="5" tabindex="2"></td>
+								<td><input type="text" class="form-control" style="width:100%" maxlength="1" name="sbjPoint" id="sbjPoint2" value="2" tabindex="22"></td>
+							</tr>
+							
+							<tr>
+								<td>3 <input type="hidden" name="sbjSeq" value="903"><input type="hidden" name="sbjSortNo" value="3"></td>
+								<td><input type="radio" class="flat-red"    name="sbjSectorCd2"     id="sbjSectorCd2A"       value="SC001" checked="checked" data-shortCd="A"> </td><td><input type="radio" class="flat-red"    name="sbjSectorCd2"     id="sbjSectorCd2B"       value="SC002"  data-shortCd="B"> </td><td><input type="radio" class="flat-red"    name="sbjSectorCd2"     id="sbjSectorCd2C"       value="SC003"  data-shortCd="C"> </td><td><input type="radio" class="flat-red"    name="sbjSectorCd2"     id="sbjSectorCd2D"       value="SC004"  data-shortCd="D"> </td><td><input type="radio" class="flat-red"    name="sbjSectorCd2"     id="sbjSectorCd2E"       value="SC005"  data-shortCd="E"> </td>
+								<td><input type="radio" class="flat-green"  name="sbjDifficultyCd2" id="sbjDifficultyCd2DC001" value="DC001" checked="checked" ></td><td><input type="radio" class="flat-green"  name="sbjDifficultyCd2" id="sbjDifficultyCd2DC002" value="DC002"  ></td><td><input type="radio" class="flat-green"  name="sbjDifficultyCd2" id="sbjDifficultyCd2DC003" value="DC003"  ></td>
+								<td><input type="radio" class="flat-orange" name="sbjTypeCd2"       id="sbjTypeCd2ST001"       value="ST001" checked="checked" ></td><td><input type="radio" class="flat-orange" name="sbjTypeCd2"       id="sbjTypeCd2ST002"       value="ST002"  ></td>
+								<td><input type="text" class="form-control" style="width:100%" maxlength="1" name="sbjAnswer" id="sbjAnswer3" value="3" tabindex="3"></td>
+								<td><input type="text" class="form-control" style="width:100%" maxlength="1" name="sbjPoint" id="sbjPoint3" value="2" tabindex="23"></td>
+							</tr>
+							
+							<tr>
+								<td>4 <input type="hidden" name="sbjSeq" value="904"><input type="hidden" name="sbjSortNo" value="4"></td>
+								<td><input type="radio" class="flat-red"    name="sbjSectorCd3"     id="sbjSectorCd3A"       value="SC001" checked="checked" data-shortCd="A"> </td><td><input type="radio" class="flat-red"    name="sbjSectorCd3"     id="sbjSectorCd3B"       value="SC002"  data-shortCd="B"> </td><td><input type="radio" class="flat-red"    name="sbjSectorCd3"     id="sbjSectorCd3C"       value="SC003"  data-shortCd="C"> </td><td><input type="radio" class="flat-red"    name="sbjSectorCd3"     id="sbjSectorCd3D"       value="SC004"  data-shortCd="D"> </td><td><input type="radio" class="flat-red"    name="sbjSectorCd3"     id="sbjSectorCd3E"       value="SC005"  data-shortCd="E"> </td>
+								<td><input type="radio" class="flat-green"  name="sbjDifficultyCd3" id="sbjDifficultyCd3DC001" value="DC001"  ></td><td><input type="radio" class="flat-green"  name="sbjDifficultyCd3" id="sbjDifficultyCd3DC002" value="DC002" checked="checked" ></td><td><input type="radio" class="flat-green"  name="sbjDifficultyCd3" id="sbjDifficultyCd3DC003" value="DC003"  ></td>
+								<td><input type="radio" class="flat-orange" name="sbjTypeCd3"       id="sbjTypeCd3ST001"       value="ST001"  ></td><td><input type="radio" class="flat-orange" name="sbjTypeCd3"       id="sbjTypeCd3ST002"       value="ST002" checked="checked" ></td>
+								<td><input type="text" class="form-control" style="width:100%" maxlength="1" name="sbjAnswer" id="sbjAnswer4" value="1" tabindex="4"></td>
+								<td><input type="text" class="form-control" style="width:100%" maxlength="1" name="sbjPoint" id="sbjPoint4" value="2" tabindex="24"></td>
+							</tr>
+							
+							<tr>
+								<td>5 <input type="hidden" name="sbjSeq" value="905"><input type="hidden" name="sbjSortNo" value="5"></td>
+								<td><input type="radio" class="flat-red"    name="sbjSectorCd4"     id="sbjSectorCd4A"       value="SC001"  data-shortCd="A"> </td><td><input type="radio" class="flat-red"    name="sbjSectorCd4"     id="sbjSectorCd4B"       value="SC002"  data-shortCd="B"> </td><td><input type="radio" class="flat-red"    name="sbjSectorCd4"     id="sbjSectorCd4C"       value="SC003"  data-shortCd="C"> </td><td><input type="radio" class="flat-red"    name="sbjSectorCd4"     id="sbjSectorCd4D"       value="SC004"  data-shortCd="D"> </td><td><input type="radio" class="flat-red"    name="sbjSectorCd4"     id="sbjSectorCd4E"       value="SC005" checked="checked" data-shortCd="E"> </td>
+								<td><input type="radio" class="flat-green"  name="sbjDifficultyCd4" id="sbjDifficultyCd4DC001" value="DC001"  ></td><td><input type="radio" class="flat-green"  name="sbjDifficultyCd4" id="sbjDifficultyCd4DC002" value="DC002" checked="checked" ></td><td><input type="radio" class="flat-green"  name="sbjDifficultyCd4" id="sbjDifficultyCd4DC003" value="DC003"  ></td>
+								<td><input type="radio" class="flat-orange" name="sbjTypeCd4"       id="sbjTypeCd4ST001"       value="ST001"  ></td><td><input type="radio" class="flat-orange" name="sbjTypeCd4"       id="sbjTypeCd4ST002"       value="ST002" checked="checked" ></td>
+								<td><input type="text" class="form-control" style="width:100%" maxlength="1" name="sbjAnswer" id="sbjAnswer5" value="2" tabindex="5"></td>
+								<td><input type="text" class="form-control" style="width:100%" maxlength="1" name="sbjPoint" id="sbjPoint5" value="2" tabindex="25"></td>
+							</tr>
+							
+							<tr>
+								<td>6 <input type="hidden" name="sbjSeq" value="906"><input type="hidden" name="sbjSortNo" value="6"></td>
+								<td><input type="radio" class="flat-red"    name="sbjSectorCd5"     id="sbjSectorCd5A"       value="SC001"  data-shortCd="A"> </td><td><input type="radio" class="flat-red"    name="sbjSectorCd5"     id="sbjSectorCd5B"       value="SC002" checked="checked" data-shortCd="B"> </td><td><input type="radio" class="flat-red"    name="sbjSectorCd5"     id="sbjSectorCd5C"       value="SC003"  data-shortCd="C"> </td><td><input type="radio" class="flat-red"    name="sbjSectorCd5"     id="sbjSectorCd5D"       value="SC004"  data-shortCd="D"> </td><td><input type="radio" class="flat-red"    name="sbjSectorCd5"     id="sbjSectorCd5E"       value="SC005"  data-shortCd="E"> </td>
+								<td><input type="radio" class="flat-green"  name="sbjDifficultyCd5" id="sbjDifficultyCd5DC001" value="DC001"  ></td><td><input type="radio" class="flat-green"  name="sbjDifficultyCd5" id="sbjDifficultyCd5DC002" value="DC002"  ></td><td><input type="radio" class="flat-green"  name="sbjDifficultyCd5" id="sbjDifficultyCd5DC003" value="DC003" checked="checked" ></td>
+								<td><input type="radio" class="flat-orange" name="sbjTypeCd5"       id="sbjTypeCd5ST001"       value="ST001"  ></td><td><input type="radio" class="flat-orange" name="sbjTypeCd5"       id="sbjTypeCd5ST002"       value="ST002" checked="checked" ></td>
+								<td><input type="text" class="form-control" style="width:100%" maxlength="1" name="sbjAnswer" id="sbjAnswer6" value="4" tabindex="6"></td>
+								<td><input type="text" class="form-control" style="width:100%" maxlength="1" name="sbjPoint" id="sbjPoint6" value="2" tabindex="26"></td>
+							</tr>
+							
+							<tr>
+								<td>7 <input type="hidden" name="sbjSeq" value="907"><input type="hidden" name="sbjSortNo" value="7"></td>
+								<td><input type="radio" class="flat-red"    name="sbjSectorCd6"     id="sbjSectorCd6A"       value="SC001"  data-shortCd="A"> </td><td><input type="radio" class="flat-red"    name="sbjSectorCd6"     id="sbjSectorCd6B"       value="SC002"  data-shortCd="B"> </td><td><input type="radio" class="flat-red"    name="sbjSectorCd6"     id="sbjSectorCd6C"       value="SC003"  data-shortCd="C"> </td><td><input type="radio" class="flat-red"    name="sbjSectorCd6"     id="sbjSectorCd6D"       value="SC004"  data-shortCd="D"> </td><td><input type="radio" class="flat-red"    name="sbjSectorCd6"     id="sbjSectorCd6E"       value="SC005" checked="checked" data-shortCd="E"> </td>
+								<td><input type="radio" class="flat-green"  name="sbjDifficultyCd6" id="sbjDifficultyCd6DC001" value="DC001" checked="checked" ></td><td><input type="radio" class="flat-green"  name="sbjDifficultyCd6" id="sbjDifficultyCd6DC002" value="DC002"  ></td><td><input type="radio" class="flat-green"  name="sbjDifficultyCd6" id="sbjDifficultyCd6DC003" value="DC003"  ></td>
+								<td><input type="radio" class="flat-orange" name="sbjTypeCd6"       id="sbjTypeCd6ST001"       value="ST001"  ></td><td><input type="radio" class="flat-orange" name="sbjTypeCd6"       id="sbjTypeCd6ST002"       value="ST002" checked="checked" ></td>
+								<td><input type="text" class="form-control" style="width:100%" maxlength="1" name="sbjAnswer" id="sbjAnswer7" value="4" tabindex="7"></td>
+								<td><input type="text" class="form-control" style="width:100%" maxlength="1" name="sbjPoint" id="sbjPoint7" value="2" tabindex="27"></td>
+							</tr>
+							
+							<tr>
+								<td>8 <input type="hidden" name="sbjSeq" value="908"><input type="hidden" name="sbjSortNo" value="8"></td>
+								<td><input type="radio" class="flat-red"    name="sbjSectorCd7"     id="sbjSectorCd7A"       value="SC001" checked="checked" data-shortCd="A"> </td><td><input type="radio" class="flat-red"    name="sbjSectorCd7"     id="sbjSectorCd7B"       value="SC002"  data-shortCd="B"> </td><td><input type="radio" class="flat-red"    name="sbjSectorCd7"     id="sbjSectorCd7C"       value="SC003"  data-shortCd="C"> </td><td><input type="radio" class="flat-red"    name="sbjSectorCd7"     id="sbjSectorCd7D"       value="SC004"  data-shortCd="D"> </td><td><input type="radio" class="flat-red"    name="sbjSectorCd7"     id="sbjSectorCd7E"       value="SC005"  data-shortCd="E"> </td>
+								<td><input type="radio" class="flat-green"  name="sbjDifficultyCd7" id="sbjDifficultyCd7DC001" value="DC001"  ></td><td><input type="radio" class="flat-green"  name="sbjDifficultyCd7" id="sbjDifficultyCd7DC002" value="DC002"  ></td><td><input type="radio" class="flat-green"  name="sbjDifficultyCd7" id="sbjDifficultyCd7DC003" value="DC003" checked="checked" ></td>
+								<td><input type="radio" class="flat-orange" name="sbjTypeCd7"       id="sbjTypeCd7ST001"       value="ST001" checked="checked" ></td><td><input type="radio" class="flat-orange" name="sbjTypeCd7"       id="sbjTypeCd7ST002"       value="ST002"  ></td>
+								<td><input type="text" class="form-control" style="width:100%" maxlength="1" name="sbjAnswer" id="sbjAnswer8" value="3" tabindex="8"></td>
+								<td><input type="text" class="form-control" style="width:100%" maxlength="1" name="sbjPoint" id="sbjPoint8" value="2" tabindex="28"></td>
+							</tr>
+							
+							<tr>
+								<td>9 <input type="hidden" name="sbjSeq" value="909"><input type="hidden" name="sbjSortNo" value="9"></td>
+								<td><input type="radio" class="flat-red"    name="sbjSectorCd8"     id="sbjSectorCd8A"       value="SC001"  data-shortCd="A"> </td><td><input type="radio" class="flat-red"    name="sbjSectorCd8"     id="sbjSectorCd8B"       value="SC002"  data-shortCd="B"> </td><td><input type="radio" class="flat-red"    name="sbjSectorCd8"     id="sbjSectorCd8C"       value="SC003" checked="checked" data-shortCd="C"> </td><td><input type="radio" class="flat-red"    name="sbjSectorCd8"     id="sbjSectorCd8D"       value="SC004"  data-shortCd="D"> </td><td><input type="radio" class="flat-red"    name="sbjSectorCd8"     id="sbjSectorCd8E"       value="SC005"  data-shortCd="E"> </td>
+								<td><input type="radio" class="flat-green"  name="sbjDifficultyCd8" id="sbjDifficultyCd8DC001" value="DC001"  ></td><td><input type="radio" class="flat-green"  name="sbjDifficultyCd8" id="sbjDifficultyCd8DC002" value="DC002" checked="checked" ></td><td><input type="radio" class="flat-green"  name="sbjDifficultyCd8" id="sbjDifficultyCd8DC003" value="DC003"  ></td>
+								<td><input type="radio" class="flat-orange" name="sbjTypeCd8"       id="sbjTypeCd8ST001"       value="ST001"  ></td><td><input type="radio" class="flat-orange" name="sbjTypeCd8"       id="sbjTypeCd8ST002"       value="ST002" checked="checked" ></td>
+								<td><input type="text" class="form-control" style="width:100%" maxlength="1" name="sbjAnswer" id="sbjAnswer9" value="3" tabindex="9"></td>
+								<td><input type="text" class="form-control" style="width:100%" maxlength="1" name="sbjPoint" id="sbjPoint9" value="2" tabindex="29"></td>
+							</tr>
+							
+							<tr>
+								<td>10 <input type="hidden" name="sbjSeq" value="910"><input type="hidden" name="sbjSortNo" value="10"></td>
+								<td><input type="radio" class="flat-red"    name="sbjSectorCd9"     id="sbjSectorCd9A"       value="SC001"  data-shortCd="A"> </td><td><input type="radio" class="flat-red"    name="sbjSectorCd9"     id="sbjSectorCd9B"       value="SC002"  data-shortCd="B"> </td><td><input type="radio" class="flat-red"    name="sbjSectorCd9"     id="sbjSectorCd9C"       value="SC003"  data-shortCd="C"> </td><td><input type="radio" class="flat-red"    name="sbjSectorCd9"     id="sbjSectorCd9D"       value="SC004" checked="checked" data-shortCd="D"> </td><td><input type="radio" class="flat-red"    name="sbjSectorCd9"     id="sbjSectorCd9E"       value="SC005"  data-shortCd="E"> </td>
+								<td><input type="radio" class="flat-green"  name="sbjDifficultyCd9" id="sbjDifficultyCd9DC001" value="DC001"  ></td><td><input type="radio" class="flat-green"  name="sbjDifficultyCd9" id="sbjDifficultyCd9DC002" value="DC002" checked="checked" ></td><td><input type="radio" class="flat-green"  name="sbjDifficultyCd9" id="sbjDifficultyCd9DC003" value="DC003"  ></td>
+								<td><input type="radio" class="flat-orange" name="sbjTypeCd9"       id="sbjTypeCd9ST001"       value="ST001"  ></td><td><input type="radio" class="flat-orange" name="sbjTypeCd9"       id="sbjTypeCd9ST002"       value="ST002" checked="checked" ></td>
+								<td><input type="text" class="form-control" style="width:100%" maxlength="1" name="sbjAnswer" id="sbjAnswer10" value="3" tabindex="10"></td>
+								<td><input type="text" class="form-control" style="width:100%" maxlength="1" name="sbjPoint" id="sbjPoint10" value="2" tabindex="30"></td>
+							</tr>
+							
+							<tr>
+								<td>11 <input type="hidden" name="sbjSeq" value="911"><input type="hidden" name="sbjSortNo" value="11"></td>
+								<td><input type="radio" class="flat-red"    name="sbjSectorCd10"     id="sbjSectorCd10A"       value="SC001"  data-shortCd="A"> </td><td><input type="radio" class="flat-red"    name="sbjSectorCd10"     id="sbjSectorCd10B"       value="SC002" checked="checked" data-shortCd="B"> </td><td><input type="radio" class="flat-red"    name="sbjSectorCd10"     id="sbjSectorCd10C"       value="SC003"  data-shortCd="C"> </td><td><input type="radio" class="flat-red"    name="sbjSectorCd10"     id="sbjSectorCd10D"       value="SC004"  data-shortCd="D"> </td><td><input type="radio" class="flat-red"    name="sbjSectorCd10"     id="sbjSectorCd10E"       value="SC005"  data-shortCd="E"> </td>
+								<td><input type="radio" class="flat-green"  name="sbjDifficultyCd10" id="sbjDifficultyCd10DC001" value="DC001"  ></td><td><input type="radio" class="flat-green"  name="sbjDifficultyCd10" id="sbjDifficultyCd10DC002" value="DC002"  ></td><td><input type="radio" class="flat-green"  name="sbjDifficultyCd10" id="sbjDifficultyCd10DC003" value="DC003" checked="checked" ></td>
+								<td><input type="radio" class="flat-orange" name="sbjTypeCd10"       id="sbjTypeCd10ST001"       value="ST001"  ></td><td><input type="radio" class="flat-orange" name="sbjTypeCd10"       id="sbjTypeCd10ST002"       value="ST002" checked="checked" ></td>
+								<td><input type="text" class="form-control" style="width:100%" maxlength="1" name="sbjAnswer" id="sbjAnswer11" value="4" tabindex="11"></td>
+								<td><input type="text" class="form-control" style="width:100%" maxlength="1" name="sbjPoint" id="sbjPoint11" value="2" tabindex="31"></td>
+							</tr>
+							
+							<tr>
+								<td>12 <input type="hidden" name="sbjSeq" value="912"><input type="hidden" name="sbjSortNo" value="12"></td>
+								<td><input type="radio" class="flat-red"    name="sbjSectorCd11"     id="sbjSectorCd11A"       value="SC001" checked="checked" data-shortCd="A"> </td><td><input type="radio" class="flat-red"    name="sbjSectorCd11"     id="sbjSectorCd11B"       value="SC002"  data-shortCd="B"> </td><td><input type="radio" class="flat-red"    name="sbjSectorCd11"     id="sbjSectorCd11C"       value="SC003"  data-shortCd="C"> </td><td><input type="radio" class="flat-red"    name="sbjSectorCd11"     id="sbjSectorCd11D"       value="SC004"  data-shortCd="D"> </td><td><input type="radio" class="flat-red"    name="sbjSectorCd11"     id="sbjSectorCd11E"       value="SC005"  data-shortCd="E"> </td>
+								<td><input type="radio" class="flat-green"  name="sbjDifficultyCd11" id="sbjDifficultyCd11DC001" value="DC001"  ></td><td><input type="radio" class="flat-green"  name="sbjDifficultyCd11" id="sbjDifficultyCd11DC002" value="DC002" checked="checked" ></td><td><input type="radio" class="flat-green"  name="sbjDifficultyCd11" id="sbjDifficultyCd11DC003" value="DC003"  ></td>
+								<td><input type="radio" class="flat-orange" name="sbjTypeCd11"       id="sbjTypeCd11ST001"       value="ST001" checked="checked" ></td><td><input type="radio" class="flat-orange" name="sbjTypeCd11"       id="sbjTypeCd11ST002"       value="ST002"  ></td>
+								<td><input type="text" class="form-control" style="width:100%" maxlength="1" name="sbjAnswer" id="sbjAnswer12" value="4" tabindex="12"></td>
+								<td><input type="text" class="form-control" style="width:100%" maxlength="1" name="sbjPoint" id="sbjPoint12" value="2" tabindex="32"></td>
+							</tr>
+							
+							<tr>
+								<td>13 <input type="hidden" name="sbjSeq" value="913"><input type="hidden" name="sbjSortNo" value="13"></td>
+								<td><input type="radio" class="flat-red"    name="sbjSectorCd12"     id="sbjSectorCd12A"       value="SC001"  data-shortCd="A"> </td><td><input type="radio" class="flat-red"    name="sbjSectorCd12"     id="sbjSectorCd12B"       value="SC002"  data-shortCd="B"> </td><td><input type="radio" class="flat-red"    name="sbjSectorCd12"     id="sbjSectorCd12C"       value="SC003"  data-shortCd="C"> </td><td><input type="radio" class="flat-red"    name="sbjSectorCd12"     id="sbjSectorCd12D"       value="SC004" checked="checked" data-shortCd="D"> </td><td><input type="radio" class="flat-red"    name="sbjSectorCd12"     id="sbjSectorCd12E"       value="SC005"  data-shortCd="E"> </td>
+								<td><input type="radio" class="flat-green"  name="sbjDifficultyCd12" id="sbjDifficultyCd12DC001" value="DC001"  ></td><td><input type="radio" class="flat-green"  name="sbjDifficultyCd12" id="sbjDifficultyCd12DC002" value="DC002"  ></td><td><input type="radio" class="flat-green"  name="sbjDifficultyCd12" id="sbjDifficultyCd12DC003" value="DC003" checked="checked" ></td>
+								<td><input type="radio" class="flat-orange" name="sbjTypeCd12"       id="sbjTypeCd12ST001"       value="ST001" checked="checked" ></td><td><input type="radio" class="flat-orange" name="sbjTypeCd12"       id="sbjTypeCd12ST002"       value="ST002"  ></td>
+								<td><input type="text" class="form-control" style="width:100%" maxlength="1" name="sbjAnswer" id="sbjAnswer13" value="3" tabindex="13"></td>
+								<td><input type="text" class="form-control" style="width:100%" maxlength="1" name="sbjPoint" id="sbjPoint13" value="2" tabindex="33"></td>
+							</tr>
+							
+							<tr>
+								<td>14 <input type="hidden" name="sbjSeq" value="914"><input type="hidden" name="sbjSortNo" value="14"></td>
+								<td><input type="radio" class="flat-red"    name="sbjSectorCd13"     id="sbjSectorCd13A"       value="SC001"  data-shortCd="A"> </td><td><input type="radio" class="flat-red"    name="sbjSectorCd13"     id="sbjSectorCd13B"       value="SC002"  data-shortCd="B"> </td><td><input type="radio" class="flat-red"    name="sbjSectorCd13"     id="sbjSectorCd13C"       value="SC003" checked="checked" data-shortCd="C"> </td><td><input type="radio" class="flat-red"    name="sbjSectorCd13"     id="sbjSectorCd13D"       value="SC004"  data-shortCd="D"> </td><td><input type="radio" class="flat-red"    name="sbjSectorCd13"     id="sbjSectorCd13E"       value="SC005"  data-shortCd="E"> </td>
+								<td><input type="radio" class="flat-green"  name="sbjDifficultyCd13" id="sbjDifficultyCd13DC001" value="DC001"  ></td><td><input type="radio" class="flat-green"  name="sbjDifficultyCd13" id="sbjDifficultyCd13DC002" value="DC002" checked="checked" ></td><td><input type="radio" class="flat-green"  name="sbjDifficultyCd13" id="sbjDifficultyCd13DC003" value="DC003"  ></td>
+								<td><input type="radio" class="flat-orange" name="sbjTypeCd13"       id="sbjTypeCd13ST001"       value="ST001"  ></td><td><input type="radio" class="flat-orange" name="sbjTypeCd13"       id="sbjTypeCd13ST002"       value="ST002" checked="checked" ></td>
+								<td><input type="text" class="form-control" style="width:100%" maxlength="1" name="sbjAnswer" id="sbjAnswer14" value="1" tabindex="14"></td>
+								<td><input type="text" class="form-control" style="width:100%" maxlength="1" name="sbjPoint" id="sbjPoint14" value="2" tabindex="34"></td>
+							</tr>
+							
+							<tr>
+								<td>15 <input type="hidden" name="sbjSeq" value="915"><input type="hidden" name="sbjSortNo" value="15"></td>
+								<td><input type="radio" class="flat-red"    name="sbjSectorCd14"     id="sbjSectorCd14A"       value="SC001"  data-shortCd="A"> </td><td><input type="radio" class="flat-red"    name="sbjSectorCd14"     id="sbjSectorCd14B"       value="SC002"  data-shortCd="B"> </td><td><input type="radio" class="flat-red"    name="sbjSectorCd14"     id="sbjSectorCd14C"       value="SC003"  data-shortCd="C"> </td><td><input type="radio" class="flat-red"    name="sbjSectorCd14"     id="sbjSectorCd14D"       value="SC004" checked="checked" data-shortCd="D"> </td><td><input type="radio" class="flat-red"    name="sbjSectorCd14"     id="sbjSectorCd14E"       value="SC005"  data-shortCd="E"> </td>
+								<td><input type="radio" class="flat-green"  name="sbjDifficultyCd14" id="sbjDifficultyCd14DC001" value="DC001" checked="checked" ></td><td><input type="radio" class="flat-green"  name="sbjDifficultyCd14" id="sbjDifficultyCd14DC002" value="DC002"  ></td><td><input type="radio" class="flat-green"  name="sbjDifficultyCd14" id="sbjDifficultyCd14DC003" value="DC003"  ></td>
+								<td><input type="radio" class="flat-orange" name="sbjTypeCd14"       id="sbjTypeCd14ST001"       value="ST001"  ></td><td><input type="radio" class="flat-orange" name="sbjTypeCd14"       id="sbjTypeCd14ST002"       value="ST002" checked="checked" ></td>
+								<td><input type="text" class="form-control" style="width:100%" maxlength="1" name="sbjAnswer" id="sbjAnswer15" value="1" tabindex="15"></td>
+								<td><input type="text" class="form-control" style="width:100%" maxlength="1" name="sbjPoint" id="sbjPoint15" value="2" tabindex="35"></td>
+							</tr>
+							
+							<tr>
+								<td>16 <input type="hidden" name="sbjSeq" value="916"><input type="hidden" name="sbjSortNo" value="16"></td>
+								<td><input type="radio" class="flat-red"    name="sbjSectorCd15"     id="sbjSectorCd15A"       value="SC001"  data-shortCd="A"> </td><td><input type="radio" class="flat-red"    name="sbjSectorCd15"     id="sbjSectorCd15B"       value="SC002" checked="checked" data-shortCd="B"> </td><td><input type="radio" class="flat-red"    name="sbjSectorCd15"     id="sbjSectorCd15C"       value="SC003"  data-shortCd="C"> </td><td><input type="radio" class="flat-red"    name="sbjSectorCd15"     id="sbjSectorCd15D"       value="SC004"  data-shortCd="D"> </td><td><input type="radio" class="flat-red"    name="sbjSectorCd15"     id="sbjSectorCd15E"       value="SC005"  data-shortCd="E"> </td>
+								<td><input type="radio" class="flat-green"  name="sbjDifficultyCd15" id="sbjDifficultyCd15DC001" value="DC001" checked="checked" ></td><td><input type="radio" class="flat-green"  name="sbjDifficultyCd15" id="sbjDifficultyCd15DC002" value="DC002"  ></td><td><input type="radio" class="flat-green"  name="sbjDifficultyCd15" id="sbjDifficultyCd15DC003" value="DC003"  ></td>
+								<td><input type="radio" class="flat-orange" name="sbjTypeCd15"       id="sbjTypeCd15ST001"       value="ST001" checked="checked" ></td><td><input type="radio" class="flat-orange" name="sbjTypeCd15"       id="sbjTypeCd15ST002"       value="ST002"  ></td>
+								<td><input type="text" class="form-control" style="width:100%" maxlength="1" name="sbjAnswer" id="sbjAnswer16" value="4" tabindex="16"></td>
+								<td><input type="text" class="form-control" style="width:100%" maxlength="1" name="sbjPoint" id="sbjPoint16" value="2" tabindex="36"></td>
+							</tr>
+							
+							<tr>
+								<td>17 <input type="hidden" name="sbjSeq" value="917"><input type="hidden" name="sbjSortNo" value="17"></td>
+								<td><input type="radio" class="flat-red"    name="sbjSectorCd16"     id="sbjSectorCd16A"       value="SC001"  data-shortCd="A"> </td><td><input type="radio" class="flat-red"    name="sbjSectorCd16"     id="sbjSectorCd16B"       value="SC002"  data-shortCd="B"> </td><td><input type="radio" class="flat-red"    name="sbjSectorCd16"     id="sbjSectorCd16C"       value="SC003" checked="checked" data-shortCd="C"> </td><td><input type="radio" class="flat-red"    name="sbjSectorCd16"     id="sbjSectorCd16D"       value="SC004"  data-shortCd="D"> </td><td><input type="radio" class="flat-red"    name="sbjSectorCd16"     id="sbjSectorCd16E"       value="SC005"  data-shortCd="E"> </td>
+								<td><input type="radio" class="flat-green"  name="sbjDifficultyCd16" id="sbjDifficultyCd16DC001" value="DC001"  ></td><td><input type="radio" class="flat-green"  name="sbjDifficultyCd16" id="sbjDifficultyCd16DC002" value="DC002"  ></td><td><input type="radio" class="flat-green"  name="sbjDifficultyCd16" id="sbjDifficultyCd16DC003" value="DC003" checked="checked" ></td>
+								<td><input type="radio" class="flat-orange" name="sbjTypeCd16"       id="sbjTypeCd16ST001"       value="ST001" checked="checked" ></td><td><input type="radio" class="flat-orange" name="sbjTypeCd16"       id="sbjTypeCd16ST002"       value="ST002"  ></td>
+								<td><input type="text" class="form-control" style="width:100%" maxlength="1" name="sbjAnswer" id="sbjAnswer17" value="3" tabindex="17"></td>
+								<td><input type="text" class="form-control" style="width:100%" maxlength="1" name="sbjPoint" id="sbjPoint17" value="2" tabindex="37"></td>
+							</tr>
+							
+							<tr>
+								<td>18 <input type="hidden" name="sbjSeq" value="918"><input type="hidden" name="sbjSortNo" value="18"></td>
+								<td><input type="radio" class="flat-red"    name="sbjSectorCd17"     id="sbjSectorCd17A"       value="SC001" checked="checked" data-shortCd="A"> </td><td><input type="radio" class="flat-red"    name="sbjSectorCd17"     id="sbjSectorCd17B"       value="SC002"  data-shortCd="B"> </td><td><input type="radio" class="flat-red"    name="sbjSectorCd17"     id="sbjSectorCd17C"       value="SC003"  data-shortCd="C"> </td><td><input type="radio" class="flat-red"    name="sbjSectorCd17"     id="sbjSectorCd17D"       value="SC004"  data-shortCd="D"> </td><td><input type="radio" class="flat-red"    name="sbjSectorCd17"     id="sbjSectorCd17E"       value="SC005"  data-shortCd="E"> </td>
+								<td><input type="radio" class="flat-green"  name="sbjDifficultyCd17" id="sbjDifficultyCd17DC001" value="DC001"  ></td><td><input type="radio" class="flat-green"  name="sbjDifficultyCd17" id="sbjDifficultyCd17DC002" value="DC002"  ></td><td><input type="radio" class="flat-green"  name="sbjDifficultyCd17" id="sbjDifficultyCd17DC003" value="DC003" checked="checked" ></td>
+								<td><input type="radio" class="flat-orange" name="sbjTypeCd17"       id="sbjTypeCd17ST001"       value="ST001" checked="checked" ></td><td><input type="radio" class="flat-orange" name="sbjTypeCd17"       id="sbjTypeCd17ST002"       value="ST002"  ></td>
+								<td><input type="text" class="form-control" style="width:100%" maxlength="1" name="sbjAnswer" id="sbjAnswer18" value="3" tabindex="18"></td>
+								<td><input type="text" class="form-control" style="width:100%" maxlength="1" name="sbjPoint" id="sbjPoint18" value="2" tabindex="38"></td>
+							</tr>
+							
+							<tr>
+								<td>19 <input type="hidden" name="sbjSeq" value="919"><input type="hidden" name="sbjSortNo" value="19"></td>
+								<td><input type="radio" class="flat-red"    name="sbjSectorCd18"     id="sbjSectorCd18A"       value="SC001"  data-shortCd="A"> </td><td><input type="radio" class="flat-red"    name="sbjSectorCd18"     id="sbjSectorCd18B"       value="SC002"  data-shortCd="B"> </td><td><input type="radio" class="flat-red"    name="sbjSectorCd18"     id="sbjSectorCd18C"       value="SC003" checked="checked" data-shortCd="C"> </td><td><input type="radio" class="flat-red"    name="sbjSectorCd18"     id="sbjSectorCd18D"       value="SC004"  data-shortCd="D"> </td><td><input type="radio" class="flat-red"    name="sbjSectorCd18"     id="sbjSectorCd18E"       value="SC005"  data-shortCd="E"> </td>
+								<td><input type="radio" class="flat-green"  name="sbjDifficultyCd18" id="sbjDifficultyCd18DC001" value="DC001"  ></td><td><input type="radio" class="flat-green"  name="sbjDifficultyCd18" id="sbjDifficultyCd18DC002" value="DC002" checked="checked" ></td><td><input type="radio" class="flat-green"  name="sbjDifficultyCd18" id="sbjDifficultyCd18DC003" value="DC003"  ></td>
+								<td><input type="radio" class="flat-orange" name="sbjTypeCd18"       id="sbjTypeCd18ST001"       value="ST001"  ></td><td><input type="radio" class="flat-orange" name="sbjTypeCd18"       id="sbjTypeCd18ST002"       value="ST002" checked="checked" ></td>
+								<td><input type="text" class="form-control" style="width:100%" maxlength="1" name="sbjAnswer" id="sbjAnswer19" value="1" tabindex="19"></td>
+								<td><input type="text" class="form-control" style="width:100%" maxlength="1" name="sbjPoint" id="sbjPoint19" value="2" tabindex="39"></td>
+							</tr>
+							
+							<tr>
+								<td>20 <input type="hidden" name="sbjSeq" value="920"><input type="hidden" name="sbjSortNo" value="20"></td>
+								<td><input type="radio" class="flat-red"    name="sbjSectorCd19"     id="sbjSectorCd19A"       value="SC001"  data-shortCd="A"> </td><td><input type="radio" class="flat-red"    name="sbjSectorCd19"     id="sbjSectorCd19B"       value="SC002"  data-shortCd="B"> </td><td><input type="radio" class="flat-red"    name="sbjSectorCd19"     id="sbjSectorCd19C"       value="SC003"  data-shortCd="C"> </td><td><input type="radio" class="flat-red"    name="sbjSectorCd19"     id="sbjSectorCd19D"       value="SC004" checked="checked" data-shortCd="D"> </td><td><input type="radio" class="flat-red"    name="sbjSectorCd19"     id="sbjSectorCd19E"       value="SC005"  data-shortCd="E"> </td>
+								<td><input type="radio" class="flat-green"  name="sbjDifficultyCd19" id="sbjDifficultyCd19DC001" value="DC001" checked="checked" ></td><td><input type="radio" class="flat-green"  name="sbjDifficultyCd19" id="sbjDifficultyCd19DC002" value="DC002"  ></td><td><input type="radio" class="flat-green"  name="sbjDifficultyCd19" id="sbjDifficultyCd19DC003" value="DC003"  ></td>
+								<td><input type="radio" class="flat-orange" name="sbjTypeCd19"       id="sbjTypeCd19ST001"       value="ST001" checked="checked" ></td><td><input type="radio" class="flat-orange" name="sbjTypeCd19"       id="sbjTypeCd19ST002"       value="ST002"  ></td>
+								<td><input type="text" class="form-control" style="width:100%" maxlength="1" name="sbjAnswer" id="sbjAnswer20" value="4" tabindex="20"></td>
+								<td><input type="text" class="form-control" style="width:100%" maxlength="1" name="sbjPoint" id="sbjPoint20" value="2" tabindex="40"></td>
+							</tr>
+							
+							</tbody>
+							<tfoot>
+							<tr>
+								<th scope="row">Tổng</th>
+								<td><span id="sbj1A"></span></td>
+								<td><span id="sbj1B"></span></td>
+								<td><span id="sbj1C"></span></td>
+								<td><span id="sbj1D"></span></td>
+								<td><span id="sbj1E"></span></td>
+								<td><span id="sbj2H"></span></td>
+								<td><span id="sbj2C"></span></td>
+								<td><span id="sbj2B"></span></td>
+								<td><span id="sbj3B"></span></td>
+								<td><span id="sbj3M"></span></td>
+								<td></td>
+								<td><span id="sbjSumPoint"></span></td>
+							</tr>
+							</tfoot>
+						</table>
+					</div>
+					<button type="button" class="btn btn-info btnTab" data-goTab="#comment-tab">Next tab</button> 
+					<button type="button" class="btn btn-info btnTab" data-goTab="#thinking-tab">Last tab</button> 
+				</div>
+
+				<div role="tabpanel" class="tab-pane fade" id="tab2" aria-labelledby="comment-tab">
+					<div class="x_title">
+						<h5>Diagnostic Assessment Comment - Total</h5>
+					</div>
+					<div class="x_line">
+						<table class="ui celled table bulk_action table_col tbodyth" style="width:100%;">
+							<caption>TABLE</caption>
+							<colgroup>
+								<col style="width: 8%">
+								<col style="width:35%">
+								<col style="width:35%">
+							</colgroup>
+							<thead>
+								<tr>
+									<th rowspan="2">count of more then 75%</th>
+									<th scope="col" colspan="2">Comment</th>
+								</tr>
+								<tr>
+									<th>Good</th>
+									<th>Bad</th>
+								</tr>
+							</thead>
+							<tbody>
+							
+							<tr>
+								<th scope="row">5 EA <input type="hidden" name="totalSeq" value="226"><input type="hidden" name="goodCase" value="5"></th>
+								<td><textarea name="goodComment" id="goodComment" cols="10" rows="2" style="width:100%; height:100%">Học sinh c&oacute; kỹ năng giải quyết vấn đề v&agrave; năng lực học tập tốt. Học sinh c&oacute; thể tham gia c&aacute;c lớp cấp độ cao</textarea></td>
+								<td><textarea name="weakComment" id="weakComment" cols="10" rows="2" style="width:100%; height:100%"></textarea></td>
+							</tr>
+							
+							<tr>
+								<th scope="row">4 EA <input type="hidden" name="totalSeq" value="227"><input type="hidden" name="goodCase" value="4"></th>
+								<td><textarea name="goodComment" id="goodComment" cols="10" rows="2" style="width:100%; height:100%">C&oacute; năng lực học tập tốt v&agrave; khả năng giải quyết vấn đề trong c&aacute;c lĩnh vực kh&aacute;c ngo&agrave;i  vấn đề&lt;span class=&quot;co_red&quot;&gt;#weakUnitCdNms#&lt;/span&gt;.</textarea></td>
+								<td><textarea name="weakComment" id="weakComment" cols="10" rows="2" style="width:100%; height:100%">Chưa chắc chắn về khả năng hiểu ho&agrave;n to&agrave;n của học sinh về c&aacute;c vấn đề:  &lt;span class=&quot;co_red&quot;&gt;#weakUnitCdN</textarea></td>
+							</tr>
+							
+							<tr>
+								<th scope="row">3 EA <input type="hidden" name="totalSeq" value="228"><input type="hidden" name="goodCase" value="3"></th>
+								<td><textarea name="goodComment" id="goodComment" cols="10" rows="2" style="width:100%; height:100%">C&oacute; năng lực học tập tốt v&agrave; khả năng giải quyết vấn đề trong c&aacute;c lĩnh vực kh&aacute;c ngo&agrave;i &lt;span class=&quot;co_red&quot;&gt;#weakUnitCdNms#&lt;/span&gt;.</textarea></td>
+								<td><textarea name="weakComment" id="weakComment" cols="10" rows="2" style="width:100%; height:100%">Chưa chắc chắn về khả năng hiểu ho&agrave;n to&agrave;n của học sinh về c&aacute;c vấn đề:  &lt;span class=&quot;co_red&quot;&gt;#weakUnitCdNms#&lt;/span&gt;.</textarea></td>
+							</tr>
+							
+							<tr>
+								<th scope="row">2 EA <input type="hidden" name="totalSeq" value="229"><input type="hidden" name="goodCase" value="2"></th>
+								<td><textarea name="goodComment" id="goodComment" cols="10" rows="2" style="width:100%; height:100%">C&oacute; năng lực học tập tốt v&agrave; khả năng giải quyết vấn đề trong &lt;span class=&quot;co_sky&quot;&gt;#goodUnitCdNms#&lt;/span&gt;.</textarea></td>
+								<td><textarea name="weakComment" id="weakComment" cols="10" rows="2" style="width:100%; height:100%">Chưa chắc chắn về khả năng hiểu ho&agrave;n to&agrave;n của học sinh về c&aacute;c vấn đề:  &lt;span class=&quot;co_red&quot;&gt;#weakUnitCdNms#&lt;/span&gt;.</textarea></td>
+							</tr>
+							
+							<tr>
+								<th scope="row">1 EA <input type="hidden" name="totalSeq" value="230"><input type="hidden" name="goodCase" value="1"></th>
+								<td><textarea name="goodComment" id="goodComment" cols="10" rows="2" style="width:100%; height:100%"></textarea></td>
+								<td><textarea name="weakComment" id="weakComment" cols="10" rows="2" style="width:100%; height:100%">Chưa chắc chắn về khả năng hiểu ho&agrave;n to&agrave;n của học sinh về c&aacute;c vấn đề:  &lt;span class=&quot;co_red&quot;&gt;#weakUnitCdNms#&lt;/span&gt;.</textarea></td>
+							</tr>
+							
+							</tbody>
+						</table>
+					</div>
+
+					<div class="x_title">
+						<h5>Diagnostic Assessment Comment - Unit</h5>
+					</div>
+					<div class="x_line">
+						<table class="ui celled table bulk_action table_col tbodyth" style="width:100%;">
+							<caption>TABLE</caption>
+							<colgroup>
+								<col style="width:16%">
+								<col style="width:76%">
+							</colgroup>
+							<thead>
+								<tr>
+									<th scope="col">Phân loại</th>
+									<th scope="col">Bình luận</th>
+								</tr>
+							</thead>
+							<tbody>
+							
+							<tr>
+								<th scope="row">When <u>A.<span class="unit_1">Ph&eacute;p cộng v&agrave; ph&eacute;p trừ</span></u> is missing <input type="hidden" name="unitSeq" value="225"><input type="hidden" name="sectorCd" value="SC001"></th>
+								<td><textarea name="unitComment" id="unitComment1" cols="10" rows="2" style="width:100%; height:100%">Học sinh cần cải thiện về  &lt;span class=&quot;co_red&quot;&gt;#weakUnitCdNm#&lt;/span&gt;. C&aacute;c số đến 9 l&agrave; kiến thức cơ bản của To&aacute;n học.  Hiểu r&otilde; bản chất v&agrave; mối quan hệ của c&aacute;c số đến 9 sẽ gi&uacute;p con học dễ d&agrave;ng những số lớn hơn.</textarea></td>
+							</tr>
+							
+							<tr>
+								<th scope="row">When <u>B.<span class="unit_2">C&aacute;c h&igrave;nh dạng kh&aacute;c nhau</span></u> is missing <input type="hidden" name="unitSeq" value="226"><input type="hidden" name="sectorCd" value="SC002"></th>
+								<td><textarea name="unitComment" id="unitComment2" cols="10" rows="2" style="width:100%; height:100%">Học sinh cần cải thiện về &lt;span class=&quot;co_red&quot;&gt;#weakUnitCdNm#&lt;/span&gt;. Kiến thức n&agrave;y c&oacute; t&aacute;c dụng quan trọng để mở rộng kh&aacute;i niệm v&agrave; hiểu c&aacute;c h&igrave;nh dạng ch&iacute;nh x&aacute;c hơn. Học sinh n&ecirc;n thực h&agrave;nh vẽ h&igrave;nh rồi đặt t&ecirc;n cho ch&uacute;ng v&agrave; quan s&aacute;t c&aacute;c đặc điểm v&agrave; thuộc t&iacute;nh của ch&uacute;ng.</textarea></td>
+							</tr>
+							
+							<tr>
+								<th scope="row">When <u>C.<span class="unit_3">Ph&acirc;n loại</span></u> is missing <input type="hidden" name="unitSeq" value="227"><input type="hidden" name="sectorCd" value="SC003"></th>
+								<td><textarea name="unitComment" id="unitComment3" cols="10" rows="2" style="width:100%; height:100%">Học sinh cần cải thiện về  &lt;span class=&quot;co_red&quot;&gt;#weakUnitCdNm#&lt;/span&gt;. Ph&eacute;p cộng v&agrave; ph&eacute;p trừ l&agrave; kiến thức cơ bản của To&aacute;n học. C&aacute;c con hiểu r&otilde; về kh&aacute;i niệm n&agrave;y sẽ gi&uacute;p hiểu những ph&eacute;p to&aacute;n kh&aacute;c.</textarea></td>
+							</tr>
+							
+							<tr>
+								<th scope="row">When <u>D.<span class="unit_4">Kiểu mẫu</span></u> is missing <input type="hidden" name="unitSeq" value="228"><input type="hidden" name="sectorCd" value="SC004"></th>
+								<td><textarea name="unitComment" id="unitComment4" cols="10" rows="2" style="width:100%; height:100%">Học sinh cần cải thiện về &lt;span class=&quot;co_red&quot;&gt;#weakUnitCdNm#&lt;/span&gt;. Học sinh cần nắm được đặc điểm của từng đối tượng, từ đ&oacute; nhận biết được đặc điểm chung v&agrave; ti&ecirc;u ch&iacute; để so s&aacute;nh.</textarea></td>
+							</tr>
+							
+							<tr>
+								<th scope="row">When <u>E.<span class="unit_5">Ph&eacute;p nh&acirc;n</span></u> is missing <input type="hidden" name="unitSeq" value="229"><input type="hidden" name="sectorCd" value="SC005"></th>
+								<td><textarea name="unitComment" id="unitComment5" cols="10" rows="2" style="width:100%; height:100%">Học sinh cần cải thiện về  &lt;span class=&quot;co_red&quot;&gt;#weakUnitCdNm#&lt;/span&gt;. C&aacute;c số đến 50 l&agrave; một th&aacute;ch thức đối với một số bạn nhưng l&agrave; cơ sở để con tiếp cận những kiến thức kh&oacute; hơn.</textarea></td>
+							</tr>
+							
+							</tbody>
+						</table>
+					</div>
+					<button type="button" class="btn btn-info btnTab" data-goTab="#subject-tab">Bảng trước</button> 
+					<button type="button" class="btn btn-info btnTab" data-goTab="#thinking-tab">Bảng tiếp theo</button> 
+				</div>
+
+				<div role="tabpanel" class="tab-pane fade" id="tab3" aria-labelledby="thinking-tab">
+					<div class="x_title">
+						<table class="ui celled table bulk_action table_col tbodyth table3" style="width:100%;">
+							<caption>TABLE</caption>
+							<colgroup>
+								<col style="width:9.09%">
+
+								<col style="width:9.09%">
+								<col style="width:9.09%">
+								<col style="width:9.09%">
+								<col style="width:9.09%">
+
+								<col style="width:9.09%">
+								<col style="width:9.09%">
+								<col style="width:9.09%">
+								<col style="width:9.09%">
+								<col style="width:9.09%">
+
+								<col style="width:9.1%">
+							</colgroup>
+							<thead>
+							<tr>
+								<th scope="col" rowspan="2">Số</th>
+								<th scope="colgroup" colspan="6">Lĩnh vực</th>
+								<th scope="colgroup" colspan="3">Difficulty</th>
+								<th scope="col" rowspan="2">Điểm chuẩn</th>
+							</tr>
+							<tr>
+								<th scope="col">A. Khả năng hiểu toán</th>
+								<th scope="col">B. Khả năng quan sát trực quan</th>
+								<th scope="col">C. Khả năng tổng hợp thông tin</th>
+								<th scope="col">D. Khả năng dự đoán toán học</th>
+								<th scope="col">E. Khả năng nhận thức không gian </th>
+								<th scope="col">F. Khả năng suy luận toán học</th>
+
+								<th scope="col">High</th>
+								<th scope="col">Medium</th>
+								<th scope="col">Low</th>
+							</tr>
+							</thead>
+							<tbody>
+							
+							<tr>
+								<th scope="row">1 <input type="hidden" name="thkSeq" value="441"><input type="hidden" name="thkSortNo" value="1"></th>
+								<td>
+									<input type="checkbox" class="flat-pink" name="understand"  id="understand0"  checked="checked">
+									<input type="hidden" value="1"  name="thkUnderstand"  id="thkUnderstand0" >
+								</td>
+								<td>
+									<input type="checkbox" class="flat-pink" name="insight"     id="insight0"     >
+									<input type="hidden" value="0"     name="thkInsight"     id="thkInsight0"    >
+								</td>
+								<td>
+									<input type="checkbox" class="flat-pink" name="organize"    id="organize0"    checked="checked">
+									<input type="hidden" value="1"    name="thkOrganize"    id="thkOrganize0"   >
+								</td>
+								<td>
+									<input type="checkbox" class="flat-pink" name="abstraction" id="abstraction0" >
+									<input type="hidden" value="0" name="thkAbstraction" id="thkAbstraction0">
+								</td>
+								<td>
+									<input type="checkbox" class="flat-pink" name="view"        id="view0"        >
+									<input type="hidden" value="0"        name="thkView"        id="thkView0"       >
+								</td>
+								<td>
+									<input type="checkbox" class="flat-pink" name="reasoning"   id="reasoning0"   checked="checked">
+									<input type="hidden" value="1"   name="thkReasoning"   id="thkReasoning0"  >
+								</td>
+								<td><input type="radio" class="flat" id="thkDifficultyCdH0" name="thkDifficultyCd0" value="DC001" ></td>
+								<td><input type="radio" class="flat" id="thkDifficultyCdM0" name="thkDifficultyCd0" value="DC002" ></td>
+								<td><input type="radio" class="flat" id="thkDifficultyCdL0" name="thkDifficultyCd0" value="DC003" checked="checked"></td>
+								<td><input type="text" class="form-control" id="thkPoint0" name="thkPoint" style="width:100%" maxlength="2" value="5"></td>
+							</tr>
+							
+							<tr>
+								<th scope="row">2 <input type="hidden" name="thkSeq" value="442"><input type="hidden" name="thkSortNo" value="2"></th>
+								<td>
+									<input type="checkbox" class="flat-pink" name="understand"  id="understand1"  checked="checked">
+									<input type="hidden" value="1"  name="thkUnderstand"  id="thkUnderstand1" >
+								</td>
+								<td>
+									<input type="checkbox" class="flat-pink" name="insight"     id="insight1"     >
+									<input type="hidden" value="0"     name="thkInsight"     id="thkInsight1"    >
+								</td>
+								<td>
+									<input type="checkbox" class="flat-pink" name="organize"    id="organize1"    >
+									<input type="hidden" value="0"    name="thkOrganize"    id="thkOrganize1"   >
+								</td>
+								<td>
+									<input type="checkbox" class="flat-pink" name="abstraction" id="abstraction1" checked="checked">
+									<input type="hidden" value="1" name="thkAbstraction" id="thkAbstraction1">
+								</td>
+								<td>
+									<input type="checkbox" class="flat-pink" name="view"        id="view1"        >
+									<input type="hidden" value="0"        name="thkView"        id="thkView1"       >
+								</td>
+								<td>
+									<input type="checkbox" class="flat-pink" name="reasoning"   id="reasoning1"   checked="checked">
+									<input type="hidden" value="1"   name="thkReasoning"   id="thkReasoning1"  >
+								</td>
+								<td><input type="radio" class="flat" id="thkDifficultyCdH1" name="thkDifficultyCd1" value="DC001" ></td>
+								<td><input type="radio" class="flat" id="thkDifficultyCdM1" name="thkDifficultyCd1" value="DC002" ></td>
+								<td><input type="radio" class="flat" id="thkDifficultyCdL1" name="thkDifficultyCd1" value="DC003" checked="checked"></td>
+								<td><input type="text" class="form-control" id="thkPoint1" name="thkPoint" style="width:100%" maxlength="2" value="5"></td>
+							</tr>
+							
+							<tr>
+								<th scope="row">3 <input type="hidden" name="thkSeq" value="443"><input type="hidden" name="thkSortNo" value="3"></th>
+								<td>
+									<input type="checkbox" class="flat-pink" name="understand"  id="understand2"  >
+									<input type="hidden" value="0"  name="thkUnderstand"  id="thkUnderstand2" >
+								</td>
+								<td>
+									<input type="checkbox" class="flat-pink" name="insight"     id="insight2"     >
+									<input type="hidden" value="0"     name="thkInsight"     id="thkInsight2"    >
+								</td>
+								<td>
+									<input type="checkbox" class="flat-pink" name="organize"    id="organize2"    checked="checked">
+									<input type="hidden" value="1"    name="thkOrganize"    id="thkOrganize2"   >
+								</td>
+								<td>
+									<input type="checkbox" class="flat-pink" name="abstraction" id="abstraction2" checked="checked">
+									<input type="hidden" value="1" name="thkAbstraction" id="thkAbstraction2">
+								</td>
+								<td>
+									<input type="checkbox" class="flat-pink" name="view"        id="view2"        >
+									<input type="hidden" value="0"        name="thkView"        id="thkView2"       >
+								</td>
+								<td>
+									<input type="checkbox" class="flat-pink" name="reasoning"   id="reasoning2"   >
+									<input type="hidden" value="0"   name="thkReasoning"   id="thkReasoning2"  >
+								</td>
+								<td><input type="radio" class="flat" id="thkDifficultyCdH2" name="thkDifficultyCd2" value="DC001" ></td>
+								<td><input type="radio" class="flat" id="thkDifficultyCdM2" name="thkDifficultyCd2" value="DC002" ></td>
+								<td><input type="radio" class="flat" id="thkDifficultyCdL2" name="thkDifficultyCd2" value="DC003" checked="checked"></td>
+								<td><input type="text" class="form-control" id="thkPoint2" name="thkPoint" style="width:100%" maxlength="2" value="5"></td>
+							</tr>
+							
+							<tr>
+								<th scope="row">4 <input type="hidden" name="thkSeq" value="444"><input type="hidden" name="thkSortNo" value="4"></th>
+								<td>
+									<input type="checkbox" class="flat-pink" name="understand"  id="understand3"  >
+									<input type="hidden" value="0"  name="thkUnderstand"  id="thkUnderstand3" >
+								</td>
+								<td>
+									<input type="checkbox" class="flat-pink" name="insight"     id="insight3"     checked="checked">
+									<input type="hidden" value="1"     name="thkInsight"     id="thkInsight3"    >
+								</td>
+								<td>
+									<input type="checkbox" class="flat-pink" name="organize"    id="organize3"    checked="checked">
+									<input type="hidden" value="1"    name="thkOrganize"    id="thkOrganize3"   >
+								</td>
+								<td>
+									<input type="checkbox" class="flat-pink" name="abstraction" id="abstraction3" >
+									<input type="hidden" value="0" name="thkAbstraction" id="thkAbstraction3">
+								</td>
+								<td>
+									<input type="checkbox" class="flat-pink" name="view"        id="view3"        >
+									<input type="hidden" value="0"        name="thkView"        id="thkView3"       >
+								</td>
+								<td>
+									<input type="checkbox" class="flat-pink" name="reasoning"   id="reasoning3"   >
+									<input type="hidden" value="0"   name="thkReasoning"   id="thkReasoning3"  >
+								</td>
+								<td><input type="radio" class="flat" id="thkDifficultyCdH3" name="thkDifficultyCd3" value="DC001" ></td>
+								<td><input type="radio" class="flat" id="thkDifficultyCdM3" name="thkDifficultyCd3" value="DC002" checked="checked"></td>
+								<td><input type="radio" class="flat" id="thkDifficultyCdL3" name="thkDifficultyCd3" value="DC003" ></td>
+								<td><input type="text" class="form-control" id="thkPoint3" name="thkPoint" style="width:100%" maxlength="2" value="5"></td>
+							</tr>
+							
+							<tr>
+								<th scope="row">5 <input type="hidden" name="thkSeq" value="445"><input type="hidden" name="thkSortNo" value="5"></th>
+								<td>
+									<input type="checkbox" class="flat-pink" name="understand"  id="understand4"  >
+									<input type="hidden" value="0"  name="thkUnderstand"  id="thkUnderstand4" >
+								</td>
+								<td>
+									<input type="checkbox" class="flat-pink" name="insight"     id="insight4"     checked="checked">
+									<input type="hidden" value="1"     name="thkInsight"     id="thkInsight4"    >
+								</td>
+								<td>
+									<input type="checkbox" class="flat-pink" name="organize"    id="organize4"    >
+									<input type="hidden" value="0"    name="thkOrganize"    id="thkOrganize4"   >
+								</td>
+								<td>
+									<input type="checkbox" class="flat-pink" name="abstraction" id="abstraction4" checked="checked">
+									<input type="hidden" value="1" name="thkAbstraction" id="thkAbstraction4">
+								</td>
+								<td>
+									<input type="checkbox" class="flat-pink" name="view"        id="view4"        checked="checked">
+									<input type="hidden" value="1"        name="thkView"        id="thkView4"       >
+								</td>
+								<td>
+									<input type="checkbox" class="flat-pink" name="reasoning"   id="reasoning4"   >
+									<input type="hidden" value="0"   name="thkReasoning"   id="thkReasoning4"  >
+								</td>
+								<td><input type="radio" class="flat" id="thkDifficultyCdH4" name="thkDifficultyCd4" value="DC001" ></td>
+								<td><input type="radio" class="flat" id="thkDifficultyCdM4" name="thkDifficultyCd4" value="DC002" checked="checked"></td>
+								<td><input type="radio" class="flat" id="thkDifficultyCdL4" name="thkDifficultyCd4" value="DC003" ></td>
+								<td><input type="text" class="form-control" id="thkPoint4" name="thkPoint" style="width:100%" maxlength="2" value="5"></td>
+							</tr>
+							
+							<tr>
+								<th scope="row">6 <input type="hidden" name="thkSeq" value="446"><input type="hidden" name="thkSortNo" value="6"></th>
+								<td>
+									<input type="checkbox" class="flat-pink" name="understand"  id="understand5"  checked="checked">
+									<input type="hidden" value="1"  name="thkUnderstand"  id="thkUnderstand5" >
+								</td>
+								<td>
+									<input type="checkbox" class="flat-pink" name="insight"     id="insight5"     >
+									<input type="hidden" value="0"     name="thkInsight"     id="thkInsight5"    >
+								</td>
+								<td>
+									<input type="checkbox" class="flat-pink" name="organize"    id="organize5"    checked="checked">
+									<input type="hidden" value="1"    name="thkOrganize"    id="thkOrganize5"   >
+								</td>
+								<td>
+									<input type="checkbox" class="flat-pink" name="abstraction" id="abstraction5" >
+									<input type="hidden" value="0" name="thkAbstraction" id="thkAbstraction5">
+								</td>
+								<td>
+									<input type="checkbox" class="flat-pink" name="view"        id="view5"        >
+									<input type="hidden" value="0"        name="thkView"        id="thkView5"       >
+								</td>
+								<td>
+									<input type="checkbox" class="flat-pink" name="reasoning"   id="reasoning5"   >
+									<input type="hidden" value="0"   name="thkReasoning"   id="thkReasoning5"  >
+								</td>
+								<td><input type="radio" class="flat" id="thkDifficultyCdH5" name="thkDifficultyCd5" value="DC001" ></td>
+								<td><input type="radio" class="flat" id="thkDifficultyCdM5" name="thkDifficultyCd5" value="DC002" checked="checked"></td>
+								<td><input type="radio" class="flat" id="thkDifficultyCdL5" name="thkDifficultyCd5" value="DC003" ></td>
+								<td><input type="text" class="form-control" id="thkPoint5" name="thkPoint" style="width:100%" maxlength="2" value="5"></td>
+							</tr>
+							
+							<tr>
+								<th scope="row">7 <input type="hidden" name="thkSeq" value="447"><input type="hidden" name="thkSortNo" value="7"></th>
+								<td>
+									<input type="checkbox" class="flat-pink" name="understand"  id="understand6"  checked="checked">
+									<input type="hidden" value="1"  name="thkUnderstand"  id="thkUnderstand6" >
+								</td>
+								<td>
+									<input type="checkbox" class="flat-pink" name="insight"     id="insight6"     >
+									<input type="hidden" value="0"     name="thkInsight"     id="thkInsight6"    >
+								</td>
+								<td>
+									<input type="checkbox" class="flat-pink" name="organize"    id="organize6"    >
+									<input type="hidden" value="0"    name="thkOrganize"    id="thkOrganize6"   >
+								</td>
+								<td>
+									<input type="checkbox" class="flat-pink" name="abstraction" id="abstraction6" checked="checked">
+									<input type="hidden" value="1" name="thkAbstraction" id="thkAbstraction6">
+								</td>
+								<td>
+									<input type="checkbox" class="flat-pink" name="view"        id="view6"        >
+									<input type="hidden" value="0"        name="thkView"        id="thkView6"       >
+								</td>
+								<td>
+									<input type="checkbox" class="flat-pink" name="reasoning"   id="reasoning6"   checked="checked">
+									<input type="hidden" value="1"   name="thkReasoning"   id="thkReasoning6"  >
+								</td>
+								<td><input type="radio" class="flat" id="thkDifficultyCdH6" name="thkDifficultyCd6" value="DC001" ></td>
+								<td><input type="radio" class="flat" id="thkDifficultyCdM6" name="thkDifficultyCd6" value="DC002" checked="checked"></td>
+								<td><input type="radio" class="flat" id="thkDifficultyCdL6" name="thkDifficultyCd6" value="DC003" ></td>
+								<td><input type="text" class="form-control" id="thkPoint6" name="thkPoint" style="width:100%" maxlength="2" value="5"></td>
+							</tr>
+							
+							<tr>
+								<th scope="row">8 <input type="hidden" name="thkSeq" value="448"><input type="hidden" name="thkSortNo" value="8"></th>
+								<td>
+									<input type="checkbox" class="flat-pink" name="understand"  id="understand7"  checked="checked">
+									<input type="hidden" value="1"  name="thkUnderstand"  id="thkUnderstand7" >
+								</td>
+								<td>
+									<input type="checkbox" class="flat-pink" name="insight"     id="insight7"     >
+									<input type="hidden" value="0"     name="thkInsight"     id="thkInsight7"    >
+								</td>
+								<td>
+									<input type="checkbox" class="flat-pink" name="organize"    id="organize7"    checked="checked">
+									<input type="hidden" value="1"    name="thkOrganize"    id="thkOrganize7"   >
+								</td>
+								<td>
+									<input type="checkbox" class="flat-pink" name="abstraction" id="abstraction7" checked="checked">
+									<input type="hidden" value="1" name="thkAbstraction" id="thkAbstraction7">
+								</td>
+								<td>
+									<input type="checkbox" class="flat-pink" name="view"        id="view7"        >
+									<input type="hidden" value="0"        name="thkView"        id="thkView7"       >
+								</td>
+								<td>
+									<input type="checkbox" class="flat-pink" name="reasoning"   id="reasoning7"   >
+									<input type="hidden" value="0"   name="thkReasoning"   id="thkReasoning7"  >
+								</td>
+								<td><input type="radio" class="flat" id="thkDifficultyCdH7" name="thkDifficultyCd7" value="DC001" checked="checked"></td>
+								<td><input type="radio" class="flat" id="thkDifficultyCdM7" name="thkDifficultyCd7" value="DC002" ></td>
+								<td><input type="radio" class="flat" id="thkDifficultyCdL7" name="thkDifficultyCd7" value="DC003" ></td>
+								<td><input type="text" class="form-control" id="thkPoint7" name="thkPoint" style="width:100%" maxlength="2" value="7"></td>
+							</tr>
+							
+							<tr>
+								<th scope="row">9 <input type="hidden" name="thkSeq" value="449"><input type="hidden" name="thkSortNo" value="9"></th>
+								<td>
+									<input type="checkbox" class="flat-pink" name="understand"  id="understand8"  >
+									<input type="hidden" value="0"  name="thkUnderstand"  id="thkUnderstand8" >
+								</td>
+								<td>
+									<input type="checkbox" class="flat-pink" name="insight"     id="insight8"     checked="checked">
+									<input type="hidden" value="1"     name="thkInsight"     id="thkInsight8"    >
+								</td>
+								<td>
+									<input type="checkbox" class="flat-pink" name="organize"    id="organize8"    >
+									<input type="hidden" value="0"    name="thkOrganize"    id="thkOrganize8"   >
+								</td>
+								<td>
+									<input type="checkbox" class="flat-pink" name="abstraction" id="abstraction8" >
+									<input type="hidden" value="0" name="thkAbstraction" id="thkAbstraction8">
+								</td>
+								<td>
+									<input type="checkbox" class="flat-pink" name="view"        id="view8"        >
+									<input type="hidden" value="0"        name="thkView"        id="thkView8"       >
+								</td>
+								<td>
+									<input type="checkbox" class="flat-pink" name="reasoning"   id="reasoning8"   checked="checked">
+									<input type="hidden" value="1"   name="thkReasoning"   id="thkReasoning8"  >
+								</td>
+								<td><input type="radio" class="flat" id="thkDifficultyCdH8" name="thkDifficultyCd8" value="DC001" checked="checked"></td>
+								<td><input type="radio" class="flat" id="thkDifficultyCdM8" name="thkDifficultyCd8" value="DC002" ></td>
+								<td><input type="radio" class="flat" id="thkDifficultyCdL8" name="thkDifficultyCd8" value="DC003" ></td>
+								<td><input type="text" class="form-control" id="thkPoint8" name="thkPoint" style="width:100%" maxlength="2" value="7"></td>
+							</tr>
+							
+							<tr>
+								<th scope="row">10 <input type="hidden" name="thkSeq" value="450"><input type="hidden" name="thkSortNo" value="10"></th>
+								<td>
+									<input type="checkbox" class="flat-pink" name="understand"  id="understand9"  >
+									<input type="hidden" value="0"  name="thkUnderstand"  id="thkUnderstand9" >
+								</td>
+								<td>
+									<input type="checkbox" class="flat-pink" name="insight"     id="insight9"     checked="checked">
+									<input type="hidden" value="1"     name="thkInsight"     id="thkInsight9"    >
+								</td>
+								<td>
+									<input type="checkbox" class="flat-pink" name="organize"    id="organize9"    >
+									<input type="hidden" value="0"    name="thkOrganize"    id="thkOrganize9"   >
+								</td>
+								<td>
+									<input type="checkbox" class="flat-pink" name="abstraction" id="abstraction9" >
+									<input type="hidden" value="0" name="thkAbstraction" id="thkAbstraction9">
+								</td>
+								<td>
+									<input type="checkbox" class="flat-pink" name="view"        id="view9"        checked="checked">
+									<input type="hidden" value="1"        name="thkView"        id="thkView9"       >
+								</td>
+								<td>
+									<input type="checkbox" class="flat-pink" name="reasoning"   id="reasoning9"   >
+									<input type="hidden" value="0"   name="thkReasoning"   id="thkReasoning9"  >
+								</td>
+								<td><input type="radio" class="flat" id="thkDifficultyCdH9" name="thkDifficultyCd9" value="DC001" checked="checked"></td>
+								<td><input type="radio" class="flat" id="thkDifficultyCdM9" name="thkDifficultyCd9" value="DC002" ></td>
+								<td><input type="radio" class="flat" id="thkDifficultyCdL9" name="thkDifficultyCd9" value="DC003" ></td>
+								<td><input type="text" class="form-control" id="thkPoint9" name="thkPoint" style="width:100%" maxlength="2" value="11"></td>
+							</tr>
+							
+							</tbody>
+							<tfoot>
+							<tr>
+								<th scope="row">Tổng</th>
+								<td><span id="thk1A"></span></td>
+								<td><span id="thk1B"></span></td>
+								<td><span id="thk1C"></span></td>
+								<td><span id="thk1D"></span></td>
+								<td><span id="thk1E"></span></td>
+								<td><span id="thk1F"></span></td>
+								<td><span id="thk2H"></span></td>
+								<td><span id="thk2C"></span></td>
+								<td><span id="thk2B"></span></td>
+								<td><span id="thkSumPoint"></span></td>
+							</tr>
+							</tfoot>
+						</table>
+					</div>
+					<button type="button" class="btn btn-info btnTab" data-goTab="#subject-tab">First tab</button> 
+					<button type="button" class="btn btn-info btnTab" data-goTab="#comment-tab">Previous tab</button> 
+				</div>
+			</div>
+		</div>
+		</form>
+
+		<div class="x_contents">
+			<div class="btn-center-box">
+				<a href="#modify" id="btnSave" class="btn btn-success" style="width:100px">Chỉnh sửa</a>
+				<!-- <a href="#" class="btn btn-dark" style="width:100px">초기화</a> -->
+				<a href="igtestList.do" class="btn btn-primary" style="width:100px">Bỏ qua</a>
+			</div>
+		</div>
+	</div>
+</div>
+
+<link href="/css/jquery.stickyheader.css" rel="stylesheet"> <!-- stickyheader -->
+<script src="/js/jquery.stickyheader.js"></script> <!-- stickyheader -->
+<script src="/js/jquery.ba-throttle-debounce.min.js"></script> <!-- stickyheader -->
+
+<script type="text/javascript">
+$(document).ready(function() {
+	// 교과평가 table head
+	$(".stickyTable").stickyhead();
+
+	$("[name='sectorNm']").on("keyup", function() {
+		var _id = $(this).attr('data-sectorSortNo');
+		var _value = $(this).val();
+
+		$(".unit_"+_id).text(_value);
+	});
+
+	//radio, checkbox td 클릭 이벤트
+	$("table tbody td").on("click", function() {
+		var _class = $(this).find(":input").attr("class");
+		if(_class && _class.indexOf("flat") > -1) {
+			$(this).find(":input").iCheck('toggle');
+		}
+	});
+
+	$(".pdfView").on("click", function() {
+		var option = {
+			url        : "/popup/previewPaper.do"
+			, dataType : "html"
+			, data     : {attachId : $(this).attr("data-attachId").split("^")[0], attachSeq : $(this).attr("data-attachId").split("^")[1]}
+			, cache    : false
+			, callback : function(result) {
+				$.colorbox({
+					html:result
+					, width: "1000"
+					, height: "900"
+					, opacity : "0.5"
+				});
+			}
+		}
+		execute(option);
+	});
+
+	//탭이동
+	$(".btnTab").on("click", function() {
+		$($(this).attr("data-goTab")).click();
+		$("body").scrollTop(0);
+	});
+
+	$("[name^='delCheck']").on("ifChecked",function() {
+		$("#"+this.id).attr("checked", true);
+
+		$("#files_0").show();
+	}).on("ifUnchecked", function() {
+		$("#"+this.id).attr("checked", false);
+
+		$("#files_0").hide();
+	});
+
+	var subjectSum = function() {
+		var sbj1A,sbj1B,sbj1C,sbj1D,sbj1E,sbj2H,sbj2C,sbj2B,sbj3B,sbj3M;
+		sbj1A = sbj1B = sbj1C = sbj1D = sbj1E = sbj2H = sbj2C = sbj2B = sbj3B = sbj3M = 0;
+		$(".table1 tbody [type='radio']").each(function(i,e) {
+			//console.log(e);
+			if($(this).hasClass('flat-red') && $(this).prop("checked")) {
+				//console.log(i,$(this).val());
+				if($(this).attr('data-shortCd') == 'A') { sbj1A++; }
+				if($(this).attr('data-shortCd') == 'B') { sbj1B++; }
+				if($(this).attr('data-shortCd') == 'C') { sbj1C++; }
+				if($(this).attr('data-shortCd') == 'D') { sbj1D++; }
+				if($(this).attr('data-shortCd') == 'E') { sbj1E++; }
+			}
+			if($(this).hasClass('flat-green') && $(this).prop("checked")) {
+				if($(this).val() == 'DC001') { sbj2H++; }
+				if($(this).val() == 'DC002') { sbj2C++; }
+				if($(this).val() == 'DC003') { sbj2B++; }
+			}
+			if($(this).hasClass('flat-orange') && $(this).prop("checked")) {
+				if($(this).val() == 'ST001') { sbj3B++; }
+				if($(this).val() == 'ST002') { sbj3M++; }
+			}
+		});
+		$("#sbj1A").text(sbj1A);$("#sbj1B").text(sbj1B);$("#sbj1C").text(sbj1C);$("#sbj1D").text(sbj1D);$("#sbj1E").text(sbj1E);$("#sbj2H").text(sbj2H);$("#sbj2C").text(sbj2C);$("#sbj2B").text(sbj2B);$("#sbj3B").text(sbj3B);$("#sbj3M").text(sbj3M);
+		var sbjSumPoint = 0;
+		$(".table1 tbody [name^='sbjPoint']").each(function(i,e) {
+			sbjSumPoint = Number($(this).val()) + sbjSumPoint;
+		});
+		$("#sbjSumPoint").text(sbjSumPoint);
+	}
+
+	var thinkingSum = function() {
+		var thk1A,thk1B,thk1C,thk1D,thk1E,thk1F,thk2H,thk2C,thk2B,thkSumPoint;
+		thk1A = thk1B = thk1C = thk1D = thk1E = thk1F = thk2H = thk2C = thk2B = thkSumPoint = 0;
+		$.each($(".table3 tbody input"), function(i,e) {
+			//console.log(e);
+			if($(this).hasClass('flat-pink') && $(this).prop("checked")) {
+				if(this.name == 'understand')  { thk1A++; }
+				if(this.name == 'insight')     { thk1B++; }
+				if(this.name == 'organize')    { thk1C++; }
+				if(this.name == 'abstraction') { thk1D++; }
+				if(this.name == 'view')        { thk1E++; }
+				if(this.name == 'reasoning')   { thk1F++; }
+			}
+
+			if($(this).hasClass('flat') && $(this).prop("checked")) {
+				if($(this).val() == 'DC001') { thk2H++;}
+				if($(this).val() == 'DC002') { thk2C++;}
+				if($(this).val() == 'DC003') { thk2B++;}
+			}
+
+			if($(this).hasClass('form-control')) {
+				thkSumPoint = Number($(this).val()) + thkSumPoint;
+			}
+		});
+
+		$("#thk1A").text(thk1A);$("#thk1B").text(thk1B);$("#thk1C").text(thk1C);$("#thk1D").text(thk1D);$("#thk1E").text(thk1E);$("#thk1F").text(thk1F);$("#thk2H").text(thk2H);$("#thk2C").text(thk2C);$("#thk2B").text(thk2B);$("#thkSumPoint").text(thkSumPoint);
+	}
+
+	subjectSum();
+
+	thinkingSum();
+
+	//교과평가 합계 계산
+	$(".table1 tbody input").on("ifChanged keyup",function(e) {
+		//console.log('id : ', e.target.id);
+		//console.log('value : ', e.target.value);
+		//console.log('checked : ', e.target.checked);
+		subjectSum();
+	});
+	//수학적 사고능력 합계 계산
+	$(".table3 tbody input").on("ifChanged keyup",function(e) {
+		thinkingSum();
+	});
+
+	//수학적 사고능력 평가 문제 영역 checkbox-hidden value sync
+	$(".flat-pink").on("ifChecked", function() {
+		//alert("ifChecked : " + );
+		$("#" + util.camelize("thk_"+this.id)).val("1");
+	}).on("ifUnchecked", function() {
+		//alert("ifUncecked : " + this.name);
+		$("#" + util.camelize("thk_"+this.id)).val("0");
+	});
+
+	var clickFlag = false;
+	//저장
+	$("#btnSave").on("click", function(event) {
+		event.preventDefault();
+
+		if(clickFlag) return;
+
+		/*
+		if(!confirm("Bạn sẽ Chỉnh sửa?")) return; //저장 하시겠습니까?
+
+		waitingDialog.show('Chỉnh sửa....',{
+			headerText: '', dialogSize: 'sm', progressType: 'danger'
+		});
+
+		clickFlag = true;
+
+		var option = {
+			url        : "igmetaModAction.do"
+			, data     : $('#form-register').serialize()
+			, callback : function(result) {
+				waitingDialog.hide();
+				if(result.code == 1) {
+					toastr.options = $.extend({
+						'onHidden' : function() {
+							//location.href="igtestList.do";
+							location.href="/redirectpage.do?returnPage=/sysm/igtestList&"+restoreHTML('');
+						}
+					},toastr.options);
+					toastr["info"]("Chỉnh sửa Đã thành công.");
+					//alert("Lưu Đã thành công.");
+					//location.href="igavgList.do";
+					return;
+				} else if(result.code == 0) {
+					alert(result.message);
+				} else {
+					alert("Chỉnh sửa đã thất bại.");
+				}
+				$(this).html("Chỉnh sửa").attr("disabled", false);
+				clickFlag = false;
+			}
+			, error    : function(result) {
+				alert("Chỉnh sửa đã thất bại.");
+				clickFlag = false;
+			}
+		}
+		execute(option);
+		*/
+
+		var sFileName = $("#files_0").val();
+		if (sFileName.length > 0) {
+			var blnValid = false;
+			var sCurExtension = ".pdf";
+			if (sFileName.substr(sFileName.length - sCurExtension.length, sCurExtension.length).toLowerCase() == sCurExtension.toLowerCase()) {
+				blnValid = true;
+			}
+
+			if (!blnValid) {
+				//alert("Chỉ có thể đính kèm tệp ở định dạng .pdf."); //pdf 파일만 첨부가 가능합니다.
+				swal({title:"Chỉ có thể đính kèm tệp ở định dạng .pdf.", type:"error",confirmButtonText: "Xác nhận",confirmButtonClass: "btn-warning"});
+				return;
+			}
+		}
+
+		//if(!confirm("Bạn sẽ Chỉnh sửa?")) { // 수정하시겠습니까?
+		//	return;
+		//}
+
+		swal({
+			title: "Are you sure?",
+			text: "Bạn sẽ Chỉnh sửa?", //수정 하시겠습니까?
+			type: "info", //info, warning, error, danger
+			showCancelButton: true,
+			confirmButtonClass: "btn-info",
+			confirmButtonText: "Modify",
+			cancelButtonText: "Cancel",
+			closeOnConfirm: false,
+			closeOnCancel: false,
+			showLoaderOnConfirm: true
+		}, function(isConfirm){
+			if(isConfirm) {
+				clickFlag = true;
+
+				$(":file").each(function(i,o) {
+					if(isEmpty(this.value)) {
+						$("#files_"+i+"").remove();
+					}
+				});
+
+				$('#form-register').ajaxForm({
+					url     : "igmetaModAction.do",
+					type    : 'POST',
+					success : function(result) {
+						if (result.code == 1) {
+							swal({title:"Chỉnh sửa Đã thành công.", type:"success", confirmButtonText: "Xác nhận", confirmButtonClass: "btn-success"}, function() {
+								location.href="/redirectpage.do?returnPage=/sysm/igtestList&"+restoreHTML('');
+							});
+							return;
+						} else if(result.code < 0) {
+							swal({title:result.message, type:"error",confirmButtonText: "Xác nhận",confirmButtonClass: "btn-warning"});
+						} else {
+							swal({title:"Chỉnh sửa đã thất bại.", type:"error",confirmButtonText: "Xác nhận",confirmButtonClass: "btn-warning"});
+						}
+						$("#fileSpan0").html('<input type="file" class="form-control" id="files_0" name="files[0]" style="max-width:450px; font-size:11px;">');
+					}
+				}).submit();
+				clickFlag = false;
+			} else {
+				swal({title:"Canceled", type:"error",confirmButtonText: "Xác nhận",confirmButtonClass: "btn-warning"});
+			}
+		});
+	});
+});
+</script><!-- footer content -->
+				<footer class='cms_foot'>
+					<div class="pull-left" style="bottom: 10px;clear: both;display: block;padding: 5px 0 0 0;position: fixed;">LMS VN</div>
+					<div class="pull-right" style="bottom: 10px;clear: both;display: block;padding: 5px 0 0 0;position: fixed;right:10px">Copyright &copy; CMS Edu Co., Ltd. All rights reserved.</div>
+					<div class="clearfix"></div>
+				</footer>
+				<!-- /footer content -->
+			</div>
+		</div>
+	</div>
+
+	<div id="custom_notifications" class="cinputViewustom-notifications dsp_none">
+		<ul class="list-unstyled notifications clearfix" data-tabbed_notifications="notif-group"></ul>
+		<div class="clearfix"></div>
+		<div id="notif-group" class="tabbed_notifications"></div>
+	</div>
+
+	<!-- tags
+	<script src="/js/tags/jquery.tagsinput.min.js"></script>
+	-->
+	<!-- switchery
+	<script src="/js/switchery/switchery.min.js"></script>
+	-->
+	<!-- daterangepicker
+	<script src="/js/moment/moment.min.js" type="text/javascript"></script>
+	<script src="/js/datepicker/daterangepicker.js" type="text/javascript"></script>
+	-->
+	<!-- richtext editor
+	<script src="/js/editor/bootstrap-wysiwyg.js"></script>
+	<script src="/js/editor/external/jquery.hotkeys.js"></script>
+	<script src="/js/editor/external/google-code-prettify/prettify.js"></script>
+	-->
+	<!-- select2
+	<script src="/js/select/select2.full.js"></script>
+	-->
+	<!-- form validation
+	<script src="/js/parsley/parsley.min.js" type="text/javascript"></script>
+	-->
+	<!-- textarea resize
+	<script src="/js/textarea/autosize.min.js"></script>
+	<script>
+		autosize($('.resizable_textarea'));
+	</script>
+	-->
+	<!-- Autocomplete
+	<script src="/js/autocomplete/countries.js" type="text/javascript"></script>
+	<script src="/js/autocomplete/jquery.autocomplete.js"></script>
+	<script src="/js/jquery.tablemerge.js"></script>
+	-->
+
+	<script src="/js/custom.js"></script>
+
+	<!-- select2 -->
+	<script>
+		//$("#flagImg").attr('src',`https://lipis.github.io/flag-icon-css/flags/4x3/${lang2}.svg`);
+		$("#flagImg").attr('src',$.i18n.prop('flagUrl',lang2));
+		$("#welcomeMsg").html($.i18n.prop('message.welcome','CMS VN','CMS-VN'));
+
+		$(document).ready(function() {
+			$(".alphabet").on("keyup keypress", function() {
+				validateElement("alphabet",this);
+			});
+			$(".phone").on("keyup keypress", function() {
+				validateElement("phone",this);
+			});
+			$(".email").on("keyup keypress", function() {
+				validateElement("email",this);
+			});
+			$(".number").on("keyup keypress", function() {
+				validateElement("number",this);
+			});
+
+			$("#dataTb_paginate").parent("div").prev(".col-xs-5").remove().end().attr('class', 'col-xs-12');
+
+			// 데이터 테이블 1,2 공통
+			$(".dataTables_paginate").css({
+				"float": "none"
+				,"text-align": "center"
+			});
+
+			$('.input-daterange').datepicker({
+				language: userLang, //en, ko, zh-CN
+				clearBtn: true,
+				todayHighlight: true,
+				autoclose: true,
+				orientation: "bottom auto",
+				format:'yyyy-mm-dd'
+			});
+			$('.xcxc').click(function() {
+				$('#descr').val($('#editor').html());
+			});
+		});
+
+		$(function() {
+			function initToolbarBootstrapBindings() {
+				var fonts = [ 'Serif', 'Sans', 'Arial',
+						'Arial Black', 'Courier', 'Courier New',
+						'Comic Sans MS', 'Helvetica', 'Impact',
+						'Lucida Grande', 'Lucida Sans', 'Tahoma',
+						'Times', 'Times New Roman', 'Verdana' ], fontTarget = $(
+						'[title=Font]').siblings('.dropdown-menu');
+				$.each(fonts, function(idx, fontName) {
+					fontTarget.append($('<li><a data-edit="fontName ' + fontName + '" style="font-family:\'' + fontName + '\'">' + fontName + '</a></li>'));
+				});
+				$('a[title]').tooltip({
+					container : 'body'
+				});
+				$('.dropdown-menu input').click(function() {
+					return false;
+				}).change( function() {
+					$(this).parent('.dropdown-menu').siblings('.dropdown-toggle').dropdown('toggle');
+				}).keydown('esc', function() {
+					this.value = '';
+					$(this).change();
+				});
+
+				$('[data-role=magic-overlay]').each(function() {
+					var overlay = $(this), target = $(overlay.data('target'));
+					overlay.css('opacity', 0).css('position','absolute').offset(target.offset()).width(target.outerWidth()).height(target.outerHeight());
+				});
+				if ("onwebkitspeechchange" in document.createElement("input")) {
+					var editorOffset = $('#editor').offset();
+					$('#voiceBtn').css('position', 'absolute').offset({
+										top : editorOffset.top,
+										left : editorOffset.left + $('#editor').innerWidth() - 35
+									});
+				} else {
+					$('#voiceBtn').hide();
+				}
+			};
+		});
+
+		var logout = function() {
+
+			if(!confirm("Bạn sẽ Đăng xuất?")) return;
+
+			location.href= "/login/logout.do";
+
+		}
+	</script>
+	<!-- /editor -->
+
+</body>
+</html>

@@ -10,6 +10,7 @@ use App\Http\Controllers\StudentController;
 use App\Http\Controllers\ContractController;
 use App\Http\Controllers\LmsTestController;
 use App\Http\Controllers\Api\UcreaEvaluationController;
+use App\Http\Controllers\Api\IgbhEvaluationController;
 
 Route::post('/login', [AuthController::class, 'login']);
 
@@ -25,3 +26,10 @@ Route::get('/ucrea/init-data', [UcreaEvaluationController::class, 'getInitData']
 Route::post('/ucrea/results', [UcreaEvaluationController::class, 'createResult']);
 Route::get('/ucrea/results/{id}', [UcreaEvaluationController::class, 'getResultDetail']);
 Route::post('/ucrea/results/{id}/grade', [UcreaEvaluationController::class, 'saveGrade']);
+
+Route::get('/igbh/results', [IgbhEvaluationController::class, 'getResults']);
+Route::get('/igbh/init-data', [IgbhEvaluationController::class, 'getInitData']);
+Route::post('/igbh/results', [IgbhEvaluationController::class, 'createResult']);
+Route::get('/igbh/results/{id}', [IgbhEvaluationController::class, 'getResultDetail']);
+Route::post('/igbh/results/{id}/grade', [IgbhEvaluationController::class, 'saveGrade']);
+

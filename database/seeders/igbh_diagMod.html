@@ -1,0 +1,819 @@
+<!doctype html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang=""> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8" lang=""> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9" lang=""> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html lang="">
+<!--<![endif]-->
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LMS VN</title>
+<link href="/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+<link href="/favicon.png" rel="apple-touch-icon" />
+<link href="/css/bootstrap.min.css" rel="stylesheet">
+<link href="/fonts/css/font-awesome.min.css" rel="stylesheet">
+<link href="/css/icheck/_all.css" rel="stylesheet" />
+<link href="/css/custom.css" rel="stylesheet"><!-- last overlapping CSS -->
+<link href="/css/datepicker/bootstrap-datepicker.css" rel="stylesheet">
+<link href="/js/datatables/jquery.dataTables.min.css" rel="stylesheet">
+<link href="/css/datatables/dataTables.bootstrap.css" rel="stylesheet">
+<link href="/css/colorbox/colorbox.css" rel="stylesheet"> <!-- colorbox -->
+<link href="/css/progressbar/bootstrap-progressbar-3.3.0.css" rel="stylesheet"> <!-- bootstrap progress -->
+<link href="/css/toast/toastr.min.css" rel="stylesheet"> <!-- jquery Toast -->
+
+<script src="/js/jquery.min.js"></script><!--  jQuery v1.11.3  -->
+<script type="text/javascript" src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script><!--  jQuery-ui 1.12.1 -->
+<script src="/js/colorbox/jquery.colorbox.js"></script><!-- colorbox -->
+<script src="/js/jquery.form.min.js"></script>
+<script src="/js/bootstrap.min.js"></script><!-- bootstrap v3.3.6 -->
+<script src="/js/icheck/icheck.min.js"></script><!-- icheck -->
+<script src="/js/progressbar/bootstrap-progressbar.min.js"></script><!-- bootstrap progress js -->
+
+<!-- HTML5 요소 및 미디어 쿼리에 대한 IE8 지원을위한 html5shiv.js와 Respond.js -->
+<!--[if lt IE 9]>
+<script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+<![endif]-->
+
+<!--  datatables -->
+<script src="/js/datatables/jquery.dataTables.js"></script>
+<script src="/js/datatables/dataTables.bootstrap.js"></script>
+<script src="/js/datatables/dataTables.select.min.js"></script>
+
+<!-- datepicker -->
+<script src="/js/datepicker/bootstrap-datepicker.js"></script>
+<script src="/js/datepicker/locales/bootstrap-datepicker.ko_KR.js"></script>
+<script src="/js/datepicker/locales/bootstrap-datepicker.zh_CN.js"></script>
+<script src="/js/datepicker/locales/bootstrap-datepicker.vi_VN.js"></script>
+
+<script src="/js/pdf/pdfobject.min.js"></script><!-- pdf -->
+<script src="/js/i18n/jquery.i18n.properties.js"></script><!-- i18n -->
+<script src="/js/toast/toastr.min.js"></script><!-- jquery toast -->
+<!-- <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script> -->
+
+<link href="/js/sweetalert/sweetalert.css" rel="stylesheet">
+<script src="/js/sweetalert/sweetalert.js"></script>
+
+<script src="/js/date.js"></script>
+<style>
+<!--
+table.dataTable thead th, table.dataTable tbody td, table.table_col tr th {
+vertical-align: middle;
+}
+-->
+</style>
+<script type="text/javascript">
+var userLang = "vi_VN";
+var lang2 = "";
+try {
+jQuery.i18n.properties({
+	name:'Messages',
+	path:'/js/i18n/properties/',
+	mode:'both',
+	language:userLang
+});
+lang2 = userLang.split('_')[1].toLowerCase();
+} catch (e) {
+
+}
+
+toastr.options = {
+	"closeButton": false,
+	"debug": false,
+	"newestOnTop": true,
+	"progressBar": true,
+	"positionClass": "toast-top-middle1",
+	"preventDuplicates": true,
+	"onclick": null,
+	"showDuration": "300",
+	"hideDuration": "1000",
+	"timeOut": "2000",
+	"extendedTimeOut": "1000",
+	"showEasing": "swing",
+	"hideEasing": "linear",
+	"showMethod": "fadeIn",
+	"hideMethod": "fadeOut"
+};
+(function($){
+	$.fn.tinyDraggable = function(options){
+		var settings = $.extend({ handle: null, exclude: null }, options);
+		return this.each(function(){
+			var dx, dy, el = $(this), handle = settings.handle? $(settings.handle, el): el;
+			handle.on({
+				mousedown: function(e){
+					if (settings.exclude && ~$.inArray(e.target, $(settings.exclude, el))) return;
+					var os = el.offset(); dx = e.pageX-os.left, dy = e.pageY-os.top;
+					$(document).on('mousemove.drag',
+						function(e){ el.offset({top: e.pageY-dy, left: e.pageX-dx});
+					});
+				},
+				mouseup: function(e){ $(document).off('mousemove.drag'); }
+			});
+		});
+	}
+}(jQuery));
+</script>
+<script src="/js/common.js"></script></head>
+<body class="nav-md">
+	<div class="container body">
+		<div class="main_container">
+			<div class="col-md-3 left_col">
+				<div class="left_col scroll-view">
+					<div class="navbar nav_title" style="border: 0;">
+						<a href="/" class="site_title"><span class="glyphicon glyphicon-home" aria-hidden="true"></span><!-- CTOC --></a>
+					</div>
+					<div class="clearfix"></div>
+					<!-- sidebar menu -->
+					<div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
+						<div class="menu_section">
+							<ul class="nav side-menu">
+								<li><a><i class="fa fa-cntr"></i>Quản lý Trung tâm<span class="fa fa-chevron-down"></span></a><ul class="nav child_menu" style="display: none">
+										<li><a href="/cntr/classList.do">Quản lý lớp học</a></li>
+									<li><a href="/cntr/studentList.do">Quản lý học sinh</a></li>
+									</ul></li><li><a><i class="fa fa-eval"></i>Quản lý bài kiểm tra UCREA<span class="fa fa-chevron-down"></span></a><ul class="nav child_menu" style="display: none">
+										<li><a href="/eval/viewList.do">Tìm kiếm bài kiểm tra</a></li>
+									<li><a href="/eval/inputList.do">Nhập đáp án bài kiểm tra</a></li>
+									<li><a href="/eval/resultList.do">Kết quả bài kiểm tra</a></li>
+									</ul></li><li><a><i class="fa fa-igel"></i>Quản lý bài kiểm tra IG.BH<span class="fa fa-chevron-down"></span></a><ul class="nav child_menu" style="display: none">
+										<li><a href="/igel/viewList.do">Tìm bài kiểm tra IG.BH</a></li>
+									<li><a href="/igel/diagList.do">Bài kiểm tra đầu vào IG.BH</a></li>
+									<li><a href="/igel/weeklyList.do">Đánh giá hàng tuần IG.BH</a></li>
+									<li><a href="/igel/finalList.do">Tóm tắt đánh giá cuối kỳ IG.BH</a></li>
+									<li><a href="/igel/smtvList.do">Tóm tắt kết quả đánh giá IG.BH</a></li>
+									</ul></li><li><a><i class="fa fa-cmnt"></i>Cộng đồng<span class="fa fa-chevron-down"></span></a><ul class="nav child_menu" style="display: none">
+										<li><a href="/cmnt/noticeList.do">Chú ý</a></li>
+									<li><a href="/cmnt/faqList.do">Câu hỏi thường gặp</a></li>
+									<li><a href="/cmnt/bulletList.do">Bảng thông báo</a></li>
+									</ul>
+						</div>
+					</div>
+					<!-- /sidebar menu -->
+
+					<!-- /menu footer buttons -->
+					<div class="sidebar-footer hidden-small">
+						<a href="/user/my.do" data-toggle="tooltip" data-placement="top" title="" data-original-title="My Page"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></a>
+						<a href="#" onclick="logout();" data-toggle="tooltip" data-placement="top" title="" data-original-title="Đăng xuất"><span class="glyphicon glyphicon-off" aria-hidden="true"></span></a>
+					</div>
+					<!-- /menu footer buttons -->
+				</div>
+			</div>
+			<!-- top navigation -->
+
+			<div class="top_nav">
+				<div class="nav_menu">
+					<nav class="" role="navigation">
+						<div class="nav toggle">
+							<a id="menu_toggle"><i class="fa fa-bars"></i></a>
+						</div>
+
+						<ul class="nav navbar-nav navbar-right">
+							<li class="">
+								<a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+									<span id="welcomeMsg"></span>
+									<span class=" fa fa-angle-down"></span>
+								</a>
+								<ul class="dropdown-menu dropdown-usermenu pull-right">
+									<li><a href="/user/my.do"> My Info</a></li>
+									<li><a href="#" onclick="logout();"><i class="fa fa-sign-out pull-right"></i> Đăng xuất</a></li>
+								</ul>
+							</li>
+							</ul>
+					</nav>
+				</div>
+			</div>
+			<!-- /top navigation -->
+
+			<!-- page content -->
+			<div class="right_col" role="main">
+				
+
+
+
+
+
+
+
+
+
+
+<script src="/js/bootstrap-waitingfor.js"></script>
+
+<div class="location">
+	<span>Quản lý bài kiểm tra IG.BH</span>
+	<span class="glyphicon glyphicon-menu-right" aria-hidden="true"></span>
+	<h3>Bài kiểm tra đầu vào IG.BH</h3>
+</div>
+
+<div class="row">
+	<div class="x_panel">
+		<div class="x_title">
+			<h4>Bài kiểm tra đầu vào Nhập Đáp án</h4>
+		</div>
+		<form id="form-register">
+		<input type="hidden" name="testSeq" value="124">
+		<input type="hidden" name="stuSeq" value="27958">
+		<input type="hidden" name="resultSeq" value="12025">
+		<div style="margin:25px 0 40px;">
+			<table class="table table_row" style="">
+				<caption>TABLE</caption>
+				<colgroup>
+					<col style="width: 9%">
+					<col style="width:14%">
+					<col style="width: 9%">
+					<col style="width:14%">
+					<col style="width: 9%">
+					<col style="width:14%">
+				</colgroup>
+				<tbody >
+				<tr>
+					<th scope="row">Bài kiểm tra đầu vào</th>
+					<td>
+						PT lớp 2 Q3
+					</td>
+					<th scope="row">Học sinh Tên </th>
+					<td>
+						Việt Bách
+					</td>
+					<th scope="row">Ngày thi</th>
+					<td>
+						<div class="input-daterange input-group" id="datepicker">
+							<span class="input-group-addon"><i class="glyphicon glyphicon-calendar fa fa-calendar"></i></span>
+							<input type="text" class="input-md form-control" value="2023-11-08" name="evalDt" id="evalDt" style="width:100%; max-width:230px;">
+						</div>
+					</td>
+				</tr>
+			</tbody>
+			</table>
+		</div>
+
+		<div class="x_title">
+			<h4>Đáp án cho Các vấn đề dựa trên chương trình giảng dạy</h4>
+		</div>
+		<div style="margin:25px 0 40px;">
+			<table class="ui celled table bulk_action table_col" style="width:100%;">
+				<caption>TABLE</caption>
+				<colgroup>
+					<col style="width:5%"><col style="width:5%"><col style="width:5%"><col style="width:5%"><col style="width:5%"><col style="width:5%"><col style="width:5%"><col style="width:5%"><col style="width:5%"><col style="width:5%"><col style="width:5%"><col style="width:5%"><col style="width:5%"><col style="width:5%"><col style="width:5%"><col style="width:5%"><col style="width:5%"><col style="width:5%"><col style="width:5%"><col style="width:5%">
+				</colgroup>
+				<thead>
+					<tr>
+						<th scope="col">1</th><th scope="col">2</th><th scope="col">3</th><th scope="col">4</th><th scope="col">5</th><th scope="col">6</th><th scope="col">7</th><th scope="col">8</th><th scope="col">9</th><th scope="col">10</th><th scope="col">11</th><th scope="col">12</th><th scope="col">13</th><th scope="col">14</th><th scope="col">15</th><th scope="col">16</th><th scope="col">17</th><th scope="col">18</th><th scope="col">19</th><th scope="col">20</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						
+						
+						<td>
+							<input type="hidden" name="saSeq" value="241161">
+							<input type="text" name="answer" id="answer_1" data-answerIndex="1" maxlength="1" class="form-control number" style="width:100%" value="5">
+						</td>
+						
+						<td>
+							<input type="hidden" name="saSeq" value="241162">
+							<input type="text" name="answer" id="answer_2" data-answerIndex="2" maxlength="1" class="form-control number" style="width:100%" value="5">
+						</td>
+						
+						<td>
+							<input type="hidden" name="saSeq" value="241163">
+							<input type="text" name="answer" id="answer_3" data-answerIndex="3" maxlength="1" class="form-control number" style="width:100%" value="4">
+						</td>
+						
+						<td>
+							<input type="hidden" name="saSeq" value="241164">
+							<input type="text" name="answer" id="answer_4" data-answerIndex="4" maxlength="1" class="form-control number" style="width:100%" value="2">
+						</td>
+						
+						<td>
+							<input type="hidden" name="saSeq" value="241165">
+							<input type="text" name="answer" id="answer_5" data-answerIndex="5" maxlength="1" class="form-control number" style="width:100%" value="1">
+						</td>
+						
+						<td>
+							<input type="hidden" name="saSeq" value="241166">
+							<input type="text" name="answer" id="answer_6" data-answerIndex="6" maxlength="1" class="form-control number" style="width:100%" value="2">
+						</td>
+						
+						<td>
+							<input type="hidden" name="saSeq" value="241167">
+							<input type="text" name="answer" id="answer_7" data-answerIndex="7" maxlength="1" class="form-control number" style="width:100%" value="3">
+						</td>
+						
+						<td>
+							<input type="hidden" name="saSeq" value="241168">
+							<input type="text" name="answer" id="answer_8" data-answerIndex="8" maxlength="1" class="form-control number" style="width:100%" value="4">
+						</td>
+						
+						<td>
+							<input type="hidden" name="saSeq" value="241169">
+							<input type="text" name="answer" id="answer_9" data-answerIndex="9" maxlength="1" class="form-control number" style="width:100%" value="5">
+						</td>
+						
+						<td>
+							<input type="hidden" name="saSeq" value="241170">
+							<input type="text" name="answer" id="answer_10" data-answerIndex="10" maxlength="1" class="form-control number" style="width:100%" value="2">
+						</td>
+						
+						<td>
+							<input type="hidden" name="saSeq" value="241171">
+							<input type="text" name="answer" id="answer_11" data-answerIndex="11" maxlength="1" class="form-control number" style="width:100%" value="2">
+						</td>
+						
+						<td>
+							<input type="hidden" name="saSeq" value="241172">
+							<input type="text" name="answer" id="answer_12" data-answerIndex="12" maxlength="1" class="form-control number" style="width:100%" value="2">
+						</td>
+						
+						<td>
+							<input type="hidden" name="saSeq" value="241173">
+							<input type="text" name="answer" id="answer_13" data-answerIndex="13" maxlength="1" class="form-control number" style="width:100%" value="3">
+						</td>
+						
+						<td>
+							<input type="hidden" name="saSeq" value="241174">
+							<input type="text" name="answer" id="answer_14" data-answerIndex="14" maxlength="1" class="form-control number" style="width:100%" value="3">
+						</td>
+						
+						<td>
+							<input type="hidden" name="saSeq" value="241175">
+							<input type="text" name="answer" id="answer_15" data-answerIndex="15" maxlength="1" class="form-control number" style="width:100%" value="4">
+						</td>
+						
+						<td>
+							<input type="hidden" name="saSeq" value="241176">
+							<input type="text" name="answer" id="answer_16" data-answerIndex="16" maxlength="1" class="form-control number" style="width:100%" value="1">
+						</td>
+						
+						<td>
+							<input type="hidden" name="saSeq" value="241177">
+							<input type="text" name="answer" id="answer_17" data-answerIndex="17" maxlength="1" class="form-control number" style="width:100%" value="3">
+						</td>
+						
+						<td>
+							<input type="hidden" name="saSeq" value="241178">
+							<input type="text" name="answer" id="answer_18" data-answerIndex="18" maxlength="1" class="form-control number" style="width:100%" value="5">
+						</td>
+						
+						<td>
+							<input type="hidden" name="saSeq" value="241179">
+							<input type="text" name="answer" id="answer_19" data-answerIndex="19" maxlength="1" class="form-control number" style="width:100%" value="4">
+						</td>
+						
+						<td>
+							<input type="hidden" name="saSeq" value="241180">
+							<input type="text" name="answer" id="answer_20" data-answerIndex="20" maxlength="1" class="form-control number" style="width:100%" value="1">
+						</td>
+						
+					</tr>
+				</tbody>
+			</table>
+		</div>
+
+		<div class="x_title">
+			<h4>Đáp án cho Các vấn đề kỹ năng tư duy Toán học </h4>
+		</div>
+
+		<div class="x_title">
+			<table class="ui celled table bulk_action table_col" style="width:100%;">
+				<caption>TABLE</caption>
+				<colgroup>
+					<col style="width:10%"><col style="width:10%"><col style="width:10%"><col style="width:10%"><col style="width:10%"><col style="width:10%"><col style="width:10%"><col style="width:10%"><col style="width:10%"><col style="width:10%">
+				</colgroup>
+				<thead>
+					<tr>
+						<th scope="col">1 (0~5)</th><th scope="col">2 (0~5)</th><th scope="col">3 (0~5)</th><th scope="col">4 (0~5)</th><th scope="col">5 (0~5)</th><th scope="col">6 (0~5)</th><th scope="col">7 (0~5)</th><th scope="col">8 (0~7)</th><th scope="col">9 (0~7)</th><th scope="col">10 (0~11)</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						
+						<td><input type="text" name="score" id="score_1" data-scoreIndex="1" max="13" class="form-control number" value="3" style="width:100%"><input type="hidden" name="taSeq" value="120581"></td><td><input type="text" name="score" id="score_2" data-scoreIndex="2" max="1" class="form-control number" value="3" style="width:100%"><input type="hidden" name="taSeq" value="120582"></td><td><input type="text" name="score" id="score_3" data-scoreIndex="3" max="1" class="form-control number" value="3" style="width:100%"><input type="hidden" name="taSeq" value="120583"></td><td><input type="text" name="score" id="score_4" data-scoreIndex="4" max="1" class="form-control number" value="3" style="width:100%"><input type="hidden" name="taSeq" value="120584"></td><td><input type="text" name="score" id="score_5" data-scoreIndex="5" max="1" class="form-control number" value="3" style="width:100%"><input type="hidden" name="taSeq" value="120585"></td><td><input type="text" name="score" id="score_6" data-scoreIndex="6" max="1" class="form-control number" value="3" style="width:100%"><input type="hidden" name="taSeq" value="120586"></td><td><input type="text" name="score" id="score_7" data-scoreIndex="7" max="1" class="form-control number" value="3" style="width:100%"><input type="hidden" name="taSeq" value="120587"></td><td><input type="text" name="score" id="score_8" data-scoreIndex="8" max="1" class="form-control number" value="3" style="width:100%"><input type="hidden" name="taSeq" value="120588"></td><td><input type="text" name="score" id="score_9" data-scoreIndex="9" max="1" class="form-control number" value="0" style="width:100%"><input type="hidden" name="taSeq" value="120589"></td><td><input type="text" name="score" id="score_10" data-scoreIndex="10" max="2" class="form-control number" value="0" style="width:100%"><input type="hidden" name="taSeq" value="120590"></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+
+		<div class="x_title">
+			<h4>Ghi chú cần xem xét</h4>
+			<ul>
+				<li>1. Nhập từng cái một. <!-- 1. 한개씩 직접 입력합니다. 다음칸으로 커서가 자동으로 이동됩니다. --></li>
+				
+			</ul>
+		</div>
+
+		</form>
+
+		<div class="x_contents">
+			<div class="btn-center-box">
+				<a href="#save" id="btnModify" class="btn btn-success" style="width:100px">Chỉnh sửa</a>
+				<a href="#delete" id="btnDelete" class="btn btn-danger" style="width:100px">Xóa</a>
+				<a href="#init" id="btnInit" class="btn btn-dark" style="width:100px">Cài đặt lại</a>
+				<a href="#cancel" id="btnList" class="btn btn-primary" style="width:100px">Bỏ qua</a>
+				</div>
+			</div>
+		</div>
+	</div>
+
+<script type="text/javascript">
+$(document).ready(function() {
+
+	$(".number").on("keyup keypress", function() {
+		validateElement("number",this);
+	});
+
+	//학생목록 ajax
+	var getDiagStudentList = function() {
+		var option = {
+			url        : "/igel/getDiagClassStudentList.do"
+			, type     : 'GET'
+			, callback : function(result) {
+				if(isEmpty(result)) return;
+
+				$("#stuSeq").append("<option value=''>Lựa chọn</option>");
+				$.each(result, function(i,o) {
+					$("#stuSeq").append("<option value='" + o.stuSeq + "'>" + o.stuNm + " (" + o.stuBirthDt + ", "+ o.stuAge + "Tuổi)</option>");
+				});
+			}
+			, error    : function(result) {
+				alert("Vui lòng thử lại."); 
+			}
+		}
+		execute(option);
+	}
+
+	getDiagStudentList();
+
+	$("input[name='answer']").on("keyup keypress", function(i) {
+		if(this.value > 5) {
+			alert("Bạn có thể nhập tối đa 5 lần."); 
+			this.value = '';
+			return;
+		}
+		if(this.value.length > 0) {
+			if($(this).attr("data-answerIndex") == 20) {
+				$("#score_1").select().focus();
+				return;
+			}
+			//$("#answer_" + (Number($(this).attr("data-answerIndex")) + 1)).select();
+			//$("#answer_" + (Number($(this).attr("data-answerIndex")) + 1)).select().focus();
+		}
+	});
+
+	$("input[name='score']").on("keyup keypress", function(i) {
+		
+		if($("#score_1").val() > 5) { alert("Đầu vào nằm ngoài phạm vi. (0~5)"); $("#score_1").val(""); return; }
+		
+		if($("#score_2").val() > 5) { alert("Đầu vào nằm ngoài phạm vi. (0~5)"); $("#score_2").val(""); return; }
+		
+		if($("#score_3").val() > 5) { alert("Đầu vào nằm ngoài phạm vi. (0~5)"); $("#score_3").val(""); return; }
+		
+		if($("#score_4").val() > 5) { alert("Đầu vào nằm ngoài phạm vi. (0~5)"); $("#score_4").val(""); return; }
+		
+		if($("#score_5").val() > 5) { alert("Đầu vào nằm ngoài phạm vi. (0~5)"); $("#score_5").val(""); return; }
+		
+		if($("#score_6").val() > 5) { alert("Đầu vào nằm ngoài phạm vi. (0~5)"); $("#score_6").val(""); return; }
+		
+		if($("#score_7").val() > 5) { alert("Đầu vào nằm ngoài phạm vi. (0~5)"); $("#score_7").val(""); return; }
+		
+		if($("#score_8").val() > 7) { alert("Đầu vào nằm ngoài phạm vi. (0~7)"); $("#score_8").val(""); return; }
+		
+		if($("#score_9").val() > 7) { alert("Đầu vào nằm ngoài phạm vi. (0~7)"); $("#score_9").val(""); return; }
+		
+		if($("#score_10").val() > 11) { alert("Đầu vào nằm ngoài phạm vi. (0~11)"); $("#score_10").val(""); return; }
+		
+		if(this.value.length > 0) {
+			$("#score_" + (Number($(this).attr("data-scoreIndex")) + 1)).focus();
+		}
+	});
+
+	var isChecked = false;
+	$("#btnModify").on("click", function() {
+		if(isChecked) return;
+
+		if(isEmpty($("#evalDt").val())) {
+			//alert("Hãy kiểm tra lại Ngày thi."); 
+			toastr['info']("Hãy kiểm tra lại Ngày thi.");
+			$("#evalDt").focus();
+			return;
+		}
+
+		/*
+		if(!confirm("Bạn sẽ Chỉnh sửa?")) return;
+
+		isChecked = true;
+
+		waitingDialog.show('Chỉnh sửa....',{
+			headerText: '', dialogSize: 'sm', progressType: 'danger'
+		});
+
+		var option = {
+			url        : "diagModAction.do"
+			, data     : $("#form-register").serialize()
+			, callback : function(result) {
+				waitingDialog.hide();
+				if(result.code == 1) {
+					alert("Chỉnh sửa Đã thành công.");
+
+					location.href="diagList.do";
+					isChecked = false;
+				} else if(result.code == 0) {
+					alert(result.message);
+					isChecked = false;
+				} else {
+					alert("Chỉnh sửa đã thất bại.");
+					isChecked = false;
+				}
+			}
+			, error    : function(result) {
+				alert("Chỉnh sửa đã thất bại.");
+				isChecked = false;
+			}
+		}
+		execute(option);
+		*/
+		swal({
+			title: "Bạn sẽ Chỉnh sửa?",
+			text: "Are You Sure?",
+			type: "info", //info, warning, error, danger
+			showCancelButton: true,
+			confirmButtonClass: "btn-info",
+			confirmButtonText: "Chỉnh sửa",
+			cancelButtonText: "Bỏ qua",
+			closeOnConfirm: false,
+			closeOnCancel: false,
+			showLoaderOnConfirm: true
+		}, function(isConfirm){
+			if(isConfirm) {
+				clickFlag = true;
+				var option = {
+					url        : "diagModAction.do"
+					, data     : $("#form-register").serialize()
+					, callback : function(result) {
+						if(result.code == 1) {
+							//alert("Chỉnh sửa Đã thành công.");
+							swal({title:"Chỉnh sửa Đã thành công.", type:"success", confirmButtonText: "Xác nhận", confirmButtonClass: "btn-success"}, function() {
+								location.href="/redirectpage.do?returnPage=/igel/diagList&"+restoreHTML('');
+							});
+
+							isChecked = false;
+						} else if(result.code == 0) {
+							//alert(result.message);
+							swal({title:result.message, type:"error",confirmButtonText: "Xác nhận",confirmButtonClass: "btn-warning"});
+							isChecked = false;
+						} else {
+							//alert("Chỉnh sửa đã thất bại.");
+							swal({title:"Chỉnh sửa đã thất bại.", type:"error",confirmButtonText: "Xác nhận",confirmButtonClass: "btn-warning"});
+							isChecked = false;
+						}
+					}
+					, error    : function(result) {
+						//alert("Chỉnh sửa đã thất bại.");
+						swal({title:"Chỉnh sửa đã thất bại.", type:"error",confirmButtonText: "Xác nhận",confirmButtonClass: "btn-warning"});
+						isChecked = false;
+					}
+				}
+				execute(option);
+			} else {
+				swal({title:"Bỏ qua Đã thành công.", type:"error",confirmButtonText: "Xác nhận",confirmButtonClass: "btn-warning"});
+			}
+		});
+	});
+
+	$("#btnDelete").on("click", function() {
+		/*
+		if(!confirm("Bạn sẽ Xóa?")) return;
+
+		isChecked = true;
+
+		waitingDialog.show('Xóa....',{
+			headerText: '', dialogSize: 'sm', progressType: 'danger'
+		});
+
+		var option = {
+			url        : "diagDelAction.do"
+			, data     : $("#form-register").serialize()
+			, callback : function(result) {
+				waitingDialog.hide();
+				if(result.code == 1) {
+					alert("Xóa Đã thành công.");
+
+					//location.href="diagList.do";
+					location.href="/redirectpage.do?returnPage=/igel/diagList&"+restoreHTML('');
+					isChecked = false;
+				} else if(result.code == 0) {
+					alert(result.message);
+					isChecked = false;
+				} else {
+					alert("Xóa đã thất bại.");
+					isChecked = false;
+				}
+			}
+			, error    : function(result) {
+				alert("Xóa đã thất bại.");
+				isChecked = false;
+			}
+		}
+		execute(option);
+		*/
+		swal({
+			title: "Bạn sẽ Xóa?",
+			text: "Are You Sure?",
+			type: "warning", //input, info, warning, error, success
+			showCancelButton: true,
+			confirmButtonClass: "btn-danger",
+			confirmButtonText: "Xóa",
+			cancelButtonText: "Bỏ qua",
+			closeOnConfirm: false,
+			closeOnCancel: false,
+			showLoaderOnConfirm: true
+		}, function(isConfirm){
+			if(isConfirm) {
+				clickFlag = true;
+				var option = {
+					url        : "diagDelAction.do"
+					, data     : $("#form-register").serialize()
+					, callback : function(result) {
+						if(result.code == 1) {
+							//alert("Xóa Đã thành công.");
+							swal({title:"Xóa Đã thành công.", type:"success", confirmButtonText: "Confirm", confirmButtonClass: "btn-success"}, function() {
+								location.href="/redirectpage.do?returnPage=/igel/diagList&"+restoreHTML('');
+							});
+							isChecked = false;
+						} else if(result.code == 0) {
+							swal({title:result.message, type:"error",confirmButtonText: "Xác nhận",confirmButtonClass: "btn-warning"});
+							isChecked = false;
+						} else {
+							//alert("Xóa đã thất bại.");
+							swal({title:"Xóa đã thất bại.", type:"error",confirmButtonText: "Xác nhận",confirmButtonClass: "btn-warning"});
+							isChecked = false;
+						}
+					}
+					, error    : function(result) {
+						//alert("Xóa đã thất bại.");
+						swal({title:"Xóa đã thất bại.", type:"error",confirmButtonText: "Xác nhận",confirmButtonClass: "btn-warning"});
+						isChecked = false;
+					}
+				}
+				execute(option);
+			} else {
+				swal({title:"Bỏ qua Đã thành công.", type:"error",confirmButtonText: "Xác nhận",confirmButtonClass: "btn-warning"});
+			}
+		});
+	});
+
+	$("#btnInit").on("click", function() {
+		$(".number").val("");
+	});
+
+	$("#btnList").on("click", function() {
+		//location.href="diagList.do";
+		location.href="/redirectpage.do?returnPage=/igel/diagList&"+restoreHTML('');
+	});
+
+});
+</script><!-- footer content -->
+				<footer class='cms_foot'>
+					<div class="pull-left" style="bottom: 10px;clear: both;display: block;padding: 5px 0 0 0;position: fixed;">LMS VN</div>
+					<div class="pull-right" style="bottom: 10px;clear: both;display: block;padding: 5px 0 0 0;position: fixed;right:10px">Copyright &copy; CMS Edu Co., Ltd. All rights reserved.</div>
+					<div class="clearfix"></div>
+				</footer>
+				<!-- /footer content -->
+			</div>
+		</div>
+	</div>
+
+	<div id="custom_notifications" class="cinputViewustom-notifications dsp_none">
+		<ul class="list-unstyled notifications clearfix" data-tabbed_notifications="notif-group"></ul>
+		<div class="clearfix"></div>
+		<div id="notif-group" class="tabbed_notifications"></div>
+	</div>
+
+	<!-- tags
+	<script src="/js/tags/jquery.tagsinput.min.js"></script>
+	-->
+	<!-- switchery
+	<script src="/js/switchery/switchery.min.js"></script>
+	-->
+	<!-- daterangepicker
+	<script src="/js/moment/moment.min.js" type="text/javascript"></script>
+	<script src="/js/datepicker/daterangepicker.js" type="text/javascript"></script>
+	-->
+	<!-- richtext editor
+	<script src="/js/editor/bootstrap-wysiwyg.js"></script>
+	<script src="/js/editor/external/jquery.hotkeys.js"></script>
+	<script src="/js/editor/external/google-code-prettify/prettify.js"></script>
+	-->
+	<!-- select2
+	<script src="/js/select/select2.full.js"></script>
+	-->
+	<!-- form validation
+	<script src="/js/parsley/parsley.min.js" type="text/javascript"></script>
+	-->
+	<!-- textarea resize
+	<script src="/js/textarea/autosize.min.js"></script>
+	<script>
+		autosize($('.resizable_textarea'));
+	</script>
+	-->
+	<!-- Autocomplete
+	<script src="/js/autocomplete/countries.js" type="text/javascript"></script>
+	<script src="/js/autocomplete/jquery.autocomplete.js"></script>
+	<script src="/js/jquery.tablemerge.js"></script>
+	-->
+
+	<script src="/js/custom.js"></script>
+
+	<!-- select2 -->
+	<script>
+		//$("#flagImg").attr('src',`https://lipis.github.io/flag-icon-css/flags/4x3/${lang2}.svg`);
+		$("#flagImg").attr('src',$.i18n.prop('flagUrl',lang2));
+		$("#welcomeMsg").html($.i18n.prop('message.welcome','Nguyễn Thị Phương Loan','Giáo viên'));
+
+		$(document).ready(function() {
+			$(".alphabet").on("keyup keypress", function() {
+				validateElement("alphabet",this);
+			});
+			$(".phone").on("keyup keypress", function() {
+				validateElement("phone",this);
+			});
+			$(".email").on("keyup keypress", function() {
+				validateElement("email",this);
+			});
+			$(".number").on("keyup keypress", function() {
+				validateElement("number",this);
+			});
+
+			$("#dataTb_paginate").parent("div").prev(".col-xs-5").remove().end().attr('class', 'col-xs-12');
+
+			// 데이터 테이블 1,2 공통
+			$(".dataTables_paginate").css({
+				"float": "none"
+				,"text-align": "center"
+			});
+
+			$('.input-daterange').datepicker({
+				language: userLang, //en, ko, zh-CN
+				clearBtn: true,
+				todayHighlight: true,
+				autoclose: true,
+				orientation: "bottom auto",
+				format:'yyyy-mm-dd'
+			});
+			$('.xcxc').click(function() {
+				$('#descr').val($('#editor').html());
+			});
+		});
+
+		$(function() {
+			function initToolbarBootstrapBindings() {
+				var fonts = [ 'Serif', 'Sans', 'Arial',
+						'Arial Black', 'Courier', 'Courier New',
+						'Comic Sans MS', 'Helvetica', 'Impact',
+						'Lucida Grande', 'Lucida Sans', 'Tahoma',
+						'Times', 'Times New Roman', 'Verdana' ], fontTarget = $(
+						'[title=Font]').siblings('.dropdown-menu');
+				$.each(fonts, function(idx, fontName) {
+					fontTarget.append($('<li><a data-edit="fontName ' + fontName + '" style="font-family:\'' + fontName + '\'">' + fontName + '</a></li>'));
+				});
+				$('a[title]').tooltip({
+					container : 'body'
+				});
+				$('.dropdown-menu input').click(function() {
+					return false;
+				}).change( function() {
+					$(this).parent('.dropdown-menu').siblings('.dropdown-toggle').dropdown('toggle');
+				}).keydown('esc', function() {
+					this.value = '';
+					$(this).change();
+				});
+
+				$('[data-role=magic-overlay]').each(function() {
+					var overlay = $(this), target = $(overlay.data('target'));
+					overlay.css('opacity', 0).css('position','absolute').offset(target.offset()).width(target.outerWidth()).height(target.outerHeight());
+				});
+				if ("onwebkitspeechchange" in document.createElement("input")) {
+					var editorOffset = $('#editor').offset();
+					$('#voiceBtn').css('position', 'absolute').offset({
+										top : editorOffset.top,
+										left : editorOffset.left + $('#editor').innerWidth() - 35
+									});
+				} else {
+					$('#voiceBtn').hide();
+				}
+			};
+		});
+
+		var logout = function() {
+
+			if(!confirm("Bạn sẽ Đăng xuất?")) return;
+
+			location.href= "/login/logout.do";
+
+		}
+	</script>
+	<!-- /editor -->
+
+</body>
+</html>
