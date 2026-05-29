@@ -43,65 +43,76 @@
 
     <!-- Table -->
     <div v-else class="overflow-x-auto bg-brand-card/20 border border-brand-border rounded-xl">
-      <table class="w-full text-left border-collapse">
+      <table class="w-full text-left border-collapse whitespace-nowrap min-w-max">
         <thead>
           <tr class="border-b border-brand-border bg-brand-header text-xs font-semibold text-brand-desc uppercase">
-            <th class="px-6 py-4 w-16">No.</th>
-            <th class="px-6 py-4">Test Name</th>
-            <th class="px-6 py-4">Student</th>
-            <th class="px-6 py-4">Teacher</th>
-            <th class="px-6 py-4 text-center">Total Score</th>
-            <th class="px-6 py-4 text-center">Assigned Level</th>
-            <th class="px-6 py-4 text-right">Actions</th>
+            <th class="px-6 py-4 w-16">STT</th>
+            <th class="px-6 py-4">Tên kiểm tra</th>
+            <th class="px-6 py-4">Quý</th>
+            <th class="px-6 py-4">Đăng ký bởi</th>
+            <th class="px-6 py-4 text-center">Ngày sinh</th>
+            <th class="px-6 py-4">Học sinh Tên</th>
+            <th class="px-6 py-4 text-center">Điểm môn học</th>
+            <th class="px-6 py-4 text-center">Điểm Năng lực tư duy</th>
+            <th class="px-6 py-4 text-center">Tổng điểm</th>
+            <th class="px-6 py-4">Ngày thi</th>
+            <th class="px-6 py-4">Ngày tạo</th>
+            <th class="px-6 py-4">Ngày sửa</th>
+            <th class="px-6 py-4 text-right sticky right-0 bg-brand-header z-10 border-l border-brand-border shadow-[-4px_0_10px_rgba(0,0,0,0.1)]">Thao tác</th>
           </tr>
         </thead>
         <tbody class="divide-y divide-brand-border text-sm text-brand-text/90">
-          <tr v-for="(item, index) in results" :key="item.id" class="hover:bg-brand-card/40 transition">
+          <tr v-for="(item, index) in results" :key="item.id" class="group hover:bg-brand-card transition">
             <td class="px-6 py-4 text-brand-desc">{{ (pagination.current_page - 1) * pagination.per_page + index + 1 }}</td>
             <td class="px-6 py-4 font-semibold text-brand-text">{{ item.test_nm }}</td>
-            <td class="px-6 py-4 font-medium text-indigo-400">
-              {{ item.stu_nm }}
-              <div class="text-xs text-brand-desc" v-if="item.stu_birth_dt">Birth: {{ item.stu_birth_dt }}</div>
-            </td>
-            <td class="px-6 py-4">{{ item.reg_name }}</td>
-            <td class="px-6 py-4 text-center font-bold">
-              <span v-if="item.total_score > 0" class="text-indigo-400">{{ item.total_score }} / 100</span>
-              <span v-else class="text-brand-desc font-normal">Not graded</span>
-            </td>
-            <td class="px-6 py-4 text-center">
-              <span class="px-2 py-1 rounded bg-indigo-500/10 text-indigo-400 font-semibold" v-if="item.assigned_level">
-                {{ item.assigned_level }}
-              </span>
-              <span class="text-brand-desc" v-else>-</span>
-            </td>
-            <td class="px-6 py-4 text-right">
+            <td class="px-6 py-4">{{ item.quarter_cd_nm || '-' }}</td>
+            <td class="px-6 py-4">{{ item.reg_name || '-' }}</td>
+            <td class="px-6 py-4 text-center text-brand-desc">{{ item.stu_birth_dt || '-' }}</td>
+            <td class="px-6 py-4 font-medium text-indigo-400">{{ item.stu_nm }}</td>
+            <td class="px-6 py-4 text-center font-semibold text-brand-text">{{ item.subject_total || 0 }}</td>
+            <td class="px-6 py-4 text-center font-semibold text-brand-text">{{ item.thinking_total || 0 }}</td>
+            <td class="px-6 py-4 text-center font-bold text-indigo-400">{{ item.total_score || 0 }}</td>
+            <td class="px-6 py-4 text-brand-desc">{{ item.eval_dt ? item.eval_dt.substring(0,10) : '-' }}</td>
+            <td class="px-6 py-4 text-xs text-brand-desc">{{ item.created_at ? item.created_at.substring(0,10) : '-' }}</td>
+            <td class="px-6 py-4 text-xs text-brand-desc">{{ item.updated_at ? item.updated_at.substring(0,10) : '-' }}</td>
+            <td class="px-6 py-4 text-right sticky right-0 bg-brand-bg z-10 border-l border-brand-border shadow-[-4px_0_10px_rgba(0,0,0,0.1)] group-hover:bg-brand-card transition-colors">
               <div class="flex justify-end items-center gap-2">
                 <router-link 
                   v-if="!(item.total_score > 0)"
                   :to="{ name: 'igbh-eval-form', params: { id: item.id } }"
-                  class="inline-flex items-center justify-center px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white font-medium text-xs transition shadow-lg shadow-indigo-600/30"
+                  title="Nhập điểm"
+                  class="inline-flex items-center justify-center p-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white transition shadow-lg shadow-indigo-600/30"
                 >
-                  Nhập điểm
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                  </svg>
                 </router-link>
                 <div v-else class="flex justify-end items-center gap-2">
                   <router-link 
                     :to="{ name: 'igbh-eval-form', params: { id: item.id } }"
-                    class="inline-flex items-center justify-center px-3 py-1.5 rounded-lg border border-indigo-600 text-indigo-500 hover:bg-indigo-600 hover:text-white font-medium text-xs transition"
+                    title="Sửa điểm"
+                    class="inline-flex items-center justify-center p-2 rounded-lg border border-indigo-600 text-indigo-500 hover:bg-indigo-600 hover:text-white transition"
                   >
-                    Sửa điểm
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                    </svg>
                   </router-link>
                   <router-link 
                     :to="{ name: 'igbh-eval-result', params: { id: item.id } }"
-                    class="inline-flex items-center justify-center px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-medium text-xs transition shadow-lg shadow-emerald-600/30"
+                    title="Xem kết quả"
+                    class="inline-flex items-center justify-center p-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white transition shadow-lg shadow-emerald-600/30"
                   >
-                    Xem kết quả
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                    </svg>
                   </router-link>
                 </div>
               </div>
             </td>
           </tr>
           <tr v-if="results.length === 0">
-            <td colspan="7" class="px-6 py-12 text-center text-brand-desc">No tests found.</td>
+            <td colspan="13" class="px-6 py-12 text-center text-brand-desc">Không tìm thấy bài kiểm tra nào.</td>
           </tr>
         </tbody>
       </table>

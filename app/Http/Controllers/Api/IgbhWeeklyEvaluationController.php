@@ -17,12 +17,15 @@ class IgbhWeeklyEvaluationController extends Controller
             ->select(
                 'e.id',
                 't.test_nm as evalNm',
+                't.level_cd as levelCd',
                 'e.class_nm as classNm',
                 'e.teacher_nm as teacherNm',
                 'e.each_cd_nm as eachCdNm',
                 'e.eval_ymd as evalYmd',
                 'e.created_at'
-            );
+            )
+            ->selectRaw('(SELECT COUNT(*) FROM igbh_weekly_eval_details WHERE weekly_eval_id = e.id) as graded_cnt')
+            ->selectRaw('(SELECT COUNT(*) FROM contracts c JOIN classes cl ON c.class_id = cl.id WHERE cl.class_seq = e.class_seq AND c.status != "SS004") as total_cnt');
 
         if ($request->has('search')) {
             $search = $request->input('search');
@@ -131,7 +134,7 @@ class IgbhWeeklyEvaluationController extends Controller
                 ->join('classes as cl', 'c.class_id', '=', 'cl.id')
                 ->where('cl.class_seq', $eval->class_seq)
                 ->where('c.status', '!=', 'SS004') // assuming SS004 is cancelled/dropped
-                ->select('s.id as stu_seq', 's.name as stu_nm')
+                ->select('s.id_lms as stu_seq', 's.name as stu_nm')
                 ->get();
 
             $details = $students->map(function ($s) {
