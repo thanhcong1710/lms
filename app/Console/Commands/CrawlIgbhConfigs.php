@@ -151,7 +151,7 @@ class CrawlIgbhConfigs extends Command
                 $sortNo = $xpath->evaluate("string(.//input[@name='sbjSortNo']/@value)", $row);
                 if (!$sortNo) continue;
                 
-                $sectorCd = $xpath->evaluate("string(.//input[starts-with(@name, 'sbjSectorCd') and @checked='checked']/@data-shortCd)", $row);
+                $sectorCd = $xpath->evaluate("string(.//input[starts-with(@name, 'sbjSectorCd') and @checked='checked']/@data-shortcd)", $row);
                 $diffCd = $xpath->evaluate("string(.//input[starts-with(@name, 'sbjDifficultyCd') and @checked='checked']/@value)", $row);
                 $typeCd = $xpath->evaluate("string(.//input[starts-with(@name, 'sbjTypeCd') and @checked='checked']/@value)", $row);
                 $answer = $xpath->evaluate("string(.//input[@name='sbjAnswer']/@value)", $row);

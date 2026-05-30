@@ -9,6 +9,7 @@ use App\Http\Controllers\ClassController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\ContractController;
 use App\Http\Controllers\LmsTestController;
+use App\Http\Controllers\IgbhConfigController;
 use App\Http\Controllers\Api\UcreaEvaluationController;
 use App\Http\Controllers\Api\IgbhEvaluationController;
 
@@ -30,6 +31,12 @@ Route::post('/ucrea/results/{id}/grade', [UcreaEvaluationController::class, 'sav
 Route::get('/igbh/results', [IgbhEvaluationController::class, 'getResults']);
 Route::get('/igbh/init-data', [IgbhEvaluationController::class, 'getInitData']);
 Route::post('/igbh/results', [IgbhEvaluationController::class, 'createResult']);
+Route::get('/igbh/evaluations/{id}', [IgbhEvaluationController::class, 'show']);
+
+// IGBH Config
+Route::get('/igbh/tests/{testSeq}/config', [IgbhConfigController::class, 'getConfig']);
+Route::put('/igbh/tests/{testSeq}/config', [IgbhConfigController::class, 'updateConfig']);
+
 Route::get('/igbh/results/{id}', [IgbhEvaluationController::class, 'getResultDetail']);
 Route::post('/igbh/results/{id}/grade', [IgbhEvaluationController::class, 'saveGrade']);
 
@@ -40,3 +47,5 @@ Route::get('/igbh/weekly/results/{id}', [\App\Http\Controllers\Api\IgbhWeeklyEva
 Route::post('/igbh/weekly/results/{id}/grade', [\App\Http\Controllers\Api\IgbhWeeklyEvaluationController::class, 'saveGrade']);
 
 
+Route::get('/igbh/summative/results', [\App\Http\Controllers\Api\IgbhSummativeEvaluationController::class, 'getResults']);
+Route::get('/igbh/summative/results/{id}', [\App\Http\Controllers\Api\IgbhSummativeEvaluationController::class, 'getReport']);

@@ -127,6 +127,126 @@ class CrawlIgbhSummativeResults extends Command
                         'created_at' => now(),
                     ]
                 );
+
+                // Get the ID of the result we just inserted/updated
+                $resultObj = DB::table('igbh_summative_results')
+                    ->where('test_seq', $testSeq)
+                    ->where('stu_seq', $stuSeq)
+                    ->first();
+                
+                $finalSeq = $record['finalSeq'] ?? '';
+                $resultSeq = $record['resultSeq'] ?? '';
+                $eachSeq = $record['eachSeq'] ?? '';
+                
+                if ($finalSeq && $resultSeq && $resultObj) {
+                    curl_setopt($ch, CURLOPT_URL, 'https://lms-vn.cmsedu.net/igel/viewReportIGSumm.do');
+                    curl_setopt($ch, CURLOPT_POST, true);
+                    curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query([
+                        'finalSeq' => $finalSeq,
+                        'resultSeq' => $resultSeq,
+                        'eachSeq' => $eachSeq,
+                        'stuSeq' => $stuSeq
+                    ]));
+                    
+                    $html = curl_exec($ch);
+                    
+                    if ($html) {
+                        $sectionPos = mb_strpos($html, 'Kết quả đánh giá theo câu hỏi riêng biệt');
+                        if ($sectionPos !== false) {
+                            $tableStart = mb_strpos($html, '<table', $sectionPos);
+                            $tableEnd = mb_strpos($html, '</table>', $tableStart);
+                            if ($tableStart !== false && $tableEnd !== false) {
+                                $tableHtml = mb_substr($html, $tableStart, $tableEnd - $tableStart);
+                                
+                                $extract = function($h, $header) {
+                                    $p = mb_strpos($h, $header);
+                                    if ($p === false) return [];
+                                    $trE = mb_strpos($h, '</tr>', $p);
+                                    if ($trE === false) return [];
+                                    $trH = mb_substr($h, $p, $trE - $p);
+                                    preg_match_all('/<td[^>]*>(?:<span[^>]*>)?\s*([\d\.]+)\s*(?:<\/span>)?\s*<\/td>/iu', $trH, $matches);
+                                    return array_slice($matches[1], 0, 5);
+                                };
+                                
+                                $maxScores = $extract($tableHtml, 'Điểm chuẩn');
+                                $scores = $extract($tableHtml, 'Điểm thực tế');
+                                $concepts = $extract($tableHtml, 'Khái niệm/hiểu');
+                                $strategies = $extract($tableHtml, 'Chiến lược/suy luận');
+                                $calculations = $extract($tableHtml, 'Tính toán/thực hành');
+                                $expressions = $extract($tableHtml, 'Diễn đạt/biểu hiện');
+                                
+                                DB::table('igbh_summative_result_details')->where('summative_result_id', $resultObj->id)->delete();
+                                
+                                for ($i = 0; $i < 5; $i++) {
+                                    if (isset($scores[$i])) {
+                                        DB::table('igbh_summative_result_details')->insert([
+                                            'summative_result_id' => $resultObj->id,
+                                            'sort_no' => $i + 1,
+                                            'max_score' => isset($maxScores[$i]) ? (float)$maxScores[$i] : null,
+                                            'score' => (float)$scores[$i],
+                                            'concept' => isset($concepts[$i]) ? (float)$concepts[$i] : null,
+                                            'strategy' => isset($strategies[$i]) ? (float)$strategies[$i] : null,
+                                            'calculation' => isset($calculations[$i]) ? (float)$calculations[$i] : null,
+                                            'expression' => isset($expressions[$i]) ? (float)$expressions[$i] : null,
+                                            'created_at' => now(),
+                                            'updated_at' => now()
+                                        ]);
+                                    }
+                                }
+                            }
+                        }
+
+                        // Extract BTM and LTM
+                        $btmPos = mb_strpos($html, 'Phân tích BTM');
+                        $ltmPos = mb_strpos($html, 'Phân tích LTM');
+                        
+                        if ($btmPos !== false && $ltmPos !== false) {
+                            $extractAnalysis = function($tableHtml) {
+                                preg_match_all('/<th[^>]*>(Số \d+)<\/th>/iu', $tableHtml, $qMatches);
+                                $q1 = $qMatches[1][0] ?? '';
+                                $q2 = $qMatches[1][1] ?? '';
+                                
+                                $extractData = function($h, $header) {
+                                    $p = mb_strpos($h, $header);
+                                    if ($p === false) return [];
+                                    $trE = mb_strpos($h, '</tr>', $p);
+                                    if ($trE === false) return [];
+                                    $trH = mb_substr($h, $p, $trE - $p);
+                                    preg_match_all('/(?:<td[^>]*>(?:<span[^>]*>)?\s*([^<]+)\s*(?:<\/span>)?\s*<\/td>)/iu', $trH, $matches);
+                                    return array_map('trim', $matches[1]);
+                                };
+                                
+                                return [
+                                    'q1_label' => $q1,
+                                    'q2_label' => $q2,
+                                    'concept' => $extractData($tableHtml, 'Khái niệm/hiểu'),
+                                    'strategy' => $extractData($tableHtml, 'Chiến lược/suy luận'),
+                                    'calculation' => $extractData($tableHtml, 'Tính toán/thực hành'),
+                                    'expression' => $extractData($tableHtml, 'Diễn đạt/biểu hiện'),
+                                    'average' => $extractData($tableHtml, 'Trung bình')
+                                ];
+                            };
+
+                            $btmEnd = mb_strpos($html, '</table>', $btmPos);
+                            $btmHtml = mb_substr($html, $btmPos, $btmEnd - $btmPos);
+                            
+                            $ltmEnd = mb_strpos($html, '</table>', $ltmPos);
+                            $ltmHtml = mb_substr($html, $ltmPos, $ltmEnd - $ltmPos);
+                            
+                            $btmData = $extractAnalysis($btmHtml);
+                            $ltmData = $extractAnalysis($ltmHtml);
+                            
+                            DB::table('igbh_summative_results')
+                                ->where('id', $resultObj->id)
+                                ->update([
+                                    'subjective_analysis' => json_encode([
+                                        'btm' => $btmData,
+                                        'ltm' => $ltmData
+                                    ], JSON_UNESCAPED_UNICODE)
+                                ]);
+                        }
+                    }
+                }
                 
                 $successCount++;
                 if ($successCount % 500 == 0) {

@@ -1,0 +1,979 @@
+<!DOCTYPE HTML>
+<html lang="ko">
+	<head></head>
+	<script src="/js/jquery.min.js"></script><!--  jQuery v1.11.3  -->
+	<script src="/js/i18n/jquery.i18n.properties.js"></script><!-- i18n -->
+	<script type="text/javascript">
+	var userLang = "vi_VN";
+	jQuery.i18n.properties({
+		name:'Messages',
+		path:'/js/i18n/properties/',
+		mode:'both',
+		language:userLang
+	});
+	$(document).ready(function(){
+		$(document).on('keydown',function(e){
+			e = ( e || window.event );
+			if ( (e.keyCode > 111 && e.keyCode < 124) /* F1~F12 */ || e.keyCode == 17 || e.keyCode == 18) {
+				return  false;
+				e.preventDefault();
+				e.returnValue = false;
+			}
+		});
+	});
+	</script>
+	<body oncontextmenu="return false" onselectstart="return false" ondragstart="return false">
+	<!-- <body> -->
+		
+
+
+
+
+
+
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>ĐÁNH GIÁ CUỐI KỲ</title>
+<link href="/css/bootstrap.min.css?v=20260529" rel="stylesheet">
+<link href="/fonts/css/font-awesome.min.css?v=20260529" rel="stylesheet">
+<link href="/js/sweetalert/sweetalert.css?v=20260529" rel="stylesheet">
+
+<script src="/js/sweetalert/sweetalert.js?v=20260529"></script>
+<script src="/js/common.js?v=20260529"></script><!-- common.js  -->
+<!-- HTML5 요소 및 미디어 쿼리에 대한 IE8 지원을위한 html5shiv.js와 Respond.js -->
+<!--[if lt IE 9]>
+<script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+<![endif]-->
+
+<script type="text/javascript">
+//크롬일 때, 팝업 사이즈 재조율
+if (navigator.userAgent.indexOf('Chrome')>-1) {
+	window.resizeTo(1000, 842);
+}
+
+//프린트
+function printOk(){
+	$(".no-show").removeClass();
+	window.print();
+}
+
+//팝업 닫기
+function popClose(){
+	window.close();
+}
+
+$(document).ready(function(){
+	var scrollPosition = $("#1pHeader").offset().top;
+	$(window).scrollTop(scrollPosition);
+
+	$("td.LMT").each(function(i,o) {
+		//alert($(this).text());
+	});
+});
+</script>
+
+<style>
+@font-face {
+	font-family: 'Noto Sans SC';
+	font-weight: normal;
+	src: url(/fonts/notosans/NotoSansSC-Light.woff) format('woff'); /* Modern Browsers */
+}
+
+@font-face {
+	font-family: 'Noto Sans SC';
+	font-weight: bold;
+	src: url(/fonts/notosans/NotoSansSC-Bold.woff) format('woff'); /* Modern Browsers */
+}
+
+/* RESET CSS */
+body, input, select, button, textarea, h1, h2, h3, h4, h5, h6, table {font:normal 10pt/ 14px 'palatino linotype', Helvetica, Apple-Gothic, Sans-serif; color:#333; }
+html, body, div, form, input, button, textarea, legend, fieldset, h1, h2, h3, h4, h5, h6, ul, ol, dl, li, dt, dd, blockquote, address, p, th, td, caption,figcaption,figure { margin:0; padding:0; }
+ol, ul, li { list-style:none; }
+address, em, optgroup{font-style:normal;}
+strong {font-weight:normal;}
+img, fieldset {max-width:100%; height:auto; vertical-align:top; border:0 none; }
+video {max-width:100%; min-width:100%; height:auto;}
+fieldset {display: table-cell;}
+input, select, textarea { vertical-align:middle; resize:none; position:relative; color:#333; border-radius:0;}
+input, textarea {-webkit-border-radius:0; /* -webkit-appearance:none; */}
+input[type="radio"] {position: relative; top:-2px;}
+input:focus {outline-style:none; box-shadow:none;}/* 크롬 초기화 */
+button { border:0 none; background:transparent; cursor:pointer; }
+hr { display:none; }
+.skip { width:0; height:0; visibility:hidden; font-size:0; line-height:0; position:absolute; top:0; left:0; overflow:hidden; }
+table caption { width:0; height:0; visibility:hidden; text-indent:-9999px; font-size:0; line-height:0; }
+table { border-collapse:collapse; border-spacing:0; }
+header, footer, section, article, aside, nav, hgroup, details, menu, figure, figcaption { display:block; }
+a { font-family:'palatino linotype', Helvetica, Apple-Gothic, Sans-serif; color:inherit; text-decoration:none;}
+a:hover,
+a:active,
+a:focus {color:#0079c2; text-decoration:underline;}
+a.link {text-decoration:underline;}
+
+/* common */
+.line_dotted {width:100%; margin:20px 0 5px; padding-bottom:5px; height:20px; border-bottom:1px dotted #2f5084; text-align: center;}
+
+.bg_lightYellow{background-color: #ffd990 !important;}
+.bg_lightRed{background-color: #fbbc86 !important;}
+.co_org {color:#f8931d !important;}
+.co_lightRed {color:#f3701e !important;}
+.bold {font-weight:bold !important;}
+.mt30 {margin-top:30px !important;}
+.mt40 {margin-top:40px !important;}
+.active {outline:2px solid #e04459 !important}
+.br1 {border-right:1px solid #231f20 !important;}
+.bb1 {border-bottom:1px solid #231f20 !important;}
+/* tbody th,
+tbody td {letter-spacing: -1px;}*/
+
+/* contents */
+body {background-color:#fff;}
+.container {position: relative; width:900px; margin:0 auto;}
+.cont_page {margin:0 2px;}
+
+.title_page {padding:70px 60px;}
+.title_page .cardStyle_top {font-size:11pt; padding:10px 0 0 15px; border-top:6px solid #2f5084; border-left: 6px solid #2f5084; color: #2f5084;}
+.title_page .title_main {margin:270px 50px 0 44px;}
+.title_page .title_main p {padding:0 20px 5px; color: #fff; font-size:17pt; line-height: 28px; border:1px solid #2f5084; border-radius:12px; border-top-left-radius:2px; background:#2f5084; letter-spacing: -1px;}
+.title_page .title_main h1 {padding:10px 20px; color: #2f5084; font-size:30pt; line-height: 44px; font-weight: bold;}
+.title_page .table_title_wrap {position: relative; margin:300px 50px 0 44px; width:686px; height:124px;}
+.title_page .table_title_wrap .left_abox {position: absolute; top:0; left:0; width: 256px; height:100%;}
+.title_page .table_title_wrap .right_abox {position: absolute; top:0; left:276px; width: 410px; height:100%; }
+.title_page .cardStyle_btm {margin:270px 0 0 0;padding:0 15px 10px 0; border-bottom:6px solid #2f5084; border-right: 6px solid #2f5084; border-bottom-right-radius:25px; color: #2f5084; text-align: right;  font-size:11pt; vertical-align: top; font-weight: bold;}
+.title_page .copy_main {padding:0 20px; font-size:11px; text-align: right; color: #2f5084;}
+
+.title_page .table_result {width:100%; border-top:1px solid #3b77b0;}
+.title_page .table_result th {padding:9px 0; font-size: 14pt; line-height: 24px; font-weight: bold; color: #004f99; border-bottom:1px solid #3b77b0;}
+.title_page .table_result td {padding:6px 0; font-size: 12pt; line-height: 24px; border-bottom:1px solid #3b77b0; text-align: left;}
+.title_page .table_result .chk_list {overflow: hidden; width:100%;}
+.title_page .table_result .chk_list li {float: left; margin-left: 10px;}
+.title_page .table_result .chk_list li span,
+.title_page .table_result .chk_list li i {vertical-align: middle;}
+.title_page .table_result .chk_list li:first-child {margin-left: 0;}
+.title_page .table_result .char2 {padding-left: 36px;}
+.title_page .table_result .char3 {padding-left: 9px;}
+
+.header {position: relative; height:96px; padding:50px 40px 10px; border-top: 4px solid #ffc907 !important; border-bottom:2px solid #f8951e !important; box-sizing: border-box;
+	/* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#ffc907+0,feae17+50,f8951e+100 */
+	background: #feae17 !important; /* Old browsers */
+	background: -moz-linear-gradient(top, #ffc907 !important 0%, #feae17 50%, #f8951e 100% !important); /* FF3.6-15 */
+	background: -webkit-linear-gradient(top, #ffc907 !important 0%,#feae17 50%,#f8951e 100% !important); /* Chrome10-25,Safari5.1-6 */
+	background: linear-gradient(to bottom, #ffc907 !important 0%,#feae17 50%,#f8951e 100% !important); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffc907', endColorstr='#f8951e',GradientType=0 ); /* IE6-9 */
+}
+.header .logo {position:absolute; left:40px; top:20px;}
+.header .logo img {width:100px;}
+.header .title {position:absolute; left:160px; top:17px; font-size: 15pt; line-height: 30px; height: 30px;color: #fff !important;}
+.header .title {float: left; font-size: 20pt; line-height: 30px; height: 30px;color: #fff !important;}
+.header .headText {position: absolute; top:25px; right:55px; text-align: right; color: #fff !important; padding:0 5px; line-height: 12px; border-left: 1px solid #fff !important; border-right: 1px solid #fff !important;}
+.header .info_box {float: right; height:30px; line-height: 30px; background: #fff !important; padding:0 15px; border-radius: 15px; box-sizing: border-box;}
+.header .info_box>ul {overflow: hidden; width: auto;}
+.header .info_box>ul>li {float: left;}
+.header .info_box>ul>li.data1 {width: 130px;}
+.header .info_box>ul>li.data2 {width: 140px;}
+.header .info_box>ul>li.data3 {width: 160px;}
+.header .info_box>ul>li>.my_title {color: #0b328d !important;}
+.header .info_box>ul>li>.my_info {font-size:9pt;}
+.cont_page .footer {position:absolute; left:0; bottom:0; border-top:1px solid #c9ccd4; width:100%;}
+.cont_page .footer .copyright {text-align:right; padding-top:5px; color:#707990}
+.contents {width:100%;}
+.contents .column {margin-top:12px;}
+.contents .column .subTitlte {position:relative; height:25px; border-radius:4px; margin-bottom:12px;
+	/* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#ffc907+0,feae17+50,f8951e+100 */
+	background: #feae17 !important; /* Old browsers */
+	background: -moz-linear-gradient(top, #ffc907 0%, #feae17 50%, #f8951e 100%); /* FF3.6-15 */
+	background: -webkit-linear-gradient(top, #ffc907 0%,#feae17 50%,#f8951e 100%); /* Chrome10-25,Safari5.1-6 */
+	background: linear-gradient(to bottom, #ffc907 0%,#feae17 50%,#f8951e 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffc907', endColorstr='#f8951e',GradientType=0 ); /* IE6-9 */
+}
+.contents .column .subTitlte .circ {position:absolute; left:33px; top:-3px; padding:0 25px; line-height:27px; height:27px; border:2px solid #c5161b !important; border-radius:15px; font-size:13pt; font-weight:bold; background-color:#fff !important;}
+
+.column .step_box {float: left; margin-left: 20px; height:25px; line-height: 25px;}
+
+.column .table_whole {width: 100%; border-top:1px solid #231f20;}
+.column .table_whole thead th {padding:7px 0 8px; border-bottom:1px solid #231f20 !important; border-right:1px solid #aeb1b8 !important; text-align: center; background-color: #e5e6e8 !important; font-weight: normal;}
+.column .table_whole thead th:last-child {border-right:0;}
+.column .table_whole tbody th,
+.column .table_whole tbody td {padding:7px 0 8px; line-height:16px; border-bottom:1px solid #aeb1b8 !important; border-right:1px solid #aeb1b8 !important; text-align: center; font-weight: normal;}
+.column .table_whole tbody th {border-right:1px solid #231f20 !important;}
+.column .table_whole tbody td.long {padding:3px;}
+.column .table_whole tbody td:last-child {border-right:0;}
+.column .table_whole tbody td.text_left {text-align: left; padding-left: 10px;}
+.column .table_whole tr.active {outline: 2px solid #e04459 !important;}
+
+.column .table_abox_wrap {position: relative; width:100%;}
+.column .table_abox_wrap .left_abox {position: absolute; top:0; left:0; height:100%;}
+.column .table_abox_wrap .right_abox {position: absolute; top:0; right:0; height:100%; }
+
+.column .circBox {position:relative; padding:33px 25px 17px; line-height:19px; height:57px; border:2px solid #bcbdc1; border-radius:18px;}
+.column .circBox .boxTitle {position:absolute; top:-7px; left:25px; font-size:14pt; font-weight:bold; color:#f4821f; text-shadow: -1px 0 #000, 0 1px #000, 1px 0 #000, 0 -1px #000;}
+.column .circBox .co_yellow {color:#f9a61a}
+
+.column .grayBox {padding:15px 35px 25px; border-radius:18px; background-color:#e5e6e8 !important;}
+.column .grayBox .boxTitle {font-size:14pt; font-weight:bold; color:#feca05 !important; text-shadow: -1px 0 #000, 0 1px #000, 1px 0 #000, 0 -1px #000;}
+.column .table_meta {width:100%; margin-top:12px; border-top:1px solid #231f20;}
+.column .table_meta thead th {background-color:#fff !important; padding:7px 0 8px; border-bottom:1px solid #231f20; border-right:1px solid #aeb1b8; text-align: center; font-weight: normal;}
+.column .table_meta thead th:last-child {border-right:0;}
+.column .table_meta tbody td {background-color:#fee4c1 !important; padding:7px 0 8px; line-height:16px; border-bottom:1px solid #aeb1b8; border-right:1px solid #aeb1b8; text-align: center; font-weight: normal;}
+.column .table_meta tbody td:last-child {border-right:0;}
+.column .table_meta tbody td.step2 {background-color:#fedbb3 !important}
+.column .table_meta tbody td.step3 {background-color:#fcd1a7 !important}
+
+.btn_area {position: fixed;  bottom:10px; left:50%; width:260px; height:30px; margin-left:-130px;}
+a.btn_home {float:right; display:block; width:120px; height: 30px; line-height: 30px; text-align: center; text-decoration: none;
+color: #fff;
+background: #337ab7;
+border: 1px solid #2e6da4;
+border-radius: 5px;
+}
+a.btn_home:hover,
+a.btn_home:focus,
+a.btn_home:active {
+background: #286090;
+border: 1px solid #204d74;
+}
+
+a.btn_print {float:left; display:block;  width:120px; height: 30px; line-height: 30px; text-align: center; text-decoration: none;
+color: #333;
+background: #fff;
+border: 1px solid #ccc;
+border-radius: 5px;
+}
+a.btn_print:hover,
+a.btn_print:focus,
+a.btn_print:active {
+background: #e6e6e6;
+border: 1px solid #adadad;
+}
+
+@media print {
+	/*@page {
+		size: 21cm 29.7cm;
+		margin-top:2.5cm;
+		margin-right:2cm;
+		margin-bottom:1.5cm;
+		margin-left:2cm;
+	}*/
+	.non-printable { display:none; } /* 출력 안되는 영역 지정 */
+	.no-show { display:none; } /* 출력 안되는 영역 지정 */
+	div .breakhere { width:auto; height;0px; line-height:0px; page-break-before:always; } /* 페이지 나눔 */
+}
+</style>
+</head>
+
+<body scroll=auto style="overflow-x:hidden;">
+	<!-- container -->
+	<div class="container">
+		<div class="cont_page">
+			<div class="header" id="1pHeader">
+				<p class="logo"><img src="/images/logo.png" alt="CMS EDU"></p>
+				<h1 class="title">ĐÁNH GIÁ CUỐI KỲ</h1>
+				<strong class="headText">Bài kiểm tra đầu vào</strong>
+				<div class="info_box" style="width:460px;">
+					<ul>
+						<li class="data1">
+							<strong class="my_title">Tên lớp : </strong>
+							<span class="my_info no-show">C09BH.TUR.TUE1.18.G1</span>
+						</li>
+						<li class="data2">
+							<strong class="my_title">Ngày sinh : </strong>
+							<span class="my_info no-show">2018-04-04</span>
+						</li>
+						<li class="data3">
+							<strong class="my_title">Tên : </strong>
+							<span class="my_info no-show">Nguyễn Lương Th&agrave;nh An</span>
+						</li>
+					</ul>
+				</div>
+			</div>
+
+			<div class="contents">
+				<div class="column">
+					<h2 class="subTitlte"><span class="circ">Nhận xét sách bài tập</span></h2>
+					<table class="table_whole">
+						<caption>TABLE</caption>
+						<colgroup>
+							<col style="width:10%;">
+							<col style="width:4%;"><col style="width:4%;"><col style="width:4%;"><col style="width:4%;"><col style="width:4%;"><col style="width:4%;"><col style="width:4%;"><col style="width:4%;"><col style="width:4%;"><col style="width:4%;"><col style="width:4%;"><col style="width:4%;">
+							<col style="width:10%;">
+						</colgroup>
+						<thead>
+							<tr>
+								<th scope="col" class="br1">Tuần</th>
+								<th scope="col">1</th><th scope="col">2</th><th scope="col">3</th><th scope="col">4</th><th scope="col">5</th><th scope="col">6</th><th scope="col">7</th><th scope="col">8</th><th scope="col">9</th><th scope="col">10</th><th scope="col">11</th><th scope="col">12</th>
+								<th scope="col">Tổng</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<th scope="row" class="bg_lightYellow">Sách bài tập</th>
+								
+								<td><span class="no-show">15</span></td><td><span class="no-show">15</span></td><td><span class="no-show">15</span></td><td><span class="no-show">15</span></td><td><span class="no-show">15</span></td><td><span class="no-show">15</span></td><td><span class="no-show">15</span></td><td><span class="no-show">15</span></td><td><span class="no-show">15</span></td><td><span class="no-show">15</span></td><td><span class="no-show">15</span></td><td><span class="no-show">15</span></td>
+								
+								<td class="active"><span class="no-show">15.0</span></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+
+				<div class="column">
+					<div class="table_abox_wrap"  style="height:325px;">
+						<div class="left_abox" style="width:354px;">
+							<h2 class="subTitlte"><span class="circ">Nhận xét thái độ học tập</span></h2>
+							<table class="table_whole">
+								<caption>TABLE</caption>
+								<colgroup>
+									<col style="width:20%;">
+									<col style="width:16%;">
+									<col style="width:16%;">
+									<col style="width:16%;">
+									<col style="width:16%;">
+									<col style="width:16%;">
+								</colgroup>
+								<thead>
+									<tr>
+										<th scope="col" class="br1">Tuần</th>
+										<th scope="col">Lắng nghe</th>
+										<th scope="col">Tham gia bài học</th>
+										<th scope="col">Sự thể hiện</th>
+										<th scope="col">Tinh thần đội nhóm</th>
+										<th scope="col">Trung bình</th>
+									</tr>
+								</thead>
+								<tbody>
+									
+									
+									<tr>
+										<th scope="col" class="bg_lightYellow">1 ~ 4</th>
+										<td><span class="no-show">5.0</span></td>
+										<td><span class="no-show">5.0</span></td>
+										<td><span class="no-show">5.0</span></td>
+										<td><span class="no-show">5.0</span></td>
+										<td><span class="no-show">5.0</span></td>
+									</tr>
+									
+									<tr>
+										<th scope="col" class="bg_lightYellow">5 ~ 8</th>
+										<td><span class="no-show">5.0</span></td>
+										<td><span class="no-show">5.0</span></td>
+										<td><span class="no-show">5.0</span></td>
+										<td><span class="no-show">5.0</span></td>
+										<td><span class="no-show">5.0</span></td>
+									</tr>
+									
+									<tr>
+										<th scope="col" class="bg_lightYellow">9 ~ 12</th>
+										<td><span class="no-show">5.0</span></td>
+										<td><span class="no-show">5.0</span></td>
+										<td><span class="no-show">5.0</span></td>
+										<td><span class="no-show">5.0</span></td>
+										<td><span class="no-show">5.0</span></td>
+									</tr>
+									
+									<tr>
+										<th scope="col" class="bg_lightYellow">Điểm quy đổi</th>
+										<td>/</td>
+										<td>/</td>
+										<td>/</td>
+										<td>/</td>
+										
+										<td class="active"><span class="no-show">10.0</span></td>
+									</tr>
+								</tbody>
+							</table>
+							<div class="circBox" style="padding:52px 29px 0px; height: 127px; top:9px;">
+								<strong class="boxTitle" style="top: 8px;">Nhận xét thái độ học tập và khả năng quan sát</strong>
+								Giáo viên sẽ đánh giá dựa trên thái độ học tập của học sinh trên lớp trong suốt quá trình theo học tại trung tâm.
+							</div>
+						</div>
+
+						<div class="right_abox" style="width:508px;">
+							<h2 class="subTitlte"><span class="circ">Quan sát lớp học</span></h2>
+							<table class="table_whole">
+								<caption>TABLE</caption>
+								<colgroup>
+									<col style="width:14%;">
+									<col style="width:75%;">
+									<col style="width:11%;">
+								</colgroup>
+								<thead>
+									<tr>
+										<th scope="col" class="br1"></th>
+										<th scope="col">Hạng mục quan sát</th>
+										<th scope="col">Điểm</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<th scope="col" class="bg_lightYellow">Kỹ năng cơ bản</th>
+										<td class="long">Học sinh thể hiện khả năng sử dụng từ vựng phong phú hơn so với các học sinh trung bình cùng độ tuổi. <br> Học sinh nhanh chóng hiểu các mối tương quan và đưa ra giải pháp một cách thích hợp với các tình huống cụ thể. <br> Học sinh có thể diễn đạt  suy nghĩ của mình một cách hợp lý.</td>
+										<td><span class="no-show">5.0</span></td>
+									</tr>
+									<tr>
+										<th scope="col" class="bg_lightYellow">Khả năng lãnh đạo</th>
+										<td class="long">Học sinh trình bày suy nghĩ của mình một cách rõ ràng và có thể giao tiếp tốt với những người khác. <br> Học sinh có khuynh hướng lãnh đạo trong các hoạt động nhóm, là người lập kế hoạch và hành động theo kế hoạch.</td>
+										<td><span class="no-show">5.0</span></td>
+									</tr>
+									<tr>
+										<th scope="col" class="bg_lightYellow">Khả năng toán học</th>
+										<td class="long">Học sinh trình bày suy nghĩ của mình một cách rõ ràng bằng việc sử dụng từ vựng và các ký hiệu toán học. <br> Học sinh thể hiện sự hứng thú với toán và có tính kiên trì khi giải quyết các vấn đề. <br> Học sinh có khả năng sử dụng những gì đã học và dễ dàng áp dụng giải quyết các vấn đề khác nhau.</td>
+										<td><span class="no-show">5.0</span></td>
+									</tr>
+									<tr>
+										<th scope="col" class="bg_lightYellow">Tính sáng tạo</th>
+										<td class="long">Học sinh thể hiện trí tưởng tượng rất tốt trong quá trình học tập. <br> Học sinh đưa ra những ý tưởng lạ và độc đáo. <br> Học sinh liên tục trình bày và đề xuất nhiều ý tưởng, giải pháp cho các vấn đề và câu hỏi.</td>
+										<td><span class="no-show">5.0</span></td>
+									</tr>
+									<tr>
+										<th scope="col" class="bg_lightYellow">Điểm quy đổi</th>
+										<td></td>
+										
+										<td class="active"><span class="no-show">10.0</span></td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+
+				<div class="column" style="margin-top: 160px;">
+					<h2 class="subTitlte">
+						<span class="circ">Đánh giá theo bài học<!--테마별성취도 평가 --></span>
+					</h2>
+					<table class="table_whole">
+						<caption>TABLE</caption>
+						<colgroup>
+							<col style="width:9%;">
+							<col style="width:71%;">
+							<col style="width:10%;">
+							<col style="width:10%;">
+						</colgroup>
+						<thead>
+							<tr>
+								<th scope="col">Số</th>
+								<th scope="col">Nội dung đánh giá</th>
+								<th scope="col">Điểm chuẩn</th>
+								<th scope="col">Điểm thực tế</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>1</td>
+								<td>Xác định hình còn thiếu dựa vào xác định kiểu lặp.</td>
+								<td>2</td>
+								<td><span class="no-show">2</span></td>
+							</tr>
+							<tr>
+								<td>2</td>
+								<td>Phát triển nhận thức không gian thông quan hoạt động xác định hình được tạo bằng cách lật, xoay</td>
+								<td>2</td>
+								<td><span class="no-show">2</span></td>
+							</tr>
+							<tr>
+								<td>3</td>
+								<td>Phát triển các kỹ năng suy luận</td>
+								<td>2</td>
+								<td><span class="no-show">2</span></td>
+							</tr>
+							<tr>
+								<td>4</td>
+								<td>Tìm hiểu về nhận thức không gian bằng cách xác định (các) mặt của một khối được sử dụng để tạo hình</td>
+								<td>3</td>
+								<td><span class="no-show">3</span></td>
+							</tr>
+							<tr>
+								<td>5</td>
+								<td>Hiểu các phép toán cộng, trừ bằng cách chơi trò chơi liên quan đến việc tạo phép tính cộng và trừ</td>
+								<td>2</td>
+								<td><span class="no-show">2</span></td>
+							</tr>
+							<tr>
+								<td>6</td>
+								<td>Xác định các số mà mỗi hình thể hiện bằng cách hiểu các mối quan hệ và thay thế các phép tính.</td>
+								<td>3</td>
+								<td><span class="no-show">3</span></td>
+							</tr>
+							<tr>
+								<td>7</td>
+								<td>Tìm và phát hiện hình dựa vào cách xác định kiểu mẫu.</td>
+								<td>2</td>
+								<td><span class="no-show">2</span></td>
+							</tr>
+							<tr>
+								<td>8</td>
+								<td>Dự đoán hình dạng của một hình khi được xoay</td>
+								<td>3</td>
+								<td><span class="no-show">3</span></td>
+							</tr>
+							<tr>
+								<td>9</td>
+								<td>Phát triển các kỹ năng suy luận bằng cách giải quyết các vấn đề logic, tập trung vào vị trí và hướng</td>
+								<td>2</td>
+								<td><span class="no-show">2</span></td>
+							</tr>
+							<tr>
+								<td>10</td>
+								<td>Hiểu thêm về phép tính cộng, trừ bằng việc thực hiện các phép tính.</td>
+								<td>3</td>
+								<td><span class="no-show">3</span></td>
+							</tr>
+							<tr>
+								<td>11</td>
+								<td>Nhận thức và thể hiện mối quan hệ không gian bằng cách xoay (các) khối theo các hướng khác nhau</td>
+								<td>3</td>
+								<td><span class="no-show">3</span></td>
+							</tr>
+							<tr>
+								<td>12</td>
+								<td>Hiểu được các quy tắc của câu đố và phát triển các kỹ năng tư duy logic </td>
+								<td>3</td>
+								<td><span class="no-show">3</span></td>
+							</tr>
+							<tr>
+								<td>Tổng</td>
+								<td></td>
+								<td>30</td>
+								
+								<td class="active"><span class="no-show">30</span></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+
+				<div class="column">
+					<h2 class="subTitlte">
+						<span class="circ">Điểm tổng</span>
+					</h2>
+					<table class="table_whole">
+						<caption>TABLE</caption>
+						<colgroup>
+							<col style="width:16%;">
+							<col style="width:13%;">
+							<col style="width:13%;">
+							<col style="width:13%;">
+							<col style="width:16%;">
+							<col style="width:13%;">
+							<col style="width:13%;">
+						</colgroup>
+						<thead>
+							<tr>
+								<th scope="col" class="br1">Mục</th>
+								<th scope="col">Sách bài tập</th>
+								<th scope="col">Thái độ học tập</th>
+								<th scope="col">Quan sát lớp học</th>
+								<th scope="col">Thành tích theo từng bài học</th>
+								<th scope="col">Đánh giá nội dung câu hỏi tự luận</th>
+								<th scope="col">Tổng</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<th scope="row" class="bg_lightYellow">Điểm chuẩn</th>
+								<td>20</td>
+								<td>10</td>
+								<td>10</td>
+								<td>30</td>
+								<td>30</td>
+								<td>100</td>
+							</tr>
+							<tr>
+								<th scope="row" class="bg_lightYellow">Điểm thực tế</th>
+								
+								<td><span class="no-show">15.0</span></td>
+								
+								<td><span class="no-show">10.0</span></td>
+								
+								<td><span class="no-show">10.0</span></td>
+								
+								<td><span class="no-show">30</span></td>
+								
+								<td><span class="no-show">30.0</span></td>
+								
+								<td class="active"><span class="no-show">95.0</span></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				
+			</div>
+		</div>
+
+		<div class="footer" style="padding-top: 20px;">
+			<p class="copyright" style="text-align:right">Copyright &copy; CMS Edu Co., Ltd. All rights reserved</p>
+		</div>
+
+		<div class="line_dotted non-printable">Page 1</div>
+		<div class="breakhere"></div>
+
+		<div class="cont_page">
+			<div class="header">
+				<p class="logo"><img src="/images/logo.png" alt="CMS EDU"></p>
+				<h1 class="title">Đánh giá nội dung câu hỏi tự luận</h1>
+				<strong class="headText">Bài kiểm tra đầu vào</strong>
+				<div class="info_box" style="width:460px;">
+					<ul>
+						<li class="data1">
+							<strong class="my_title">Tên lớp : </strong>
+							<span class="my_info">C09BH.TUR.TUE1.18.G1</span>
+						</li>
+						<li class="data2">
+							<strong class="my_title">Ngày sinh : </strong>
+							<span class="my_info">2018-04-04</span>
+						</li>
+						<li class="data3">
+							<strong class="my_title">Tên : </strong>
+							<span class="my_info">Nguyễn Lương Th&agrave;nh An</span>
+						</li>
+					</ul>
+				</div>
+			</div>
+
+			<div class="contents">
+				<div class="column">
+					<h2 class="subTitlte">
+						<span class="circ">Kết quả đánh giá theo câu hỏi riêng biệt</span>
+					</h2>
+					<table class="table_whole">
+						<caption>TABLE</caption>
+						<colgroup>
+							<col style="width:15%;">
+							<col style="width:14%;">
+							<col style="width:14%;">
+							<col style="width:14%;">
+							<col style="width:14%;">
+							<col style="width:14%;">
+							<col style="width:15%;">
+						</colgroup>
+						<thead>
+							<tr>
+							<th scope="col" class="br1">NO</th>
+							<th scope="col">1</th>
+							<th scope="col">2</th>
+							<th scope="col">3</th>
+							<th scope="col">4</th>
+							<th scope="col">5</th>
+							<th scope="col">Tổng</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<th scope="row" class="bg_lightYellow bb1">Điểm chuẩn</th>
+								<td class="bb1">6</td>
+								<td class="bb1">6</td>
+								<td class="bb1">6</td>
+								<td class="bb1">6</td>
+								<td class="bb1">6</td>
+								<td class="bb1">30</td>
+							</tr>
+							<tr>
+								<th scope="row" class="bg_lightYellow">Điểm thực tế</th>
+								<td><span class="no-show">6.0</span> </td><td><span class="no-show">6.0</span> </td><td><span class="no-show">6.0</span> </td><td><span class="no-show">6.0</span> </td><td><span class="no-show">6.0</span> </td>
+								
+								<td class="active"><span class="no-show">30.0</span></td>
+							</tr>
+							<tr>
+								<th scope="row" class="bg_lightYellow">Khái niệm/hiểu</th>
+								<td><span class="no-show">4</span> </td><td><span class="no-show">4</span> </td><td><span class="no-show">4</span> </td><td><span class="no-show">4</span> </td><td><span class="no-show">4</span> </td>
+								<td><span class="no-show">4.0 </span></td>
+							</tr>
+							<tr>
+								<th scope="row" class="bg_lightYellow">Chiến lược/suy luận</th>
+								<td><span class="no-show">4</span> </td><td><span class="no-show">4</span> </td><td><span class="no-show">4</span> </td><td><span class="no-show">4</span> </td><td><span class="no-show">4</span> </td>
+								<td><span class="no-show">4.0</span></td>
+							</tr>
+							<tr>
+								<th scope="row" class="bg_lightYellow">Tính toán/thực hành</th>
+								<td><span class="no-show">4</span> </td><td><span class="no-show">4</span> </td><td><span class="no-show">4</span> </td><td><span class="no-show">4</span> </td><td><span class="no-show">4</span> </td>
+								<td><span class="no-show">4.0</span></td>
+							</tr>
+							<tr>
+								<th scope="row" class="bg_lightYellow">Diễn đạt/biểu hiện</th>
+								<td><span class="no-show">4</span> </td><td><span class="no-show">4</span> </td><td><span class="no-show">4</span> </td><td><span class="no-show">4</span> </td><td><span class="no-show">4</span> </td>
+								<td><span class="no-show">4.0</span></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+
+				<div class="column mt20">
+					<div class="circBox" style="height:125px; padding-top: 36px;">
+						<strong class="boxTitle" style="top: 7px;">Thành phần đánh giá</strong>
+						<ul>
+							<li><i class="fa fa-check-circle co_org"></i> <span class="co_lightRed bold">Khái niệm/hiểu</span> | Học sinh có hiểu vấn đề và yêu cầu của đề không?</li>
+							<li><i class="fa fa-check-circle co_org"></i> <span class="co_lightRed bold">Chiến lược/suy luận</span> | Học sinh có sử dụng chiến lược thích hợp để giải quyết vấn đề không?</li>
+							<li><i class="fa fa-check-circle co_org"></i> <span class="co_lightRed bold">Tính toán/thực hành</span> | Học sinh có tuân theo một quy trình giải quyết vấn đề đầy đủ và chính xác không?</li>
+							<li><i class="fa fa-check-circle co_org"></i> <span class="co_lightRed bold">Diễn đạt/biểu hiện</span> | Có thể dễ dàng hiểu được ý của học sinh thông qua cách diễn đạt trong bài không?</li>
+						</ul>
+					</div>
+				</div>
+
+				<div class="column mt20">
+					<h2 class="subTitlte">
+						<span class="circ">Phân tích BTM/LTM</span>
+					</h2>
+					<div class="table_abox_wrap" style="height:192px;">
+						<div class="left_abox" style="width:422px;">
+							<table class="table_whole">
+								<caption>TABLE</caption>
+								<colgroup>
+									<col style="width:20%;">
+									<col style="width:20%;">
+									<col style="width:20%;">
+									<col style="width:20%;">
+									<col style="width:20%;">
+								</colgroup>
+								<thead>
+									<tr>
+										<th scope="col" class="bg_lightRed br1">Phân tích BTM</th>
+										<th scope="col">Số 1</th><th scope="col">Số 2</th>
+										<th scope="col">Bình quân</th>
+										<th scope="col">Ý kiến</th>
+									</tr>
+								</thead>
+								<tbody>
+									
+									
+									
+									
+									<tr>
+										<th scope="col" class="bg_lightYellow">Khái niệm/hiểu</th>
+										<td><span class="no-show">4</span></td><td><span class="no-show">4</span></td>
+										<td class="active"><span class="no-show">4.0</span></td>
+										<td><span class="no-show">Rất tốt</span></td>
+									</tr>
+									<tr>
+										<th scope="col" class="bg_lightYellow">Chiến lược/suy luận</th>
+										<td><span class="no-show">4</span></td><td><span class="no-show">4</span></td>
+										<td class="active"><span class="no-show">4.0</span></td>
+										<td><span class="no-show">Rất tốt</span></td>
+									</tr>
+									<tr>
+										<th scope="col" class="bg_lightYellow">Tính toán/thực hành</th>
+										<td><span class="no-show">4</span></td><td><span class="no-show">4</span></td>
+										<td class="active"><span class="no-show">4.0</span></td>
+										<td><span class="no-show">Rất tốt</span></td>
+									</tr>
+									<tr>
+										<th scope="col" class="bg_lightYellow">Diễn đạt/biểu hiện</th>
+										<td><span class="no-show">4</span></td><td><span class="no-show">4</span></td>
+										<td class="active"><span class="no-show">4.0</span></td>
+										<td><span class="no-show">Rất tốt</span></td>
+									</tr>
+									<tr>
+										<th scope="col" class="bg_lightYellow">Trung bình<!--평균 --></th>
+										<td><span class="no-show">4.0</span></td><td><span class="no-show">4.0</span></td>
+										<td><span class="no-show">4.0</span></td>
+										<td></td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+						<div class="right_abox" style="width:422px;">
+							<table class="table_whole">
+								<caption>TABLE</caption>
+								<colgroup>
+									<col style="width:20%;">
+									<col style="width:20%;">
+									<col style="width:20%;">
+									<col style="width:20%;">
+									<col style="width:20%;">
+								</colgroup>
+								<thead>
+									<tr>
+										<th scope="col" class="bg_lightRed br1">Phân tích LTM</th>
+										<th scope="col">Số 1</th><th scope="col">Số 2</th>
+										<th scope="col">Bình quân</th>
+										<th scope="col">Ý kiến<!--의견 --></th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<th scope="col" class="bg_lightYellow">Khái niệm/hiểu</th>
+										<td><span class="no-show">4</span></td><td><span class="no-show">4</span></td>
+										<td class="LTM_1"><span class="no-show">4.0</span></td>
+										<td><span class="no-show">Rất tốt</span></td>
+									</tr>
+									<tr>
+										<th scope="col" class="bg_lightYellow">Chiến lược/suy luận</th>
+										<td><span class="no-show">4</span></td><td><span class="no-show">4</span></td>
+										<td class="LTM_2"><span class="no-show">4.0</span></td>
+										<td><span class="no-show">Rất tốt</span></td>
+									</tr>
+									<tr>
+										<th scope="col" class="bg_lightYellow">Tính toán/thực hành</th>
+										<td><span class="no-show">4</span></td><td><span class="no-show">4</span></td>
+										<td class="LTM_3"><span class="no-show">4.0</span></td>
+										<td><span class="no-show">Rất tốt</span></td>
+									</tr>
+									<tr>
+										<th scope="col" class="bg_lightYellow">Diễn đạt/biểu hiện</th>
+										<td><span class="no-show">4</span></td><td><span class="no-show">4</span></td>
+										<td class="LTM_4"><span class="no-show">4.0</span></td>
+										<td><span class="no-show">Rất tốt</span></td>
+									</tr>
+									<tr>
+										<th scope="col" class="bg_lightYellow">Trung bình<!--평균 --></th>
+										<td><span class="no-show">4.0</span></td><td><span class="no-show">4.0</span></td>
+										<td><span class="no-show">4.0</span></td>
+										<td></td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+
+				<div class="column mt30">
+					<div class="circBox" style="height:175px; top: 75px;">
+						<strong class="boxTitle" style="top: 7px;"><span class="co_yellow">Phân tích BTM/LTM</span> là gì?</strong>
+						Nó là một dạng phân tích sử dụng điểm trung bình từ phân bố xác suất để tìm ra các khía cạnh yếu nhất trong quá trình giải quyết vấn đề. Điểm số của mỗi vấn đề được liệt kê từ cao nhất đến thấp nhất và chỉ định điểm số ở giữa là trung bình. Sau đó, 2 điểm cao hơn điểm trung bình và 2 điểm thấp hơn điểm trung bình được chọn cho mỗi khu vực và sau đó tìm điểm thấp nhất. Cuối cùng, so sánh phân tích yếu tố đánh giá từ điểm thấp nhất. (BTM là viết tắt của Better Than Median và đại diện cho điểm số lớn hơn trung bình trong khi LTM là viết tắt của Less Than Median và đại diện cho điểm số thấp hơn trung bình.)
+						<br><br>
+						<ul>
+							
+							<li>Nhìn chung, trong trường hợp kết quả là LTM, học sinh có thể đã bị hết thời gian hoặc bỏ cuộc vì độ khó của vấn đề.</li>
+						</ul>
+					</div>
+				</div>
+
+				<div class="column">
+					<div class="grayBox" style="margin-top: 85px">
+						<strong class="boxTitle">Thang điểm đánh giá phần mô tả</strong>
+						<table class="table_meta">
+							<caption>TABLE</caption>
+							<colgroup>
+								<col style="width:10%;">
+								<col style="width:13%;">
+								<col style="width:10%;">
+								<col style="width:67%;">
+							</colgroup>
+							<thead>
+								<tr>
+								<th scope="col">Cấp độ</th>
+								<th scope="col">Thang điểm</th>
+								<th scope="col">Đánh giá</th>
+								<th scope="col">Ghi chú</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>A</td>
+									<td>24~30</td>
+									<td>Xuất sắc</td>
+									<td>Năng lực giải quyết vấn đề rất tốt.<br>Nên dành thời gian để học sinh thử thách với những bài toán nâng cao như các bài toán tuyển chọn của trường chuyên.</td>
+								</tr>
+								<tr>
+									<td class="step2">B</td>
+									<td class="step2">14~23</td>
+									<td class="step2">Khá</td>
+									<td class="step2">Năng lực giải quyết vấn đề còn nhiều thiếu sót.<br>Tuy nhiên, cần tập trung phát triển hơn nữa nă.</td>
+								</tr>
+								<tr>
+									<td class="step3">C</td>
+									<td class="step3">13</td>
+									<td class="step3">Trung bình</td>
+									<td class="step3">Năng lực giải quyết vấn đề kém.<br>Cần luyện tập và hình thành thói quen giải các bài tập một cách.</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="footer" style="padding-top: 20px;">
+			<p class="copyright" style="text-align:right">Copyright &copy; CMS Edu Co., Ltd. All rights reserved</p>
+		</div>
+		<div class="line_dotted non-printable">Page 2</div>
+
+		<div class="btn_area non-printable">
+			<a href="#confirm" id="btnConfirm" class="btn_print" data-resultSeq="23876" data-finalSeq="3982"><i class="fa fa-exclamation" aria-hidden="true"></i> Kiểm tra lần cuối</a>
+			
+			<a href="#" onclick="popClose();" class="btn_home"><i class="fa fa-times" aria-hidden="true"></i> Đóng</a>
+		</div>
+	</div>
+	<!-- //container -->
+</body>
+<script type="text/javascript">
+$(document).ready(function(){
+	$("#btnConfirm").on("click",function(e) {
+		e.preventDefault();
+
+		var resultSeq = $(this).attr('data-resultSeq');
+		var finalSeq = $(this).attr('data-finalSeq');
+
+		swal({
+			title: "Are You Sure?",
+			text: "Bạn sẽ không thể chỉnh sửa và thêm nhận xét sau bước này. \n Tiếp tục?", // 최종 확인 후에는 수정 할 수 없습니다.
+			type: "info", //info, warning, error, danger
+			showCancelButton: true,
+			confirmButtonClass: "btn-info",
+			confirmButtonText: "Confirm",
+			cancelButtonText: "Cancel",
+			closeOnConfirm: false,
+			closeOnCancel: false,
+			showLoaderOnConfirm: true
+		}, function(isConfirm) {
+			if(isConfirm) {
+				var option = {
+					url        : "/igel/igSummConfirmAction.do"
+					, data     : {resultSeq : resultSeq, finalSeq:finalSeq}
+					, cache    : false
+					, callback : function(result) {
+						if (result.code == 1) {
+							alert("Đã xác nhận.");
+							opener.$("#btnSearch").click();
+							window.close();
+						} else if(result.code < 0) {
+							alert(result.message);
+						} else {
+							alert("Vui lòng thử lại."); 
+						}
+					}
+					, error    : function(result) {
+						alert("Vui lòng thử lại."); 
+					}
+				}
+				execute(option);
+			} else {
+				swal({title:"Bỏ qua Đã thành công.", type:"error",confirmButtonText: "Xác nhận",confirmButtonClass: "btn-warning"});
+			}
+		});
+	});
+
+	var LTM = [{
+		index:1,
+		value:'4.0'
+	},{
+		index:2,
+		value:'4.0'
+	},{
+		index:3,
+		value:'4.0'
+	},{
+		index:4,
+		value:'4.0'
+	}];
+
+	var minIdx, minValue;
+	minValue = "5";
+	$.each(LTM, function(i,o) {
+		if(minValue >= o.value) {
+			minValue = o.value;
+			minIdx = o.index;
+		}
+	});
+	$(".LTM_" + minIdx).addClass(" active");
+});
+</script>
+</html></body>
+</html>

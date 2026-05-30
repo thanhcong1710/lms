@@ -15,6 +15,9 @@ import IgbhEvalResult from './views/IgbhEvalResult.vue';
 import IgbhEvalForm from './views/IgbhEvalForm.vue';
 import IgbhWeeklyEvalList from './views/IgbhWeeklyEvalList.vue';
 import IgbhWeeklyEvalForm from './views/IgbhWeeklyEvalForm.vue';
+import IgbhSummativeEvalList from './views/IgbhSummativeEvalList.vue';
+import IgbhSummativeEvalReport from './views/IgbhSummativeEvalReport.vue';
+import IgbhTestConfig from './views/IgbhTestConfig.vue';
 
 const routes = [
     { path: '/login', name: 'login', component: Login },
@@ -33,6 +36,9 @@ const routes = [
     { path: '/igbh/evaluations/grade/:id', name: 'igbh-eval-form', component: IgbhEvalForm, meta: { requiresAuth: true } },
     { path: '/igbh/weekly', name: 'igbh-weekly-evaluations', component: IgbhWeeklyEvalList, meta: { requiresAuth: true } },
     { path: '/igbh/weekly/grade/:id?', name: 'igbh-weekly-eval-form', component: IgbhWeeklyEvalForm, meta: { requiresAuth: true } },
+    { path: '/igbh/summative/evaluations', name: 'igbh-summative-evaluations', component: IgbhSummativeEvalList, meta: { requiresAuth: true } },
+    { path: '/igbh/summative/report/:id', name: 'igbh-summative-eval-report', component: IgbhSummativeEvalReport, meta: { requiresAuth: true } },
+    { path: '/igbh/test-config/:id', name: 'igbh-test-config', component: IgbhTestConfig, meta: { requiresAuth: true } },
 ];
 
 

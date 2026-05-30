@@ -1,0 +1,686 @@
+<!doctype html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang=""> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8" lang=""> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9" lang=""> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html lang="">
+<!--<![endif]-->
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LMS VN</title>
+<link href="/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+<link href="/favicon.png" rel="apple-touch-icon" />
+<link href="/css/bootstrap.min.css" rel="stylesheet">
+<link href="/fonts/css/font-awesome.min.css" rel="stylesheet">
+<link href="/css/icheck/_all.css" rel="stylesheet" />
+<link href="/css/custom.css" rel="stylesheet"><!-- last overlapping CSS -->
+<link href="/css/datepicker/bootstrap-datepicker.css" rel="stylesheet">
+<link href="/js/datatables/jquery.dataTables.min.css" rel="stylesheet">
+<link href="/css/datatables/dataTables.bootstrap.css" rel="stylesheet">
+<link href="/css/colorbox/colorbox.css" rel="stylesheet"> <!-- colorbox -->
+<link href="/css/progressbar/bootstrap-progressbar-3.3.0.css" rel="stylesheet"> <!-- bootstrap progress -->
+<link href="/css/toast/toastr.min.css" rel="stylesheet"> <!-- jquery Toast -->
+
+<script src="/js/jquery.min.js"></script><!--  jQuery v1.11.3  -->
+<script type="text/javascript" src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script><!--  jQuery-ui 1.12.1 -->
+<script src="/js/colorbox/jquery.colorbox.js"></script><!-- colorbox -->
+<script src="/js/jquery.form.min.js"></script>
+<script src="/js/bootstrap.min.js"></script><!-- bootstrap v3.3.6 -->
+<script src="/js/icheck/icheck.min.js"></script><!-- icheck -->
+<script src="/js/progressbar/bootstrap-progressbar.min.js"></script><!-- bootstrap progress js -->
+
+<!-- HTML5 요소 및 미디어 쿼리에 대한 IE8 지원을위한 html5shiv.js와 Respond.js -->
+<!--[if lt IE 9]>
+<script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+<![endif]-->
+
+<!--  datatables -->
+<script src="/js/datatables/jquery.dataTables.js"></script>
+<script src="/js/datatables/dataTables.bootstrap.js"></script>
+<script src="/js/datatables/dataTables.select.min.js"></script>
+
+<!-- datepicker -->
+<script src="/js/datepicker/bootstrap-datepicker.js"></script>
+<script src="/js/datepicker/locales/bootstrap-datepicker.ko_KR.js"></script>
+<script src="/js/datepicker/locales/bootstrap-datepicker.zh_CN.js"></script>
+<script src="/js/datepicker/locales/bootstrap-datepicker.vi_VN.js"></script>
+
+<script src="/js/pdf/pdfobject.min.js"></script><!-- pdf -->
+<script src="/js/i18n/jquery.i18n.properties.js"></script><!-- i18n -->
+<script src="/js/toast/toastr.min.js"></script><!-- jquery toast -->
+<!-- <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script> -->
+
+<link href="/js/sweetalert/sweetalert.css" rel="stylesheet">
+<script src="/js/sweetalert/sweetalert.js"></script>
+
+<script src="/js/date.js"></script>
+<style>
+<!--
+table.dataTable thead th, table.dataTable tbody td, table.table_col tr th {
+vertical-align: middle;
+}
+-->
+</style>
+<script type="text/javascript">
+var userLang = "vi_VN";
+var lang2 = "";
+try {
+jQuery.i18n.properties({
+	name:'Messages',
+	path:'/js/i18n/properties/',
+	mode:'both',
+	language:userLang
+});
+lang2 = userLang.split('_')[1].toLowerCase();
+} catch (e) {
+
+}
+
+toastr.options = {
+	"closeButton": false,
+	"debug": false,
+	"newestOnTop": true,
+	"progressBar": true,
+	"positionClass": "toast-top-middle1",
+	"preventDuplicates": true,
+	"onclick": null,
+	"showDuration": "300",
+	"hideDuration": "1000",
+	"timeOut": "2000",
+	"extendedTimeOut": "1000",
+	"showEasing": "swing",
+	"hideEasing": "linear",
+	"showMethod": "fadeIn",
+	"hideMethod": "fadeOut"
+};
+(function($){
+	$.fn.tinyDraggable = function(options){
+		var settings = $.extend({ handle: null, exclude: null }, options);
+		return this.each(function(){
+			var dx, dy, el = $(this), handle = settings.handle? $(settings.handle, el): el;
+			handle.on({
+				mousedown: function(e){
+					if (settings.exclude && ~$.inArray(e.target, $(settings.exclude, el))) return;
+					var os = el.offset(); dx = e.pageX-os.left, dy = e.pageY-os.top;
+					$(document).on('mousemove.drag',
+						function(e){ el.offset({top: e.pageY-dy, left: e.pageX-dx});
+					});
+				},
+				mouseup: function(e){ $(document).off('mousemove.drag'); }
+			});
+		});
+	}
+}(jQuery));
+</script>
+<script src="/js/common.js"></script></head>
+<body class="nav-md">
+	<div class="container body">
+		<div class="main_container">
+			<div class="col-md-3 left_col">
+				<div class="left_col scroll-view">
+					<div class="navbar nav_title" style="border: 0;">
+						<a href="/" class="site_title"><span class="glyphicon glyphicon-home" aria-hidden="true"></span><!-- CTOC --></a>
+					</div>
+					<div class="clearfix"></div>
+					<!-- sidebar menu -->
+					<div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
+						<div class="menu_section">
+							<ul class="nav side-menu">
+								<li><a><i class="fa fa-user"></i>Quản lý người dùng<span class="fa fa-chevron-down"></span></a><ul class="nav child_menu" style="display: none">
+										<li><a href="/user/centerList.do">Trung tâm</a></li>
+									<li><a href="/user/teacherList.do">Giáo viên</a></li>
+									</ul></li><li><a><i class="fa fa-test"></i>Quản lý bài kiểm tra<span class="fa fa-chevron-down"></span></a><ul class="nav child_menu" style="display: none">
+										<li><a href="/test/paperList.do">Bài kiểm tra</a></li>
+									<li><a href="/test/paperInfoList.do">Thông tin bài kiểm tra</a></li>
+									</ul></li><li><a><i class="fa fa-cntr"></i>Quản lý Trung tâm<span class="fa fa-chevron-down"></span></a><ul class="nav child_menu" style="display: none">
+										<li><a href="/cntr/classList.do">Quản lý lớp học</a></li>
+									<li><a href="/cntr/studentList.do">Quản lý học sinh</a></li>
+									</ul></li><li><a><i class="fa fa-eval"></i>Quản lý bài kiểm tra UCREA<span class="fa fa-chevron-down"></span></a><ul class="nav child_menu" style="display: none">
+										<li><a href="/eval/viewList.do">Tìm kiếm bài kiểm tra</a></li>
+									<li><a href="/eval/inputList.do">Nhập đáp án bài kiểm tra</a></li>
+									<li><a href="/eval/resultList.do">Kết quả bài kiểm tra</a></li>
+									</ul></li><li><a><i class="fa fa-igel"></i>Quản lý bài kiểm tra IG.BH<span class="fa fa-chevron-down"></span></a><ul class="nav child_menu" style="display: none">
+										<li><a href="/igel/viewList.do">Tìm bài kiểm tra IG.BH</a></li>
+									<li><a href="/igel/diagList.do">Bài kiểm tra đầu vào IG.BH</a></li>
+									<li><a href="/igel/smtvList.do">Tóm tắt kết quả đánh giá IG.BH</a></li>
+									</ul></li><li><a><i class="fa fa-cmnt"></i>Cộng đồng<span class="fa fa-chevron-down"></span></a><ul class="nav child_menu" style="display: none">
+										<li><a href="/cmnt/noticeList.do">Chú ý</a></li>
+									<li><a href="/cmnt/faqList.do">Câu hỏi thường gặp</a></li>
+									<li><a href="/cmnt/bulletList.do">Bảng thông báo</a></li>
+									</ul></li><li><a><i class="fa fa-sysm"></i>Quản lý hệ thống<span class="fa fa-chevron-down"></span></a><ul class="nav child_menu" style="display: none">
+										<li><a href="/sysm/igtestList.do">Quản lý bài kiểm tra IG.BH</a></li>
+									</ul>
+						</div>
+					</div>
+					<!-- /sidebar menu -->
+
+					<!-- /menu footer buttons -->
+					<div class="sidebar-footer hidden-small">
+						<a href="/user/my.do" data-toggle="tooltip" data-placement="top" title="" data-original-title="My Page"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></a>
+						<a href="#" onclick="logout();" data-toggle="tooltip" data-placement="top" title="" data-original-title="Đăng xuất"><span class="glyphicon glyphicon-off" aria-hidden="true"></span></a>
+					</div>
+					<!-- /menu footer buttons -->
+				</div>
+			</div>
+			<!-- top navigation -->
+
+			<div class="top_nav">
+				<div class="nav_menu">
+					<nav class="" role="navigation">
+						<div class="nav toggle">
+							<a id="menu_toggle"><i class="fa fa-bars"></i></a>
+						</div>
+
+						<ul class="nav navbar-nav navbar-right">
+							<li class="">
+								<a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+									<span id="welcomeMsg"></span>
+									<span class=" fa fa-angle-down"></span>
+								</a>
+								<ul class="dropdown-menu dropdown-usermenu pull-right">
+									<li><a href="/user/my.do"> My Info</a></li>
+									<li><a href="#" onclick="logout();"><i class="fa fa-sign-out pull-right"></i> Đăng xuất</a></li>
+								</ul>
+							</li>
+							</ul>
+					</nav>
+				</div>
+			</div>
+			<!-- /top navigation -->
+
+			<!-- page content -->
+			<div class="right_col" role="main">
+				
+
+
+
+
+
+
+<div class="location">
+	<span>Quản lý bài kiểm tra IG.BH</span>
+	<span class="glyphicon glyphicon-menu-right" aria-hidden="true"></span>
+	<h3>Tóm tắt kết quả đánh giá IG.BH</h3>
+</div>
+
+<div class="row">
+	<div class="x_panel">
+		<div class="x_title">
+			<form id="form-search" onsubmit="return false;">
+			<div class="col-xs-12 form-inline">
+				<input type="hidden" name="searchCols" id="searchCols" value="">
+				<input type="hidden" name="sTestSeq"   id="sTestSeq"   value="">
+				<input type="hidden" name="sLevelCd"   id="sLevelCd"   value="">
+				<input type="hidden" name="sSortCd"    id="sSortCd"    value="">
+				<div class="input-group mr10">
+					<div class="input-group-btn btn_select">
+						<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+							<span class="output_select">Lựa chọn</span> <span class="caret"></span>
+						</button>
+						<ul class="dropdown-menu dropdown-menu-right cols" role="menu">
+							<li><a href="#">Lựa chọn</a></li>
+							<li><a href="#" data-cd="tcNm">Giáo viên Tên</a></li>
+							<li><a href="#" data-cd="cNm">Lớp Tên</a></li>
+							<li><a href="#" data-cd="sNm">Học sinh Tên</a></li>
+						</ul>
+					</div>
+					<input type="text" name="searchText" id="searchText" class="form-control" value="">
+					<div class="input-group-btn btn_select">
+						<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+							<span class="output_select">Tên bài kiểm tra Tất cả</span> <span class="caret"></span>
+						</button>
+						<ul class="dropdown-menu dropdown-menu-right testSeq" role="menu">
+							<li><a href="#">Tên bài kiểm tra Tất cả</a></li>
+							
+							<li><a href="#" data-cd="76">IG-J summative test</a></li>
+							
+							<li><a href="#" data-cd="77">IG-T summative test</a></li>
+							
+							<li><a href="#" data-cd="78">IG-C summative test</a></li>
+							
+							<li><a href="#" data-cd="79">IG-W summative test</a></li>
+							
+							<li><a href="#" data-cd="80">IG-Q summative test</a></li>
+							
+							<li><a href="#" data-cd="81">IG-U summative test</a></li>
+							
+							<li><a href="#" data-cd="82">BH-G1 summative test</a></li>
+							
+							<li><a href="#" data-cd="83">BH-G2 summative test</a></li>
+							
+							<li><a href="#" data-cd="84">BH-R1 summative test</a></li>
+							
+							<li><a href="#" data-cd="85">BH-R2 summative test</a></li>
+							
+							<li><a href="#" data-cd="86">BH-R3 summative test</a></li>
+							
+							<li><a href="#" data-cd="87">BH-R4 summative test</a></li>
+							
+							<li><a href="#" data-cd="88">BH-B1 summative test </a></li>
+							
+							<li><a href="#" data-cd="89">BH-B2 summative test</a></li>
+							
+							<li><a href="#" data-cd="90">BH-B3 summative test</a></li>
+							
+							<li><a href="#" data-cd="91">BH-B4 summative test</a></li>
+							
+							<li><a href="#" data-cd="92">BH-P1 summative test</a></li>
+							
+							<li><a href="#" data-cd="93">BH-P2 summative test</a></li>
+							
+							<li><a href="#" data-cd="94">BH-P3 summative test</a></li>
+							
+							<li><a href="#" data-cd="95">BH-P4 summative test</a></li>
+							
+							<li><a href="#" data-cd="140">Test 2</a></li>
+							
+							<li><a href="#" data-cd="141">Test 3</a></li>
+							
+							<li><a href="#" data-cd="143">test 5</a></li>
+							
+						</ul>
+					</div>
+					<div class="input-group-btn btn_select">
+						<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+							<span class="output_select">LEVEL Tất cả</span> <span class="caret"></span>
+						</button>
+						<ul class="dropdown-menu dropdown-menu-right levelCd" role="menu">
+							<li><a href="#">LEVEL Tất cả</a></li>
+							
+							<li><a href="#" data-cd="LJ">IG Lev.J</a></li>
+							
+							<li><a href="#" data-cd="LT">IG Lev.T</a></li>
+							
+							<li><a href="#" data-cd="LC">IG Lev.C</a></li>
+							
+							<li><a href="#" data-cd="LW">IG Lev.W</a></li>
+							
+							<li><a href="#" data-cd="LQ">IG Lev.Q</a></li>
+							
+							<li><a href="#" data-cd="LU">IG Lev.U</a></li>
+							
+							<li><a href="#" data-cd="LG1">BH Lev.G1</a></li>
+							
+							<li><a href="#" data-cd="LG2">BH Lev.G2</a></li>
+							
+							<li><a href="#" data-cd="LR1">BH Lev.R1</a></li>
+							
+							<li><a href="#" data-cd="LR2">BH Lev.R2</a></li>
+							
+							<li><a href="#" data-cd="LR3">BH Lev.R3</a></li>
+							
+							<li><a href="#" data-cd="LR4">BH Lev.R4</a></li>
+							
+							<li><a href="#" data-cd="LB1">BH Lev.B1</a></li>
+							
+							<li><a href="#" data-cd="LB2">BH Lev.B2</a></li>
+							
+							<li><a href="#" data-cd="LB3">BH Lev.B3</a></li>
+							
+							<li><a href="#" data-cd="LB4">BH Lev.B4</a></li>
+							
+							<li><a href="#" data-cd="LP1">BH Lev.P1</a></li>
+							
+							<li><a href="#" data-cd="LP2">BH Lev.P2</a></li>
+							
+							<li><a href="#" data-cd="LP3">BH Lev.P3</a></li>
+							
+							<li><a href="#" data-cd="LP4">BH Lev.P4</a></li>
+							
+						</ul>
+					</div>
+				</div>
+				<a href="#search" id="btnSearch" class="btn btn-default mr10">Tìm kiếm</a>
+				<a href="#init" id="btnInit" class="btn btn-default">Cài đặt lại</a>
+			</div>
+
+			<div class="clearfix"></div>
+
+			<div class="col-xs-12 form-inline mt10">
+				<label for="start" class="lb_topCont">Ngày kiểm tra<!-- 평가일 --></label>
+				<div class="input-daterange input-group" id="datepicker">
+					<span class="input-group-addon"><i class="glyphicon glyphicon-calendar fa fa-calendar"></i></span>
+					<input type="text" class="input-md form-control" name="start" id="start" value="">
+					<span class="input-group-addon">~</span>
+					<input type="text" class="input-md form-control" name="end" id="end" value="">
+				</div>
+			</div>
+
+			<div class="clearfix"></div>
+
+			</form>
+		</div>
+		<div class="x_contents">
+			<div class="col-xs-12">
+				<div class="table_list_top">
+					<div id="gender" class="btn-group" data-toggle="buttons">
+						<label class="btn btn-default" data-toggle-class="btn-primary" data-toggle-passive-class="btn-default" style="width:100px">
+						<input type="radio" name="sSortCd" id="sort_score" value="score" data-parsley-multiple="dataTbStyle">Theo điểm</label>
+						<label class="btn btn-default" data-toggle-class="btn-primary" data-toggle-passive-class="btn-default" style="width:150px">
+						<input type="radio" name="sSortCd" id="sort_eval" value="eval" data-parsley-multiple="dataTbStyle">Đến ngày kiểm tra</label>
+					</div>
+				</div>
+
+				<table id="dataTb" class="ui celled table bulk_action" style="width:100%;">
+					<caption>Kỹ năng tư duy sáng tạo cho trẻ table</caption>
+					<colgroup>
+						<col style="width: 5%">
+						<col style="width:12%">
+						<col style="width: 7%">
+						<col style="width: 7%">
+						<col style="width: 8%">
+						<col style="width: 8%">
+						<col style="width: 5%">
+						<col style="width: 5%">
+						<col style="width: 9%">
+						<col style="width: 8%">
+						<col style="width: 5%">
+					</colgroup>
+					<thead>
+					<tr>
+						<th scope="col">Số</th>
+						<th scope="col">Tên bài kiểm tra</th>
+						<th scope="col">LEVEL</th>
+						<th scope="col">Tên lớp</th>
+						<th scope="col">Giáo viên Tên</th>
+						<th scope="col">Học sinh Tên</th>
+						<th scope="col">Tổng điểm</th>
+						<th scope="col">Ngày kiểm tra<!-- 평가일 --></th>
+						<th scope="col">Trạng thái<!-- 상태 --></th>
+						<th scope="col">Ngày đăng ký</th>
+						<th scope="col">Chỉnh sửa Đánh giá</th>
+					</tr>
+					</thead>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+var goReport  = function (finalSeq, resultSeq, eachSeq, stuSeq) {
+	window.open("", "popup-center", "width=900px,height=800px,resizable=yes,scrollbars=yes,directories=no,titlebar=no,toolbar=no,location=no,status=no,menubar=no");
+
+	var comSubmit = new ComSubmit();
+	comSubmit.setUrl("viewReportIGSumm.do");
+	comSubmit.addParam("finalSeq" ,finalSeq);
+	comSubmit.addParam("resultSeq",resultSeq);
+	comSubmit.addParam("eachSeq"  ,eachSeq);
+	comSubmit.addParam("stuSeq"   ,stuSeq);
+	comSubmit.setTarget("popup-center");
+	comSubmit.submit();
+}
+
+var isClicked = false;
+$(document).ready(function() {
+	$(".btn-init").on("click", function() {
+		$("#form-search")[0].reset();
+	});
+	
+	
+	
+	
+
+	var table = {
+		ajax : {
+			url :"getSmtvList.do"
+			, data : function(data) {
+				var datas = [];
+
+				var colArr = ["testSeq", "levelCd","sortCd"];
+				var valArr = [$("#sTestSeq").val(),$("#sLevelCd").val(),$("#sSortCd").val()];
+
+				$.each(colArr, function(i,o) {
+					var obj = {};
+					obj['col'] = colArr[i];
+					obj['val'] = valArr[i];
+					datas.push(obj);
+				});
+
+				data.searchDatas  = datas;
+				data.searchCols   = $("#searchCols").val();
+				data.searchText   = $("#searchText").val();
+				data.searchFromDt = $("#start").val();
+				data.searchToDt   = $("#end").val();
+
+				delete(data.columns);
+				delete(data.order);
+				delete(data.search);
+			}
+			, dataSrc : function(result) {
+				return result.data;
+			}
+		}
+		, columns : [
+			{data:"rn"}
+			, {data:"evalNm", defaultContent:''}
+			, {data:"testGradeCdNm"}
+			, {data:"classNm", defaultContent:'', className:"dt-body-left"}
+			, {data:"membNm" , defaultContent:'', className:"dt-body-left"}
+			, {data:"stuNm", defaultContent:'', className:"dt-body-left"}
+			, {data:"totalScore", defaultContent:'', className:"dt-body-right"}
+			, {data:"evalYmd", defaultContent:''}
+			, {data:"resultCdNm", defaultContent:''}
+			, {data:"regDate", defaultContent:''}
+			, {data:null, defaultContent:'' }
+		]
+		, columnDefs : [
+			{
+				targets : [1]
+				, render : function(data, type, full, meta) {
+					//return '<a href="#view" onclick="goReport("' + full.finalSeq  + '", "' + full.resultSeq + '")">' + data +'</a>';
+					return "<a href='#mod' onclick='goReport(" + full.finalSeq + ", " + full.resultSeq + "," + full.eachSeq + ", " + full.stuSeq + ")'><u>" + data + "</u></a>";
+				}
+			}
+			, {
+				targets:[6]
+				, render : function(data, type, full, meta) {
+					return isEmpty(data) ? '' : data + ' Điểm';
+				}
+			}
+			, {
+				targets:[10]
+				, render : function(data, type, full, meta) {
+					if(full.resultCd == 'IS003') {
+						return "<a href='#mod' class='btn btn-info btn-sm btnModify' data-finalSeq='" + full.finalSeq + "' data-resultSeq='" + full.resultSeq + "' data-stuSeq='" + full.stuSeq + "' data-classSeq='" + full.classSeq + "'>Chỉnh sửa</a>";
+					} else {
+						return "<a class='btn btn-success btn-sm'>Complete</a>";
+					}
+				}
+			}
+		]
+	};
+
+	drawTable('dataTb',table);
+
+	$('.cols').find('a').on("click",function(e) {
+		$("#searchCols").val($(this).attr("data-cd"));
+	});
+	$('.testSeq').find('a').on("click",function(e) {
+		$("#sTestSeq").val($(this).attr("data-cd"));
+	});
+	$('.levelCd').find('a').on("click",function(e) {
+		$("#sLevelCd").val($(this).attr("data-cd"));
+	});
+	$("#gender").find("label").on("click", function(e) {
+		$("#sSortCd").val($(this).find("input").val());
+
+		var dataTb = $("#dataTb").DataTable();
+		dataTb.draw();
+	});
+
+	$("#btnInit").on("click", function() {
+		location.href="smtvList.do";
+	});
+
+	$("#searchText").on("keyup", function(e) {
+		if(e.keyCode == 13) $("#btnSearch").click();
+	});
+
+	$("#btnSearch").on("click", function() {
+		if( !isEmpty($("#searchText").val()) && isEmpty($("#searchCols").val()) ) {
+			alert("Vui lòng chọn danh mục tìm kiếm.");
+			return;
+		}
+		var dataTb = $("#dataTb").DataTable();
+		dataTb.draw();
+	});
+
+	$(document).on("click", ".btnModify", function() {
+		var comSubmit = new ComSubmit();
+		comSubmit.setUrl("smtvMod.do");
+		comSubmit.addParam("finalSeq", $(this).attr("data-finalSeq"));
+		comSubmit.addParam("resultSeq", $(this).attr("data-resultSeq"));
+		comSubmit.addParam("classSeq", $(this).attr("data-classSeq"));
+		comSubmit.addParam("stuSeq", $(this).attr("data-stuSeq"));
+		comSubmit.addParam("paramMap",$("#form-search").serialize().toString());
+		comSubmit.submit();
+	});
+});
+</script><!-- footer content -->
+				<footer class='cms_foot'>
+					<div class="pull-left" style="bottom: 10px;clear: both;display: block;padding: 5px 0 0 0;position: fixed;">LMS VN</div>
+					<div class="pull-right" style="bottom: 10px;clear: both;display: block;padding: 5px 0 0 0;position: fixed;right:10px">Copyright &copy; CMS Edu Co., Ltd. All rights reserved.</div>
+					<div class="clearfix"></div>
+				</footer>
+				<!-- /footer content -->
+			</div>
+		</div>
+	</div>
+
+	<div id="custom_notifications" class="cinputViewustom-notifications dsp_none">
+		<ul class="list-unstyled notifications clearfix" data-tabbed_notifications="notif-group"></ul>
+		<div class="clearfix"></div>
+		<div id="notif-group" class="tabbed_notifications"></div>
+	</div>
+
+	<!-- tags
+	<script src="/js/tags/jquery.tagsinput.min.js"></script>
+	-->
+	<!-- switchery
+	<script src="/js/switchery/switchery.min.js"></script>
+	-->
+	<!-- daterangepicker
+	<script src="/js/moment/moment.min.js" type="text/javascript"></script>
+	<script src="/js/datepicker/daterangepicker.js" type="text/javascript"></script>
+	-->
+	<!-- richtext editor
+	<script src="/js/editor/bootstrap-wysiwyg.js"></script>
+	<script src="/js/editor/external/jquery.hotkeys.js"></script>
+	<script src="/js/editor/external/google-code-prettify/prettify.js"></script>
+	-->
+	<!-- select2
+	<script src="/js/select/select2.full.js"></script>
+	-->
+	<!-- form validation
+	<script src="/js/parsley/parsley.min.js" type="text/javascript"></script>
+	-->
+	<!-- textarea resize
+	<script src="/js/textarea/autosize.min.js"></script>
+	<script>
+		autosize($('.resizable_textarea'));
+	</script>
+	-->
+	<!-- Autocomplete
+	<script src="/js/autocomplete/countries.js" type="text/javascript"></script>
+	<script src="/js/autocomplete/jquery.autocomplete.js"></script>
+	<script src="/js/jquery.tablemerge.js"></script>
+	-->
+
+	<script src="/js/custom.js"></script>
+
+	<!-- select2 -->
+	<script>
+		//$("#flagImg").attr('src',`https://lipis.github.io/flag-icon-css/flags/4x3/${lang2}.svg`);
+		$("#flagImg").attr('src',$.i18n.prop('flagUrl',lang2));
+		$("#welcomeMsg").html($.i18n.prop('message.welcome','CMS VN','CMS-VN'));
+
+		$(document).ready(function() {
+			$(".alphabet").on("keyup keypress", function() {
+				validateElement("alphabet",this);
+			});
+			$(".phone").on("keyup keypress", function() {
+				validateElement("phone",this);
+			});
+			$(".email").on("keyup keypress", function() {
+				validateElement("email",this);
+			});
+			$(".number").on("keyup keypress", function() {
+				validateElement("number",this);
+			});
+
+			$("#dataTb_paginate").parent("div").prev(".col-xs-5").remove().end().attr('class', 'col-xs-12');
+
+			// 데이터 테이블 1,2 공통
+			$(".dataTables_paginate").css({
+				"float": "none"
+				,"text-align": "center"
+			});
+
+			$('.input-daterange').datepicker({
+				language: userLang, //en, ko, zh-CN
+				clearBtn: true,
+				todayHighlight: true,
+				autoclose: true,
+				orientation: "bottom auto",
+				format:'yyyy-mm-dd'
+			});
+			$('.xcxc').click(function() {
+				$('#descr').val($('#editor').html());
+			});
+		});
+
+		$(function() {
+			function initToolbarBootstrapBindings() {
+				var fonts = [ 'Serif', 'Sans', 'Arial',
+						'Arial Black', 'Courier', 'Courier New',
+						'Comic Sans MS', 'Helvetica', 'Impact',
+						'Lucida Grande', 'Lucida Sans', 'Tahoma',
+						'Times', 'Times New Roman', 'Verdana' ], fontTarget = $(
+						'[title=Font]').siblings('.dropdown-menu');
+				$.each(fonts, function(idx, fontName) {
+					fontTarget.append($('<li><a data-edit="fontName ' + fontName + '" style="font-family:\'' + fontName + '\'">' + fontName + '</a></li>'));
+				});
+				$('a[title]').tooltip({
+					container : 'body'
+				});
+				$('.dropdown-menu input').click(function() {
+					return false;
+				}).change( function() {
+					$(this).parent('.dropdown-menu').siblings('.dropdown-toggle').dropdown('toggle');
+				}).keydown('esc', function() {
+					this.value = '';
+					$(this).change();
+				});
+
+				$('[data-role=magic-overlay]').each(function() {
+					var overlay = $(this), target = $(overlay.data('target'));
+					overlay.css('opacity', 0).css('position','absolute').offset(target.offset()).width(target.outerWidth()).height(target.outerHeight());
+				});
+				if ("onwebkitspeechchange" in document.createElement("input")) {
+					var editorOffset = $('#editor').offset();
+					$('#voiceBtn').css('position', 'absolute').offset({
+										top : editorOffset.top,
+										left : editorOffset.left + $('#editor').innerWidth() - 35
+									});
+				} else {
+					$('#voiceBtn').hide();
+				}
+			};
+		});
+
+		var logout = function() {
+
+			if(!confirm("Bạn sẽ Đăng xuất?")) return;
+
+			location.href= "/login/logout.do";
+
+		}
+	</script>
+	<!-- /editor -->
+
+</body>
+</html>
