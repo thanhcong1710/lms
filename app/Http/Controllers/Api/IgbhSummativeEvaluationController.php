@@ -61,22 +61,14 @@ class IgbhSummativeEvaluationController extends Controller
             ->orderBy('sort_no')
             ->get();
 
-        // Fetch weekly evaluations for this class & test
-        $evals = DB::table('igbh_weekly_evals')
-            ->where('class_seq', $result->class_seq)
-            ->where('test_seq', $result->test_seq)
+        // Fetch student's weekly details regardless of class_seq (handles transferred students)
+        $detailsQuery = DB::table('igbh_weekly_eval_details as d')
+            ->join('igbh_weekly_evals as e', 'd.weekly_eval_id', '=', 'e.id')
+            ->select('d.*', 'e.each_cd')
+            ->where('d.stu_seq', $result->stu_seq)
             ->get();
 
-        $evalIds = $evals->pluck('id');
-
-        // Fetch student's weekly details
-        $details = DB::table('igbh_weekly_eval_details')
-            ->whereIn('weekly_eval_id', $evalIds)
-            ->where('stu_seq', $result->stu_seq)
-            ->get()
-            ->keyBy(function($item) use ($evals) {
-                return $evals->firstWhere('id', $item->weekly_eval_id)->each_cd;
-            });
+        $details = $detailsQuery->keyBy('each_cd');
 
         $reportData = [];
         $totalWorkbook = 0;

@@ -202,11 +202,6 @@ class CrawlIgbhWeeklyEvals extends Command
                         $allowYn = $row->getAttribute('data-stuallowyn');
                         
                         if (!$stuSeq) continue;
-                        
-                        // If student is not allowed, scores are probably empty or invalid
-                        if ($allowYn === 'N') {
-                            continue;
-                        }
 
                         $stuNmRaw = $xpath->evaluate("string(.//th)", $row);
                         // Clean student name by removing hidden input content if needed
