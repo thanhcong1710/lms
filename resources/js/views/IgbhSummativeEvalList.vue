@@ -2,8 +2,8 @@
   <div class="space-y-6">
     <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
       <div>
-        <h2 class="text-2xl font-bold text-brand-text">IG.BH Summative Report</h2>
-        <p class="text-sm text-brand-desc">Tóm tắt kết quả đánh giá IG.BH</p>
+        <h2 class="text-2xl font-bold text-brand-text">{{ $t('igbh.summative_title') }}</h2>
+        <p class="text-sm text-brand-desc">{{ $t('igbh.summative_desc') }}</p>
       </div>
     </div>
 
@@ -14,7 +14,7 @@
           type="text" 
           v-model="search" 
           @input="fetchData"
-          placeholder="Tìm theo học sinh, lớp, giáo viên..." 
+          :placeholder="$t('igbh.search_student')" 
           class="w-full pl-4 pr-10 py-2.5 rounded-xl bg-brand-input border border-brand-border text-brand-text placeholder-brand-desc/60 focus:outline-none focus:border-indigo-500 transition text-sm"
         >
         <span class="absolute right-3 top-3 text-brand-desc/60">🔍</span>
@@ -28,7 +28,7 @@
     <!-- Loading State -->
     <div v-if="loading" class="flex flex-col items-center justify-center py-16 space-y-4">
       <div class="animate-spin rounded-full h-10 w-10 border-b-2 border-indigo-600"></div>
-      <p class="text-sm text-brand-desc">Đang tải dữ liệu...</p>
+      <p class="text-sm text-brand-desc">{{ $t('igbh.loading') }}</p>
     </div>
 
     <!-- Table -->
@@ -36,17 +36,17 @@
       <table class="w-full text-left border-collapse whitespace-nowrap min-w-max">
         <thead>
           <tr class="border-b border-brand-border bg-brand-header text-xs font-semibold text-brand-desc uppercase">
-            <th class="px-6 py-4 w-16">STT</th>
-            <th class="px-6 py-4">Tên bài kiểm tra</th>
-            <th class="px-6 py-4">LEVEL</th>
-            <th class="px-6 py-4">Tên lớp</th>
-            <th class="px-6 py-4">Giáo viên</th>
-            <th class="px-6 py-4">Học sinh</th>
-            <th class="px-6 py-4 text-center">Tổng điểm</th>
-            <th class="px-6 py-4">Ngày kiểm tra</th>
-            <th class="px-6 py-4">Ngày tạo</th>
-            <th class="px-6 py-4">Ngày cập nhật</th>
-            <th class="px-6 py-4 text-right sticky right-0 bg-brand-header z-10 border-l border-brand-border shadow-[-4px_0_10px_rgba(0,0,0,0.1)]">Thao tác</th>
+            <th class="px-6 py-4 w-16">{{ $t('common.stt') }}</th>
+            <th class="px-6 py-4">{{ $t('igbh.cols.test_name') }}</th>
+            <th class="px-6 py-4">{{ $t('igbh.cols.level') }}</th>
+            <th class="px-6 py-4">{{ $t('igbh.cols.class') }}</th>
+            <th class="px-6 py-4">{{ $t('igbh.cols.teacher') }}</th>
+            <th class="px-6 py-4">{{ $t('igbh.modal.student') }}</th>
+            <th class="px-6 py-4 text-center">{{ $t('igbh.cols.total_score') }}</th>
+            <th class="px-6 py-4">{{ $t('igbh.cols.test_date') }}</th>
+            <th class="px-6 py-4">{{ $t('igbh.cols.created_at') }}</th>
+            <th class="px-6 py-4">{{ $t('igbh.cols.updated_at') }}</th>
+            <th class="px-6 py-4 text-right sticky right-0 bg-brand-header z-10 border-l border-brand-border shadow-[-4px_0_10px_rgba(0,0,0,0.1)]">{{ $t('common.actions') }}</th>
           </tr>
         </thead>
         <tbody class="divide-y divide-brand-border text-sm text-brand-text/90">
@@ -65,7 +65,7 @@
               <div class="flex justify-end items-center gap-2">
                 <router-link 
                   :to="{ name: 'igbh-summative-eval-report', params: { id: item.id } }"
-                  title="Xem Báo Cáo"
+                  :title="$t('igbh.actions.view_report')"
                   class="inline-flex items-center justify-center p-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white transition shadow-lg shadow-emerald-600/30"
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -77,7 +77,7 @@
             </td>
           </tr>
           <tr v-if="results.length === 0">
-            <td colspan="11" class="px-6 py-12 text-center text-brand-desc">Không tìm thấy báo cáo nào.</td>
+            <td colspan="11" class="px-6 py-12 text-center text-brand-desc">{{ $t('igbh.no_data') }}</td>
           </tr>
         </tbody>
       </table>

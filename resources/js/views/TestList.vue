@@ -6,27 +6,7 @@
         <p class="text-sm text-brand-desc">{{ $t('tests.desc') }}</p>
       </div>
 
-      <!-- Tabs -->
-      <div class="flex bg-brand-card border border-brand-border p-1 rounded-xl">
-        <button 
-          @click="changeTab('UCREA')" 
-          :class="[
-            activeTab === 'UCREA' ? 'bg-indigo-600 text-white' : 'text-brand-desc hover:text-brand-text',
-            'px-4 py-2 rounded-lg text-sm font-semibold transition'
-          ]"
-        >
-          U-Crea Tests
-        </button>
-        <button 
-          @click="changeTab('IG.BH')" 
-          :class="[
-            activeTab === 'IG.BH' ? 'bg-indigo-600 text-white' : 'text-brand-desc hover:text-brand-text',
-            'px-4 py-2 rounded-lg text-sm font-semibold transition'
-          ]"
-        >
-          IG.BH Tests
-        </button>
-      </div>
+      <!-- Tabs removed since they are now separate menu items -->
     </div>
 
     <!-- Search Bar -->
@@ -199,9 +179,23 @@ export default {
     }
   },
   created() {
+    this.setActiveTabFromRoute();
     this.fetchTests();
   },
+  watch: {
+    '$route.path'() {
+      this.setActiveTabFromRoute();
+      this.fetchTests(1);
+    }
+  },
   methods: {
+    setActiveTabFromRoute() {
+      if (this.$route.path.includes('igbh')) {
+        this.activeTab = 'IG.BH';
+      } else {
+        this.activeTab = 'UCREA';
+      }
+    },
     async fetchTests(page = 1) {
       this.loading = true;
       try {
@@ -234,8 +228,7 @@ export default {
       this.fetchTests(1);
     },
     changeTab(tab) {
-      this.activeTab = tab;
-      this.fetchTests(1);
+      // Logic for changing tab is handled by the route now
     },
     getFilename(path) {
       if (!path) return '';

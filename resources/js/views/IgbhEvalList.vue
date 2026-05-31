@@ -2,8 +2,8 @@
   <div class="space-y-6">
     <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
       <div>
-        <h2 class="text-2xl font-bold text-brand-text">IG.BH Diagnostic Assessment Management</h2>
-        <p class="text-sm text-brand-desc">Manage student diagnostic evaluations and entry test results</p>
+        <h2 class="text-2xl font-bold text-brand-text">{{ $t('igbh.diagnostic_title') }}</h2>
+        <p class="text-sm text-brand-desc">{{ $t('igbh.diagnostic_desc') }}</p>
       </div>
 
       <!-- Actions -->
@@ -12,7 +12,7 @@
           @click="openCreateModal" 
           class="px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white font-semibold transition text-sm flex items-center gap-1.5 shadow-lg shadow-indigo-600/30"
         >
-          <span class="text-base font-bold">+</span> Thêm Mới Nhập Điểm
+          <span class="text-base font-bold">+</span> {{ $t('igbh.add_eval') }}
         </button>
       </div>
     </div>
@@ -24,7 +24,7 @@
           type="text" 
           v-model="search" 
           @input="fetchData"
-          placeholder="Search by student name or teacher..." 
+          :placeholder="$t('igbh.search_student')" 
           class="w-full pl-4 pr-10 py-2.5 rounded-xl bg-brand-input border border-brand-border text-brand-text placeholder-brand-desc/60 focus:outline-none focus:border-indigo-500 transition text-sm"
         >
         <span class="absolute right-3 top-3 text-brand-desc/60">🔍</span>
@@ -38,7 +38,7 @@
     <!-- Loading State -->
     <div v-if="loading" class="flex flex-col items-center justify-center py-16 space-y-4">
       <div class="animate-spin rounded-full h-10 w-10 border-b-2 border-indigo-600"></div>
-      <p class="text-sm text-brand-desc">Loading IG.BH data...</p>
+      <p class="text-sm text-brand-desc">{{ $t('igbh.loading') }}</p>
     </div>
 
     <!-- Table -->
@@ -46,19 +46,19 @@
       <table class="w-full text-left border-collapse whitespace-nowrap min-w-max">
         <thead>
           <tr class="border-b border-brand-border bg-brand-header text-xs font-semibold text-brand-desc uppercase">
-            <th class="px-6 py-4 w-16">STT</th>
-            <th class="px-6 py-4">Tên kiểm tra</th>
-            <th class="px-6 py-4">Quý</th>
-            <th class="px-6 py-4">Đăng ký bởi</th>
-            <th class="px-6 py-4 text-center">Ngày sinh</th>
-            <th class="px-6 py-4">Học sinh Tên</th>
-            <th class="px-6 py-4 text-center">Điểm môn học</th>
-            <th class="px-6 py-4 text-center">Điểm Năng lực tư duy</th>
-            <th class="px-6 py-4 text-center">Tổng điểm</th>
-            <th class="px-6 py-4">Ngày thi</th>
-            <th class="px-6 py-4">Ngày tạo</th>
-            <th class="px-6 py-4">Ngày sửa</th>
-            <th class="px-6 py-4 text-right sticky right-0 bg-brand-header z-10 border-l border-brand-border shadow-[-4px_0_10px_rgba(0,0,0,0.1)]">Thao tác</th>
+            <th class="px-6 py-4 w-16">{{ $t('common.stt') }}</th>
+            <th class="px-6 py-4">{{ $t('igbh.cols.test_name') }}</th>
+            <th class="px-6 py-4">{{ $t('igbh.cols.quarter') }}</th>
+            <th class="px-6 py-4">{{ $t('igbh.cols.registered_by') }}</th>
+            <th class="px-6 py-4 text-center">{{ $t('igbh.cols.dob') }}</th>
+            <th class="px-6 py-4">{{ $t('igbh.cols.student_name') }}</th>
+            <th class="px-6 py-4 text-center">{{ $t('igbh.cols.subject_score') }}</th>
+            <th class="px-6 py-4 text-center">{{ $t('igbh.cols.thinking_score') }}</th>
+            <th class="px-6 py-4 text-center">{{ $t('igbh.cols.total_score') }}</th>
+            <th class="px-6 py-4">{{ $t('igbh.cols.test_date') }}</th>
+            <th class="px-6 py-4">{{ $t('igbh.cols.created_at') }}</th>
+            <th class="px-6 py-4">{{ $t('igbh.cols.updated_at') }}</th>
+            <th class="px-6 py-4 text-right sticky right-0 bg-brand-header z-10 border-l border-brand-border shadow-[-4px_0_10px_rgba(0,0,0,0.1)]">{{ $t('common.actions') }}</th>
           </tr>
         </thead>
         <tbody class="divide-y divide-brand-border text-sm text-brand-text/90">
@@ -80,7 +80,7 @@
                 <router-link 
                   v-if="!(item.total_score > 0)"
                   :to="{ name: 'igbh-eval-form', params: { id: item.id } }"
-                  title="Nhập điểm"
+                  :title="$t('igbh.actions.enter_score')"
                   class="inline-flex items-center justify-center p-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white transition shadow-lg shadow-indigo-600/30"
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -90,7 +90,7 @@
                 <div v-else class="flex justify-end items-center gap-2">
                   <router-link 
                     :to="{ name: 'igbh-eval-form', params: { id: item.id } }"
-                    title="Sửa điểm"
+                    :title="$t('igbh.actions.edit_score')"
                     class="inline-flex items-center justify-center p-2 rounded-lg border border-indigo-600 text-indigo-500 hover:bg-indigo-600 hover:text-white transition"
                   >
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -99,7 +99,7 @@
                   </router-link>
                   <router-link 
                     :to="{ name: 'igbh-eval-result', params: { id: item.id } }"
-                    title="Xem kết quả"
+                    :title="$t('igbh.actions.view_result')"
                     class="inline-flex items-center justify-center p-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white transition shadow-lg shadow-emerald-600/30"
                   >
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -112,7 +112,7 @@
             </td>
           </tr>
           <tr v-if="results.length === 0">
-            <td colspan="13" class="px-6 py-12 text-center text-brand-desc">Không tìm thấy bài kiểm tra nào.</td>
+            <td colspan="13" class="px-6 py-12 text-center text-brand-desc">{{ $t('igbh.no_data') }}</td>
           </tr>
         </tbody>
       </table>
@@ -134,7 +134,7 @@
       <div class="bg-brand-card border border-brand-border w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-200">
         <!-- Modal Header -->
         <div class="px-6 py-4 border-b border-brand-border bg-brand-header flex justify-between items-center">
-          <h3 class="text-lg font-bold text-brand-text">Thêm Mới Nhập Điểm IG.BH</h3>
+          <h3 class="text-lg font-bold text-brand-text">{{ $t('igbh.modal.add_title') }}</h3>
           <button @click="closeCreateModal" class="text-brand-desc hover:text-brand-text text-xl font-bold">&times;</button>
         </div>
 
@@ -142,44 +142,44 @@
         <form @submit.prevent="submitCreate" class="p-6 space-y-4">
           <!-- Student Selector -->
           <div class="space-y-1.5">
-            <label class="block text-xs font-semibold text-brand-desc uppercase">Học sinh</label>
+            <label class="block text-xs font-semibold text-brand-desc uppercase">{{ $t('igbh.modal.student') }}</label>
             <select v-model="form.student_id" required class="w-full px-3 py-2 rounded-xl bg-brand-input border border-brand-border text-brand-text focus:outline-none focus:border-indigo-500 transition text-sm">
-              <option value="" disabled>-- Chọn học sinh --</option>
+              <option value="" disabled>{{ $t('igbh.modal.select_student') }}</option>
               <option v-for="std in initData.students" :key="std.id" :value="std.id">{{ std.name }}</option>
             </select>
           </div>
 
           <!-- Teacher Selector -->
           <div class="space-y-1.5">
-            <label class="block text-xs font-semibold text-brand-desc uppercase">Giáo viên đánh giá</label>
+            <label class="block text-xs font-semibold text-brand-desc uppercase">{{ $t('igbh.modal.teacher_eval') }}</label>
             <select v-model="form.teacher_name" required class="w-full px-3 py-2 rounded-xl bg-brand-input border border-brand-border text-brand-text focus:outline-none focus:border-indigo-500 transition text-sm">
-              <option value="" disabled>-- Chọn giáo viên --</option>
+              <option value="" disabled>{{ $t('igbh.modal.select_teacher') }}</option>
               <option v-for="t in initData.teachers" :key="t.id" :value="t.name">{{ t.name }}</option>
             </select>
           </div>
 
           <!-- Test Selector -->
           <div class="space-y-1.5">
-            <label class="block text-xs font-semibold text-brand-desc uppercase">Bài Kiểm Tra IG.BH</label>
+            <label class="block text-xs font-semibold text-brand-desc uppercase">{{ $t('igbh.modal.test_igbh') }}</label>
             <select v-model="form.test_seq" required class="w-full px-3 py-2 rounded-xl bg-brand-input border border-brand-border text-brand-text focus:outline-none focus:border-indigo-500 transition text-sm">
-              <option value="" disabled>-- Chọn bài kiểm tra --</option>
+              <option value="" disabled>{{ $t('igbh.modal.select_test') }}</option>
               <option v-for="t in initData.tests" :key="t.id" :value="t.test_seq">{{ t.test_nm }}</option>
             </select>
           </div>
 
           <!-- Date Selector -->
           <div class="space-y-1.5">
-            <label class="block text-xs font-semibold text-brand-desc uppercase">Ngày đánh giá</label>
+            <label class="block text-xs font-semibold text-brand-desc uppercase">{{ $t('igbh.modal.eval_date') }}</label>
             <input type="date" v-model="form.eval_dt" required class="w-full px-3 py-2 rounded-xl bg-brand-input border border-brand-border text-brand-text focus:outline-none focus:border-indigo-500 transition text-sm">
           </div>
 
           <!-- Modal Footer -->
           <div class="pt-4 border-t border-brand-border flex justify-end gap-3">
             <button type="button" @click="closeCreateModal" class="px-4 py-2 rounded-xl border border-brand-border text-brand-desc hover:bg-brand-input hover:text-brand-text transition text-sm font-semibold">
-              Hủy
+              {{ $t('common.cancel') }}
             </button>
             <button type="submit" :disabled="creating" class="px-5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold transition text-sm shadow-lg shadow-indigo-600/30 disabled:opacity-50">
-              {{ creating ? 'Đang tạo...' : 'Tạo Đánh Giá' }}
+              {{ creating ? $t('igbh.modal.creating') : $t('igbh.modal.create_btn') }}
             </button>
           </div>
         </form>

@@ -4,10 +4,10 @@
     <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
       <div>
         <router-link :to="{ name: 'igbh-weekly-evaluations' }" class="text-indigo-400 hover:text-indigo-300 text-sm flex items-center gap-1 mb-2 transition">
-          <span>&larr;</span> Back to Weekly Evaluations
+          <span>&larr;</span> {{ $t('igbh.form.back_list') }}
         </router-link>
-        <h2 class="text-2xl font-bold text-brand-text">Nhập Điểm Tuần - {{ evaluation?.eachCdNm }}</h2>
-        <p class="text-sm text-brand-desc">Lớp: <span class="font-bold text-indigo-400">{{ evaluation?.classNm }}</span> | Bài Test: <span class="font-bold text-brand-text">{{ evaluation?.test_nm }}</span></p>
+        <h2 class="text-2xl font-bold text-brand-text">{{ $t('igbh.form.title_weekly') }} - {{ evaluation?.eachCdNm }}</h2>
+        <p class="text-sm text-brand-desc">{{ $t('igbh.cols.class') }}: <span class="font-bold text-indigo-400">{{ evaluation?.classNm }}</span> | {{ $t('igbh.cols.test_name') }}: <span class="font-bold text-brand-text">{{ evaluation?.test_nm }}</span></p>
       </div>
 
       <!-- Actions -->
@@ -18,7 +18,7 @@
           class="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold transition text-sm flex items-center gap-2 shadow-lg shadow-indigo-600/30 disabled:opacity-50"
         >
           <span v-if="saving" class="animate-spin h-4 w-4 border-2 border-white border-t-transparent rounded-full"></span>
-          {{ saving ? 'Đang lưu...' : 'Lưu Điểm' }}
+          {{ saving ? $t('igbh.form.saving') : $t('igbh.form.save_btn') }}
         </button>
       </div>
     </div>
@@ -26,7 +26,7 @@
     <!-- Loading State -->
     <div v-if="loading" class="flex flex-col items-center justify-center py-20 space-y-4">
       <div class="animate-spin rounded-full h-10 w-10 border-b-2 border-indigo-600"></div>
-      <p class="text-sm text-brand-desc">Loading students and grades...</p>
+      <p class="text-sm text-brand-desc">{{ $t('igbh.loading') }}</p>
     </div>
 
     <div v-else class="bg-brand-card/20 border border-brand-border rounded-xl overflow-hidden">
@@ -34,16 +34,16 @@
         <table class="w-full text-left border-collapse whitespace-nowrap min-w-max">
           <thead>
             <tr class="bg-brand-header border-b border-brand-border text-xs font-semibold text-brand-desc uppercase">
-              <th class="px-4 py-3 sticky left-0 bg-brand-header z-10 w-48 border-r border-brand-border">Học sinh</th>
-              <th class="px-4 py-3 text-center">Sách BT (1-20)</th>
-              <th class="px-4 py-3 text-center" title="Khả năng lắng nghe">Lắng nghe (1-5)</th>
-              <th class="px-4 py-3 text-center" title="Tham gia bài học">Tham gia (1-5)</th>
-              <th class="px-4 py-3 text-center" title="Khả năng thể hiện">Thể hiện (1-5)</th>
-              <th class="px-4 py-3 text-center" title="Sự hợp tác">Hợp tác (1-5)</th>
-              <th class="px-4 py-3 text-center" title="Kỹ năng cơ bản">Kỹ năng (1-5)</th>
-              <th class="px-4 py-3 text-center" title="Khả năng lãnh đạo">Lãnh đạo (1-5)</th>
-              <th class="px-4 py-3 text-center" title="Khả năng toán học">Toán học (1-5)</th>
-              <th class="px-4 py-3 text-center" title="Tính sáng tạo">Sáng tạo (1-5)</th>
+              <th class="px-4 py-3 sticky left-0 bg-brand-header z-10 w-48 border-r border-brand-border">{{ $t('igbh.weekly_cols.student') }}</th>
+              <th class="px-4 py-3 text-center">{{ $t('igbh.weekly_cols.workbook') }}</th>
+              <th class="px-4 py-3 text-center">{{ $t('igbh.weekly_cols.listen') }}</th>
+              <th class="px-4 py-3 text-center">{{ $t('igbh.weekly_cols.join') }}</th>
+              <th class="px-4 py-3 text-center">{{ $t('igbh.weekly_cols.express') }}</th>
+              <th class="px-4 py-3 text-center">{{ $t('igbh.weekly_cols.coop') }}</th>
+              <th class="px-4 py-3 text-center">{{ $t('igbh.weekly_cols.skill') }}</th>
+              <th class="px-4 py-3 text-center">{{ $t('igbh.weekly_cols.leadership') }}</th>
+              <th class="px-4 py-3 text-center">{{ $t('igbh.weekly_cols.math') }}</th>
+              <th class="px-4 py-3 text-center">{{ $t('igbh.weekly_cols.creative') }}</th>
             </tr>
           </thead>
           <tbody class="divide-y divide-brand-border text-sm">
@@ -80,7 +80,7 @@
               </td>
             </tr>
             <tr v-if="students.length === 0">
-              <td colspan="10" class="px-6 py-12 text-center text-brand-desc">Không có học sinh trong lớp này.</td>
+              <td colspan="10" class="px-6 py-12 text-center text-brand-desc">{{ $t('igbh.no_data') }}</td>
             </tr>
           </tbody>
         </table>

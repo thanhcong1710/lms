@@ -5,21 +5,21 @@
       <div>
         <div class="flex items-center gap-3 mb-1">
           <button @click="$router.push({ name: 'igbh-evaluations' })" class="text-brand-desc hover:text-brand-text transition">
-            ← Danh sách
+            {{ $t('igbh.form.back_list') }}
           </button>
         </div>
-        <h2 class="text-2xl font-bold text-brand-text">Báo cáo Kết Quả IG.BH</h2>
+        <h2 class="text-2xl font-bold text-brand-text">{{ $t('igbh.form.title_result') }}</h2>
         <p class="text-sm text-brand-desc mt-1" v-if="general">
-          {{ general.test_nm }} | Học sinh: <strong class="text-indigo-400">{{ general.stu_nm }}</strong>
-          <span v-if="general.stu_birth_dt"> | Sinh: {{ general.stu_birth_dt }}</span>
+          {{ general.test_nm }} | {{ $t('igbh.form.student') }}: <strong class="text-indigo-400">{{ general.stu_nm }}</strong>
+          <span v-if="general.stu_birth_dt"> | {{ $t('igbh.form.dob') }}: {{ general.stu_birth_dt }}</span>
         </p>
       </div>
       <div class="flex gap-3">
         <button @click="printReport" class="px-4 py-2 rounded-xl border border-brand-border text-brand-desc hover:bg-brand-input transition text-sm font-semibold flex items-center gap-2">
-          🖨️ In báo cáo
+          🖨️ {{ $t('igbh.form.print_report') }}
         </button>
         <router-link :to="{ name: 'igbh-eval-form', params: { id: resultId } }" class="px-4 py-2 rounded-xl border border-indigo-500 text-indigo-400 hover:bg-indigo-500/10 transition text-sm font-semibold">
-          ✏️ Sửa điểm
+          ✏️ {{ $t('igbh.actions.edit_score') }}
         </router-link>
       </div>
     </div>
@@ -27,7 +27,7 @@
     <!-- Loading -->
     <div v-if="loading" class="flex flex-col items-center justify-center py-20 print:hidden">
       <div class="animate-spin rounded-full h-10 w-10 border-b-2 border-indigo-600 mb-4"></div>
-      <p class="text-brand-desc text-sm">Loading report...</p>
+      <p class="text-brand-desc text-sm">{{ $t('igbh.loading') }}</p>
     </div>
 
     <div v-else-if="general" id="igbh-pdf-content" class="mx-auto w-full max-w-[900px] print:p-0 print:m-0 print:border-none print:shadow-none bg-white">

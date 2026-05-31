@@ -3,17 +3,17 @@
     <!-- Header -->
     <div class="flex items-center justify-between">
       <div>
-        <h2 class="text-2xl font-bold text-brand-text">{{ configType === 'summative' ? 'Cấu hình Đánh giá Cuối Kỳ (Summative)' : 'Cấu hình Đánh giá Đầu Kỳ (Diagnostic)' }}</h2>
+        <h2 class="text-2xl font-bold text-brand-text">{{ configType === 'summative' ? $t('igbh.config.title_summative') : $t('igbh.config.title_diagnostic') }}</h2>
         <p class="text-sm text-brand-desc" v-if="test">
-          Bài kiểm tra: <span class="font-semibold text-brand-text">{{ test.name }}</span> - Cấp độ: {{ test.level_cd }}
+          {{ $t('igbh.config.test') }}: <span class="font-semibold text-brand-text">{{ test.name }}</span> - {{ $t('igbh.config.level') }}: {{ test.level_cd }}
         </p>
       </div>
       <div class="flex gap-2">
         <router-link :to="{ name: 'tests' }" class="px-4 py-2 border border-brand-border hover:bg-brand-input text-brand-desc hover:text-brand-text rounded-lg text-sm font-semibold transition">
-          Quay lại
+          {{ $t('igbh.config.back') }}
         </router-link>
         <button @click="saveConfig" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg text-sm font-semibold transition shadow-lg shadow-indigo-500/30">
-          Lưu Cấu Hình
+          {{ $t('igbh.config.save') }}
         </button>
       </div>
     </div>
@@ -26,15 +26,15 @@
     <!-- Form for SUMMATIVE -->
     <div v-else-if="configType === 'summative'" class="bg-brand-card border border-brand-border rounded-xl shadow-sm overflow-hidden">
       <div class="px-6 py-4 border-b border-brand-border bg-brand-input/30">
-        <h3 class="font-bold text-brand-text">Thành tích theo từng bài học (12 Tuần)</h3>
+        <h3 class="font-bold text-brand-text">{{ $t('igbh.config.achievement_12_weeks') }}</h3>
       </div>
       <div class="p-6">
         <table class="w-full text-left border-collapse border border-brand-border text-sm">
           <thead class="bg-brand-header text-brand-desc">
             <tr>
-              <th class="border border-brand-border px-4 py-2 w-16 text-center">Số</th>
-              <th class="border border-brand-border px-4 py-2">Đánh giá Nội dung</th>
-              <th class="border border-brand-border px-4 py-2 w-32 text-center">Điểm chuẩn</th>
+              <th class="border border-brand-border px-4 py-2 w-16 text-center">{{ $t('igbh.config.number') }}</th>
+              <th class="border border-brand-border px-4 py-2">{{ $t('igbh.config.content_eval') }}</th>
+              <th class="border border-brand-border px-4 py-2 w-32 text-center">{{ $t('igbh.config.standard_score') }}</th>
             </tr>
           </thead>
           <tbody>
@@ -50,7 +50,7 @@
           </tbody>
           <tfoot>
             <tr class="bg-brand-header font-bold text-brand-text">
-              <td colspan="2" class="border border-brand-border px-4 py-2 text-right">Tổng</td>
+              <td colspan="2" class="border border-brand-border px-4 py-2 text-right">{{ $t('igbh.config.total') }}</td>
               <td class="border border-brand-border px-4 py-2 text-center">{{ summativeTotal }}</td>
             </tr>
           </tfoot>
@@ -64,28 +64,28 @@
       <!-- Info Header Table -->
       <div class="bg-white border border-brand-border rounded-xl shadow-sm overflow-hidden text-sm">
         <div class="px-4 py-3 border-b border-brand-border bg-brand-input/30">
-          <h3 class="font-bold text-brand-text">ĐÁNH GIÁ ĐẦU KỲ Thông tin Nhập</h3>
+          <h3 class="font-bold text-brand-text">{{ $t('igbh.config.input_info') }}</h3>
         </div>
         <table class="w-full text-left border-collapse">
           <tbody>
             <tr>
-              <th class="border border-brand-border bg-brand-input/10 px-4 py-3 font-semibold text-brand-text w-40">Tên bài kiểm tra</th>
+              <th class="border border-brand-border bg-brand-input/10 px-4 py-3 font-semibold text-brand-text w-40">{{ $t('igbh.config.test_name') }}</th>
               <td class="border border-brand-border px-4 py-3 text-brand-desc">{{ test?.name }}</td>
-              <th class="border border-brand-border bg-brand-input/10 px-4 py-3 font-semibold text-brand-text w-24">Đơn vị</th>
+              <th class="border border-brand-border bg-brand-input/10 px-4 py-3 font-semibold text-brand-text w-24">{{ $t('igbh.config.unit') }}</th>
               <td class="border border-brand-border px-4 py-3 text-brand-desc">{{ test?.level_cd }}</td>
-              <th class="border border-brand-border bg-brand-input/10 px-4 py-3 font-semibold text-brand-text w-48">Ngày bắt đầu/ngày kết thúc</th>
+              <th class="border border-brand-border bg-brand-input/10 px-4 py-3 font-semibold text-brand-text w-48">{{ $t('igbh.config.start_end_date') }}</th>
               <td class="border border-brand-border px-4 py-3 text-brand-desc"></td>
             </tr>
             <tr>
-              <th class="border border-brand-border bg-brand-input/10 px-4 py-3 font-semibold text-brand-text">Cấp</th>
+              <th class="border border-brand-border bg-brand-input/10 px-4 py-3 font-semibold text-brand-text">{{ $t('igbh.config.grade') }}</th>
               <td class="border border-brand-border px-4 py-3 text-brand-desc">{{ test?.level_cd }}</td>
-              <th class="border border-brand-border bg-brand-input/10 px-4 py-3 font-semibold text-brand-text">Năm đánh giá</th>
+              <th class="border border-brand-border bg-brand-input/10 px-4 py-3 font-semibold text-brand-text">{{ $t('igbh.config.eval_year') }}</th>
               <td class="border border-brand-border px-4 py-3 text-brand-desc"></td>
-              <th class="border border-brand-border bg-brand-input/10 px-4 py-3 font-semibold text-brand-text">Quý</th>
+              <th class="border border-brand-border bg-brand-input/10 px-4 py-3 font-semibold text-brand-text">{{ $t('igbh.config.quarter') }}</th>
               <td class="border border-brand-border px-4 py-3 text-brand-desc"></td>
             </tr>
             <tr>
-              <th class="border border-brand-border bg-brand-input/10 px-4 py-3 font-semibold text-brand-text">Thư mục</th>
+              <th class="border border-brand-border bg-brand-input/10 px-4 py-3 font-semibold text-brand-text">{{ $t('igbh.config.folder') }}</th>
               <td colspan="5" class="border border-brand-border px-4 py-3 text-brand-desc">
                 {{ test?.pdf_url || test?.local_pdf_path }}
               </td>
@@ -100,19 +100,19 @@
           @click="activeTab = 'curriculum'" 
           :class="['px-6 py-3 text-sm font-semibold transition', activeTab === 'curriculum' ? 'text-indigo-600 border-b-2 border-indigo-600 bg-indigo-50/50' : 'text-brand-desc hover:text-brand-text']"
         >
-          Các vấn đề dựa trên chương trình giảng dạy
+          {{ $t('igbh.config.curriculum_issues') }}
         </button>
         <button 
           @click="activeTab = 'comments'" 
           :class="['px-6 py-3 text-sm font-semibold transition', activeTab === 'comments' ? 'text-indigo-600 border-b-2 border-indigo-600 bg-indigo-50/50' : 'text-brand-desc hover:text-brand-text']"
         >
-          Các vấn đề dựa trên chương trình giảng dạy Bình luận
+          {{ $t('igbh.config.curriculum_comments') }}
         </button>
         <button 
           @click="activeTab = 'thinking'" 
           :class="['px-6 py-3 text-sm font-semibold transition', activeTab === 'thinking' ? 'text-indigo-600 border-b-2 border-indigo-600 bg-indigo-50/50' : 'text-brand-desc hover:text-brand-text']"
         >
-          Các vấn đề kỹ năng tư duy Toán học
+          {{ $t('igbh.config.thinking_issues') }}
         </button>
       </div>
 
@@ -121,7 +121,7 @@
         <!-- Sectors (Units) -->
         <div class="bg-brand-card border border-brand-border rounded-xl shadow-sm overflow-hidden">
           <div class="px-6 py-4 border-b border-brand-border bg-brand-input/30">
-            <h3 class="font-bold text-brand-text">Đơn vị (Sectors / Units)</h3>
+            <h3 class="font-bold text-brand-text">{{ $t('igbh.config.sectors') }}</h3>
           </div>
           <div class="p-6 grid grid-cols-1 md:grid-cols-5 gap-4">
             <div v-for="key in ['A','B','C','D','E']" :key="key" class="flex items-center gap-2">
@@ -134,18 +134,18 @@
         <!-- Curriculum Questions -->
         <div class="bg-brand-card border border-brand-border rounded-xl shadow-sm overflow-hidden">
           <div class="px-6 py-4 border-b border-brand-border bg-brand-input/30">
-            <h3 class="font-bold text-brand-text">Cấu hình Câu hỏi (20 câu)</h3>
+            <h3 class="font-bold text-brand-text">{{ $t('igbh.config.question_config') }}</h3>
           </div>
           <div class="overflow-x-auto p-4">
             <table class="w-full text-center border-collapse text-sm whitespace-nowrap">
               <thead>
                 <tr>
-                  <th rowspan="2" class="border border-brand-border px-2 py-2 w-10 text-brand-desc">Số</th>
-                  <th colspan="5" class="border border-brand-border px-2 py-1 text-brand-desc bg-brand-header">Đơn vị (Sector)</th>
-                  <th colspan="3" class="border border-brand-border px-2 py-1 text-brand-desc bg-brand-header">Độ khó (Difficulty)</th>
+                  <th rowspan="2" class="border border-brand-border px-2 py-2 w-10 text-brand-desc">{{ $t('igbh.config.number') }}</th>
+                  <th colspan="5" class="border border-brand-border px-2 py-1 text-brand-desc bg-brand-header">{{ $t('igbh.config.sectors') }}</th>
+                  <th colspan="3" class="border border-brand-border px-2 py-1 text-brand-desc bg-brand-header">{{ $t('igbh.config.difficulty') }}</th>
                   <th colspan="2" class="border border-brand-border px-2 py-1 text-brand-desc bg-brand-header">Non-word and word problems</th>
-                  <th rowspan="2" class="border border-brand-border px-2 py-2 w-20 text-brand-desc">Correct Answer</th>
-                  <th rowspan="2" class="border border-brand-border px-2 py-2 w-20 text-brand-desc">Điểm chuẩn</th>
+                  <th rowspan="2" class="border border-brand-border px-2 py-2 w-20 text-brand-desc">{{ $t('igbh.config.correct_answer') }}</th>
+                  <th rowspan="2" class="border border-brand-border px-2 py-2 w-20 text-brand-desc">{{ $t('igbh.config.standard_score') }}</th>
                 </tr>
                 <tr class="text-xs text-brand-desc bg-brand-input/50">
                   <th class="border border-brand-border px-2 py-1" title="A.">A</th>
@@ -156,8 +156,8 @@
                   <th class="border border-brand-border px-2 py-1">High</th>
                   <th class="border border-brand-border px-2 py-1">Medium</th>
                   <th class="border border-brand-border px-2 py-1">Low</th>
-                  <th class="border border-brand-border px-2 py-1" title="Non-word">Non-word problems</th>
-                  <th class="border border-brand-border px-2 py-1" title="Word">word problems</th>
+                  <th class="border border-brand-border px-2 py-1" :title="$t('igbh.config.non_word_problems')">{{ $t('igbh.config.non_word_problems') }}</th>
+                  <th class="border border-brand-border px-2 py-1" :title="$t('igbh.config.word_problems')">{{ $t('igbh.config.word_problems') }}</th>
                 </tr>
               </thead>
               <tbody>
@@ -187,7 +187,7 @@
               </tbody>
               <tfoot>
                 <tr class="bg-brand-header font-bold text-brand-text">
-                  <td class="border border-brand-border px-2 py-2 text-center">Tổng</td>
+                  <td class="border border-brand-border px-2 py-2 text-center">{{ $t('igbh.config.total') }}</td>
                   <td class="border border-brand-border px-2 py-2 text-center">{{ countCur('sector', 'A') }}</td>
                   <td class="border border-brand-border px-2 py-2 text-center">{{ countCur('sector', 'B') }}</td>
                   <td class="border border-brand-border px-2 py-2 text-center">{{ countCur('sector', 'C') }}</td>
@@ -210,19 +210,19 @@
       <!-- Tab 2: Comments -->
       <div v-if="activeTab === 'comments'" class="bg-brand-card border border-brand-border rounded-xl shadow-sm overflow-hidden">
         <div class="px-6 py-4 border-b border-brand-border bg-brand-input/30 flex justify-between items-center">
-          <h3 class="font-bold text-brand-text">Cấu hình Bình luận Tổng (Total Comments)</h3>
+          <h3 class="font-bold text-brand-text">{{ $t('igbh.config.total_comments') }}</h3>
           <button @click="addComment('total')" class="px-3 py-1.5 text-xs font-semibold bg-indigo-50 text-indigo-600 rounded-lg hover:bg-indigo-100 transition">
-            + Thêm dòng
+            {{ $t('igbh.config.add_row') }}
           </button>
         </div>
         <div class="p-6">
           <table class="w-full text-left border-collapse border border-brand-border text-sm">
             <thead class="bg-brand-header text-brand-desc">
               <tr>
-                <th class="border border-brand-border px-4 py-2 w-64 text-center">Phân loại</th>
-                <th class="border border-brand-border px-4 py-2 text-center">Bình luận (Tốt)</th>
-                <th class="border border-brand-border px-4 py-2 text-center">Bình luận (Kém)</th>
-                <th class="border border-brand-border px-4 py-2 w-16 text-center">Xóa</th>
+                <th class="border border-brand-border px-4 py-2 w-64 text-center">{{ $t('igbh.config.category') }}</th>
+                <th class="border border-brand-border px-4 py-2 text-center">{{ $t('igbh.config.good_comment') }}</th>
+                <th class="border border-brand-border px-4 py-2 text-center">{{ $t('igbh.config.weak_comment') }}</th>
+                <th class="border border-brand-border px-4 py-2 w-16 text-center">{{ $t('igbh.config.delete') }}</th>
               </tr>
             </thead>
             <tbody>
@@ -243,7 +243,7 @@
                 </td>
               </tr>
               <tr v-if="totalComments.length === 0">
-                <td colspan="4" class="text-center py-4 text-brand-desc">Chưa có bình luận nào</td>
+                <td colspan="4" class="text-center py-4 text-brand-desc">{{ $t('igbh.config.no_comment') }}</td>
               </tr>
             </tbody>
           </table>
@@ -251,20 +251,20 @@
 
         <div class="px-6 py-4 border-b border-t border-brand-border bg-brand-input/30 flex justify-between items-center">
           <div>
-            <h3 class="font-bold text-brand-text">Diagnostic Assessment Comment - Unit</h3>
-            <p class="text-xs text-brand-desc">Nhận xét theo từng Đơn vị (Khi đơn vị A/B/C/D/E bị sai nhiều)</p>
+            <h3 class="font-bold text-brand-text">{{ $t('igbh.config.unit_comment') }}</h3>
+            <p class="text-xs text-brand-desc">{{ $t('igbh.config.unit_comment_desc') }}</p>
           </div>
           <button @click="addComment('unit')" class="px-3 py-1.5 text-xs font-semibold bg-indigo-50 text-indigo-600 rounded-lg hover:bg-indigo-100 transition">
-            + Thêm dòng
+            {{ $t('igbh.config.add_row') }}
           </button>
         </div>
         <div class="p-6">
           <table class="w-full text-left border-collapse border border-brand-border text-sm">
             <thead class="bg-brand-header text-brand-desc">
               <tr>
-                <th class="border border-brand-border px-4 py-2 w-64 text-center">Phân loại</th>
-                <th class="border border-brand-border px-4 py-2 text-center">Bình luận</th>
-                <th class="border border-brand-border px-4 py-2 w-16 text-center">Xóa</th>
+                <th class="border border-brand-border px-4 py-2 w-64 text-center">{{ $t('igbh.config.category') }}</th>
+                <th class="border border-brand-border px-4 py-2 text-center">{{ $t('igbh.config.weak_comment') }}</th>
+                <th class="border border-brand-border px-4 py-2 w-16 text-center">{{ $t('igbh.config.delete') }}</th>
               </tr>
             </thead>
             <tbody>
@@ -282,7 +282,7 @@
                 </td>
               </tr>
               <tr v-if="unitComments.length === 0">
-                <td colspan="3" class="text-center py-4 text-brand-desc">Chưa có bình luận nào</td>
+                <td colspan="3" class="text-center py-4 text-brand-desc">{{ $t('igbh.config.no_comment') }}</td>
               </tr>
             </tbody>
           </table>
@@ -292,24 +292,24 @@
       <!-- Tab 3: Thinking -->
       <div v-if="activeTab === 'thinking'" class="bg-brand-card border border-brand-border rounded-xl shadow-sm overflow-hidden">
         <div class="px-6 py-4 border-b border-brand-border bg-brand-input/30">
-          <h3 class="font-bold text-brand-text">Cấu hình Câu hỏi Tư duy (10 câu)</h3>
+          <h3 class="font-bold text-brand-text">{{ $t('igbh.config.thinking_config') }}</h3>
         </div>
         <div class="overflow-x-auto p-4">
           <table class="w-full text-center border-collapse text-sm whitespace-nowrap">
             <thead>
               <tr>
-                <th rowspan="2" class="border border-brand-border px-2 py-2 w-10 text-brand-desc">Số</th>
-                <th colspan="6" class="border border-brand-border px-2 py-1 text-brand-desc bg-brand-header">Lĩnh vực</th>
-                <th colspan="3" class="border border-brand-border px-2 py-1 text-brand-desc bg-brand-header">Difficulty</th>
-                <th rowspan="2" class="border border-brand-border px-2 py-2 w-20 text-brand-desc">Điểm chuẩn</th>
+                <th rowspan="2" class="border border-brand-border px-2 py-2 w-10 text-brand-desc">{{ $t('igbh.config.number') }}</th>
+                <th colspan="6" class="border border-brand-border px-2 py-1 text-brand-desc bg-brand-header">{{ $t('igbh.config.areas') }}</th>
+                <th colspan="3" class="border border-brand-border px-2 py-1 text-brand-desc bg-brand-header">{{ $t('igbh.config.difficulty') }}</th>
+                <th rowspan="2" class="border border-brand-border px-2 py-2 w-20 text-brand-desc">{{ $t('igbh.config.standard_score') }}</th>
               </tr>
               <tr class="text-xs text-brand-desc bg-brand-input/50">
-                <th class="border border-brand-border px-2 py-1">A. Khả năng hiểu toán</th>
-                <th class="border border-brand-border px-2 py-1">B. Khả năng quan sát trực quan</th>
-                <th class="border border-brand-border px-2 py-1">C. Khả năng tổng hợp thông tin</th>
-                <th class="border border-brand-border px-2 py-1">D. Khả năng dự đoán toán học</th>
-                <th class="border border-brand-border px-2 py-1">E. Khả năng nhận thức không gian</th>
-                <th class="border border-brand-border px-2 py-1">F. Khả năng suy luận toán học</th>
+                <th class="border border-brand-border px-2 py-1">{{ $t('igbh.config.area_a') }}</th>
+                <th class="border border-brand-border px-2 py-1">{{ $t('igbh.config.area_b') }}</th>
+                <th class="border border-brand-border px-2 py-1">{{ $t('igbh.config.area_c') }}</th>
+                <th class="border border-brand-border px-2 py-1">{{ $t('igbh.config.area_d') }}</th>
+                <th class="border border-brand-border px-2 py-1">{{ $t('igbh.config.area_e') }}</th>
+                <th class="border border-brand-border px-2 py-1">{{ $t('igbh.config.area_f') }}</th>
                 <th class="border border-brand-border px-2 py-1">High</th>
                 <th class="border border-brand-border px-2 py-1">Medium</th>
                 <th class="border border-brand-border px-2 py-1">Low</th>
@@ -339,7 +339,7 @@
             </tbody>
             <tfoot>
               <tr class="bg-brand-header font-bold text-brand-text">
-                <td class="border border-brand-border px-2 py-2 text-center">Tổng</td>
+                <td class="border border-brand-border px-2 py-2 text-center">{{ $t('igbh.config.total') }}</td>
                 <td class="border border-brand-border px-2 py-2 text-center">{{ countThkArea('A') }}</td>
                 <td class="border border-brand-border px-2 py-2 text-center">{{ countThkArea('B') }}</td>
                 <td class="border border-brand-border px-2 py-2 text-center">{{ countThkArea('C') }}</td>

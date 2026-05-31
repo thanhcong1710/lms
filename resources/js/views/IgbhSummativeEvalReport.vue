@@ -6,13 +6,13 @@
         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
         </svg>
-        Quay lại
+        {{ $t('igbh.form.back_list') }}
       </router-link>
       <button @click="printReport" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg font-medium shadow-lg shadow-indigo-600/30 flex items-center gap-2 text-sm transition">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
         </svg>
-        In Báo Cáo
+        {{ $t('igbh.form.print_report') }}
       </button>
     </div>
 
@@ -36,9 +36,9 @@
         </div>
         
         <div class="bg-white text-black rounded-full py-1.5 px-6 flex flex-wrap gap-4 md:gap-8 justify-center text-sm shadow-md mt-4 font-medium max-w-3xl mx-auto border-2 border-[#fdb913]">
-          <div><span class="text-blue-600">Tên lớp :</span> {{ reportData.student_info.class_nm }}</div>
-          <div><span class="text-blue-600">Ngày sinh :</span> 2018-02-19</div>
-          <div><span class="text-blue-600">Tên :</span> {{ reportData.student_info.stu_nm }}</div>
+          <div><span class="text-blue-600">{{ $t('igbh.cols.class') }} :</span> {{ reportData.student_info.class_nm }}</div>
+          <div><span class="text-blue-600">{{ $t('igbh.form.dob') }} :</span> 2018-02-19</div>
+          <div><span class="text-blue-600">{{ $t('igbh.form.student') }} :</span> {{ reportData.student_info.stu_nm }}</div>
         </div>
       </div>
 
@@ -293,9 +293,9 @@
           </div>
           
           <div class="bg-white text-black rounded-full py-1.5 px-6 flex flex-wrap gap-4 md:gap-8 justify-center text-sm shadow-md mt-4 font-medium max-w-3xl mx-auto border-2 border-[#fdb913]">
-            <div><span class="text-blue-600">Tên lớp :</span> {{ reportData.student_info.class_nm }}</div>
-            <div><span class="text-blue-600">Ngày sinh :</span> 2018-02-19</div>
-            <div><span class="text-blue-600">Tên :</span> {{ reportData.student_info.stu_nm }}</div>
+            <div><span class="text-blue-600">{{ $t('igbh.cols.class') }} :</span> {{ reportData.student_info.class_nm }}</div>
+            <div><span class="text-blue-600">{{ $t('igbh.form.dob') }} :</span> 2018-02-19</div>
+            <div><span class="text-blue-600">{{ $t('igbh.form.student') }} :</span> {{ reportData.student_info.stu_nm }}</div>
           </div>
         </div>
 

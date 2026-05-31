@@ -53,40 +53,96 @@
         </div>
 
         <!-- Navigation Links -->
-        <nav class="space-y-1">
-          <router-link to="/" @click="isMobileMenuOpen = false" class="flex items-center gap-3 px-4 py-3 rounded-xl transition hover:bg-brand-input hover:text-brand-text text-brand-desc" active-class="bg-indigo-600/10 text-indigo-500 border-l-4 border-indigo-600 font-medium">
-            <span>📊 {{ $t('sidebar.dashboard') }}</span>
-          </router-link>
-          <router-link to="/branches" @click="isMobileMenuOpen = false" class="flex items-center gap-3 px-4 py-3 rounded-xl transition hover:bg-brand-input hover:text-brand-text text-brand-desc" active-class="bg-indigo-600/10 text-indigo-500 border-l-4 border-indigo-600 font-medium">
-            <span>🏢 {{ $t('sidebar.branches') }}</span>
-          </router-link>
-          <router-link to="/teachers" @click="isMobileMenuOpen = false" class="flex items-center gap-3 px-4 py-3 rounded-xl transition hover:bg-brand-input hover:text-brand-text text-brand-desc" active-class="bg-indigo-600/10 text-indigo-500 border-l-4 border-indigo-600 font-medium">
-            <span>👨‍🏫 {{ $t('sidebar.teachers') }}</span>
-          </router-link>
-          <router-link to="/classes" @click="isMobileMenuOpen = false" class="flex items-center gap-3 px-4 py-3 rounded-xl transition hover:bg-brand-input hover:text-brand-text text-brand-desc" active-class="bg-indigo-600/10 text-indigo-500 border-l-4 border-indigo-600 font-medium">
-            <span>🏫 {{ $t('sidebar.classes') }}</span>
-          </router-link>
-          <router-link to="/students" @click="isMobileMenuOpen = false" class="flex items-center gap-3 px-4 py-3 rounded-xl transition hover:bg-brand-input hover:text-brand-text text-brand-desc" active-class="bg-indigo-600/10 text-indigo-500 border-l-4 border-indigo-600 font-medium">
-            <span>🎓 {{ $t('sidebar.students') }}</span>
-          </router-link>
-          <router-link to="/contracts" @click="isMobileMenuOpen = false" class="flex items-center gap-3 px-4 py-3 rounded-xl transition hover:bg-brand-input hover:text-brand-text text-brand-desc" active-class="bg-indigo-600/10 text-indigo-500 border-l-4 border-indigo-600 font-medium">
-            <span>📄 {{ $t('sidebar.contracts') }}</span>
-          </router-link>
-          <router-link to="/tests" @click="isMobileMenuOpen = false" class="flex items-center gap-3 px-4 py-3 rounded-xl transition hover:bg-brand-input hover:text-brand-text text-brand-desc" active-class="bg-indigo-600/10 text-indigo-500 border-l-4 border-indigo-600 font-medium">
-            <span>📝 {{ $t('sidebar.tests') }}</span>
-          </router-link>
-          <router-link to="/ucrea/evaluations" @click="isMobileMenuOpen = false" class="flex items-center gap-3 px-4 py-3 rounded-xl transition hover:bg-brand-input hover:text-brand-text text-brand-desc" active-class="bg-indigo-600/10 text-indigo-500 border-l-4 border-indigo-600 font-medium">
-            <span>⭐ UCREA Eval</span>
-          </router-link>
-          <router-link to="/igbh/evaluations" @click="isMobileMenuOpen = false" class="flex items-center gap-3 px-4 py-3 rounded-xl transition hover:bg-brand-input hover:text-brand-text text-brand-desc" active-class="bg-indigo-600/10 text-indigo-500 border-l-4 border-indigo-600 font-medium">
-            <span>📊 IG.BH Eval</span>
-          </router-link>
-          <router-link to="/igbh/weekly" @click="isMobileMenuOpen = false" class="flex items-center gap-3 px-4 py-3 rounded-xl transition hover:bg-brand-input hover:text-brand-text text-brand-desc" active-class="bg-indigo-600/10 text-indigo-500 border-l-4 border-indigo-600 font-medium">
-            <span>📅 IG.BH Weekly</span>
-          </router-link>
-          <router-link to="/igbh/summative/evaluations" @click="isMobileMenuOpen = false" class="flex items-center gap-3 px-4 py-3 rounded-xl transition hover:bg-brand-input hover:text-brand-text text-brand-desc" active-class="bg-indigo-600/10 text-indigo-500 border-l-4 border-indigo-600 font-medium">
-            <span>📈 IG.BH Summative</span>
-          </router-link>
+        <nav class="space-y-3">
+          <!-- Always visible dashboard -->
+          <div class="mb-2">
+            <router-link to="/" @click="isMobileMenuOpen = false" class="flex items-center gap-3 px-4 py-3 rounded-xl transition hover:bg-brand-input hover:text-brand-text text-brand-desc" active-class="bg-indigo-600/10 text-indigo-500 border-l-4 border-indigo-600 font-medium">
+              <span>📊 {{ $t('sidebar.dashboard') }}</span>
+            </router-link>
+          </div>
+
+          <!-- Group: Center Management -->
+          <div class="border-t border-brand-border/50 pt-3">
+            <button @click="toggleGroup('center')" :class="['w-full flex items-center justify-between px-3 py-2.5 text-xs font-bold uppercase tracking-wider transition rounded-xl mb-1', expandedGroup === 'center' ? 'text-indigo-500 bg-indigo-500/10' : 'text-brand-desc hover:text-brand-text hover:bg-brand-input/50']">
+              <div class="flex items-center gap-2.5">
+                <span class="text-base">🏢</span>
+                <span>{{ $t('sidebar.group_center') }}</span>
+              </div>
+              <svg :class="{'rotate-180': expandedGroup === 'center'}" class="w-4 h-4 transition-transform duration-300 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+            </button>
+            <div v-show="expandedGroup === 'center'" class="space-y-1 pl-2">
+              <router-link to="/branches" @click="isMobileMenuOpen = false" class="flex items-center gap-3 px-4 py-2.5 rounded-xl transition hover:bg-brand-input hover:text-brand-text text-brand-desc text-sm" active-class="bg-indigo-600/10 text-indigo-500 font-medium">
+                <span class="w-2 h-2 rounded-full bg-current opacity-40"></span>
+                <span>{{ $t('sidebar.branches') }}</span>
+              </router-link>
+              <router-link to="/teachers" @click="isMobileMenuOpen = false" class="flex items-center gap-3 px-4 py-2.5 rounded-xl transition hover:bg-brand-input hover:text-brand-text text-brand-desc text-sm" active-class="bg-indigo-600/10 text-indigo-500 font-medium">
+                <span class="w-2 h-2 rounded-full bg-current opacity-40"></span>
+                <span>{{ $t('sidebar.teachers') }}</span>
+              </router-link>
+              <router-link to="/classes" @click="isMobileMenuOpen = false" class="flex items-center gap-3 px-4 py-2.5 rounded-xl transition hover:bg-brand-input hover:text-brand-text text-brand-desc text-sm" active-class="bg-indigo-600/10 text-indigo-500 font-medium">
+                <span class="w-2 h-2 rounded-full bg-current opacity-40"></span>
+                <span>{{ $t('sidebar.classes') }}</span>
+              </router-link>
+              <router-link to="/students" @click="isMobileMenuOpen = false" class="flex items-center gap-3 px-4 py-2.5 rounded-xl transition hover:bg-brand-input hover:text-brand-text text-brand-desc text-sm" active-class="bg-indigo-600/10 text-indigo-500 font-medium">
+                <span class="w-2 h-2 rounded-full bg-current opacity-40"></span>
+                <span>{{ $t('sidebar.students') }}</span>
+              </router-link>
+              <router-link to="/contracts" @click="isMobileMenuOpen = false" class="flex items-center gap-3 px-4 py-2.5 rounded-xl transition hover:bg-brand-input hover:text-brand-text text-brand-desc text-sm" active-class="bg-indigo-600/10 text-indigo-500 font-medium">
+                <span class="w-2 h-2 rounded-full bg-current opacity-40"></span>
+                <span>{{ $t('sidebar.contracts') }}</span>
+              </router-link>
+            </div>
+          </div>
+
+          <!-- Group: UCREA Test Management -->
+          <div class="border-t border-brand-border/50 pt-3">
+            <button @click="toggleGroup('ucrea')" :class="['w-full flex items-center justify-between px-3 py-2.5 text-xs font-bold uppercase tracking-wider transition rounded-xl mb-1', expandedGroup === 'ucrea' ? 'text-indigo-500 bg-indigo-500/10' : 'text-brand-desc hover:text-brand-text hover:bg-brand-input/50']">
+              <div class="flex items-center gap-2.5">
+                <span class="text-base">⭐</span>
+                <span>{{ $t('sidebar.group_ucrea') }}</span>
+              </div>
+              <svg :class="{'rotate-180': expandedGroup === 'ucrea'}" class="w-4 h-4 transition-transform duration-300 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+            </button>
+            <div v-show="expandedGroup === 'ucrea'" class="space-y-1 pl-2">
+              <router-link to="/ucrea/tests" @click="isMobileMenuOpen = false" class="flex items-center gap-3 px-4 py-2.5 rounded-xl transition hover:bg-brand-input hover:text-brand-text text-brand-desc text-sm" active-class="bg-indigo-600/10 text-indigo-500 font-medium">
+                <span class="w-2 h-2 rounded-full bg-current opacity-40"></span>
+                <span>{{ $t('sidebar.ucrea_tests') }}</span>
+              </router-link>
+              <router-link to="/ucrea/evaluations" @click="isMobileMenuOpen = false" class="flex items-center gap-3 px-4 py-2.5 rounded-xl transition hover:bg-brand-input hover:text-brand-text text-brand-desc text-sm" active-class="bg-indigo-600/10 text-indigo-500 font-medium">
+                <span class="w-2 h-2 rounded-full bg-current opacity-40"></span>
+                <span>{{ $t('sidebar.ucrea_eval') }}</span>
+              </router-link>
+            </div>
+          </div>
+
+          <!-- Group: IG.BH Test Management -->
+          <div class="border-t border-brand-border/50 pt-3">
+            <button @click="toggleGroup('igbh')" :class="['w-full flex items-center justify-between px-3 py-2.5 text-xs font-bold uppercase tracking-wider transition rounded-xl mb-1', expandedGroup === 'igbh' ? 'text-indigo-500 bg-indigo-500/10' : 'text-brand-desc hover:text-brand-text hover:bg-brand-input/50']">
+              <div class="flex items-center gap-2.5">
+                <span class="text-base">📊</span>
+                <span>{{ $t('sidebar.group_igbh') }}</span>
+              </div>
+              <svg :class="{'rotate-180': expandedGroup === 'igbh'}" class="w-4 h-4 transition-transform duration-300 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+            </button>
+            <div v-show="expandedGroup === 'igbh'" class="space-y-1 pl-2">
+              <router-link to="/igbh/tests" @click="isMobileMenuOpen = false" class="flex items-center gap-3 px-4 py-2.5 rounded-xl transition hover:bg-brand-input hover:text-brand-text text-brand-desc text-sm" active-class="bg-indigo-600/10 text-indigo-500 font-medium">
+                <span class="w-2 h-2 rounded-full bg-current opacity-40"></span>
+                <span>{{ $t('sidebar.igbh_tests') }}</span>
+              </router-link>
+              <router-link to="/igbh/evaluations" @click="isMobileMenuOpen = false" class="flex items-center gap-3 px-4 py-2.5 rounded-xl transition hover:bg-brand-input hover:text-brand-text text-brand-desc text-sm" active-class="bg-indigo-600/10 text-indigo-500 font-medium">
+                <span class="w-2 h-2 rounded-full bg-current opacity-40"></span>
+                <span>{{ $t('sidebar.igbh_eval') }}</span>
+              </router-link>
+              <router-link to="/igbh/weekly" @click="isMobileMenuOpen = false" class="flex items-center gap-3 px-4 py-2.5 rounded-xl transition hover:bg-brand-input hover:text-brand-text text-brand-desc text-sm" active-class="bg-indigo-600/10 text-indigo-500 font-medium">
+                <span class="w-2 h-2 rounded-full bg-current opacity-40"></span>
+                <span>{{ $t('sidebar.igbh_weekly') }}</span>
+              </router-link>
+              <router-link to="/igbh/summative/evaluations" @click="isMobileMenuOpen = false" class="flex items-center gap-3 px-4 py-2.5 rounded-xl transition hover:bg-brand-input hover:text-brand-text text-brand-desc text-sm" active-class="bg-indigo-600/10 text-indigo-500 font-medium">
+                <span class="w-2 h-2 rounded-full bg-current opacity-40"></span>
+                <span>{{ $t('sidebar.igbh_summative') }}</span>
+              </router-link>
+            </div>
+          </div>
         </nav>
       </div>
 
@@ -148,12 +204,14 @@ export default {
       isAuthenticated: false,
       isMobileMenuOpen: false,
       theme: localStorage.getItem('theme') || 'dark',
-      currentLocale: localStorage.getItem('locale') || 'vi'
+      currentLocale: localStorage.getItem('locale') || 'vi',
+      expandedGroup: 'center'
     }
   },
   watch: {
     $route() {
       this.checkAuth();
+      this.updateExpandedGroup();
     },
     theme: {
       immediate: true,
@@ -170,8 +228,26 @@ export default {
   },
   created() {
     this.checkAuth();
+    this.updateExpandedGroup();
   },
   methods: {
+    updateExpandedGroup() {
+      const path = this.$route.path;
+      if (path.includes('/ucrea')) {
+        this.expandedGroup = 'ucrea';
+      } else if (path.includes('/igbh')) {
+        this.expandedGroup = 'igbh';
+      } else if (path !== '/' && path !== '/login') {
+        this.expandedGroup = 'center';
+      }
+    },
+    toggleGroup(group) {
+      if (this.expandedGroup === group) {
+        this.expandedGroup = null;
+      } else {
+        this.expandedGroup = group;
+      }
+    },
     checkAuth() {
       this.isAuthenticated = !!localStorage.getItem('token');
     },
