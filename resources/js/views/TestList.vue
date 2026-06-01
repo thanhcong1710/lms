@@ -91,7 +91,7 @@
                 LMS Link
               </a>
               <router-link 
-                v-if="activeTab === 'IG.BH' && test.test_seq"
+                v-if="activeTab === 'IG.BH' && test.test_seq && userRole === 'admin'"
                 :to="{ name: 'igbh-test-config', params: { id: test.test_seq } }" 
                 class="inline-flex items-center justify-center p-2 rounded-lg border border-brand-border text-orange-500 hover:bg-orange-50 hover:border-orange-200 transition"
                 title="Config Test"
@@ -168,6 +168,7 @@ export default {
       search: '',
       showModal: false,
       activeTest: null,
+      userRole: localStorage.getItem('user_role') || 'admin',
       pagination: {
         current_page: 1,
         per_page: 20,

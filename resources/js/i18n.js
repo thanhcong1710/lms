@@ -308,7 +308,7 @@ const messages = {
         teacher: 'Teacher'
       },
       pwd_placeholder: 'Leave blank to keep current',
-      default_pwd: 'Default: @12345678',
+      default_pwd: 'Default: {\'@\'}12345678',
       select_branch: '-- Select Branch --',
       select_teacher: '-- Select Teacher --',
       select_student: '-- Search Student --',
@@ -622,7 +622,7 @@ const messages = {
         teacher: 'Giáo viên'
       },
       pwd_placeholder: 'Để trống để giữ nguyên',
-      default_pwd: 'Mặc định: @12345678',
+      default_pwd: 'Mặc định: {\'@\'}12345678',
       select_branch: '-- Chọn cơ sở --',
       select_teacher: '-- Chọn giáo viên --',
       select_student: '-- Tìm học sinh --',

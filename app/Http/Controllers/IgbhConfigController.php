@@ -7,8 +7,13 @@ use Illuminate\Support\Facades\DB;
 
 class IgbhConfigController extends Controller
 {
-    public function getConfig($testSeq)
+    public function getConfig(Request $request, $testSeq)
     {
+        $user = \App\Http\Controllers\AuthController::resolveUser($request);
+        if (!$user || !$user->isAdmin()) {
+            return response()->json(['message' => 'Forbidden. Admin only.'], 403);
+        }
+
         $test = DB::table('lms_tests')->where('test_seq', $testSeq)->where('test_type', 'IG.BH')->first();
         if (!$test) {
             return response()->json(['message' => 'Not found'], 404);
@@ -53,6 +58,11 @@ class IgbhConfigController extends Controller
 
     public function updateConfig(Request $request, $testSeq)
     {
+        $user = \App\Http\Controllers\AuthController::resolveUser($request);
+        if (!$user || !$user->isAdmin()) {
+            return response()->json(['message' => 'Forbidden. Admin only.'], 403);
+        }
+
         $type = $request->input('type');
         
         if ($type === 'summative') {

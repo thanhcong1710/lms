@@ -56,6 +56,13 @@ router.beforeEach((to, from, next) => {
         next({ name: 'login' });
     } else if (to.name === 'login' && token) {
         next({ name: 'dashboard' });
+    } else if (to.meta.role) {
+        const userRole = localStorage.getItem('user_role');
+        if (to.meta.role === 'admin' && userRole !== 'admin') {
+            next({ name: 'dashboard' });
+        } else {
+            next();
+        }
     } else {
         next();
     }

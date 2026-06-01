@@ -66,14 +66,17 @@ class OptionsController extends Controller
 
         if ($classId = $request->query('class_id')) {
             $studentIds = \App\Models\Contract::where('class_id', $classId)->pluck('student_id')->toArray();
-            $query->whereIn('id', $studentIds);
+            $query->whereNotIn('id', $studentIds);
         }
 
         if ($search = $request->query('search')) {
-            $query->where(function ($q) use ($search) {
-                $q->where('name', 'LIKE', "%{$search}%")
-                  ->orWhere('id_lms', 'LIKE', "%{$search}%");
-            });
+            $search = trim($search);
+            if (!empty($search)) {
+                $query->where(function ($q) use ($search) {
+                    $q->where('name', 'LIKE', "%{$search}%")
+                      ->orWhere('id_lms', 'LIKE', "%{$search}%");
+                });
+            }
         }
 
         $students = $query->orderBy('name')->limit(50)->get();
