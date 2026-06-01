@@ -17,7 +17,9 @@ const messages = {
       igbh_tests: 'IG.BH Tests',
       igbh_eval: 'IG.BH Diagnostic',
       igbh_weekly: 'IG.BH Weekly',
-      igbh_summative: 'IG.BH Summative'
+      igbh_summative: 'IG.BH Summative',
+      group_system: 'System',
+      users: 'User Management'
     },
     header: {
       welcome: 'Welcome to CMS EDU LMS Management Portal',
@@ -283,6 +285,34 @@ const messages = {
         math: 'Math (1-5)',
         creative: 'Creativity (1-5)'
       }
+    },
+    system: {
+      title: 'User Management',
+      desc: 'Manage user accounts and role-based access',
+      add_btn: '+ Add User',
+      search: 'Search by name, email...',
+      no_data: 'No users found.',
+      modal_add: 'Add New User',
+      modal_edit: 'Edit User',
+      cols: {
+        username: 'Username',
+        role: 'Role',
+        branch: 'Branch',
+        teacher: 'Teacher',
+        password: 'Password',
+        reset_pwd: 'Reset Password'
+      },
+      roles: {
+        admin: 'Admin',
+        team_leader: 'Team Leader',
+        teacher: 'Teacher'
+      },
+      pwd_placeholder: 'Leave blank to keep current',
+      default_pwd: 'Default: @12345678',
+      select_branch: '-- Select Branch --',
+      select_teacher: '-- Select Teacher --',
+      select_student: '-- Search Student --',
+      select_class: '-- Select Class --'
     }
   },
   vi: {
@@ -301,7 +331,9 @@ const messages = {
       igbh_tests: 'Bài kiểm tra IG.BH',
       igbh_eval: 'Bài kiểm tra đầu vào IG.BH',
       igbh_weekly: 'ĐG Tuần IG.BH',
-      igbh_summative: 'ĐG Cuối kỳ IG.BH'
+      igbh_summative: 'ĐG Cuối kỳ IG.BH',
+      group_system: 'Hệ thống',
+      users: 'Quản lý người dùng'
     },
     header: {
       welcome: 'Chào mừng đến với Cổng Quản Lý LMS CMS EDU',
@@ -532,7 +564,7 @@ const messages = {
         area_f: 'F. Khả năng suy luận toán học'
       },
       form: {
-        back_list: '← Danh sách',
+        back_list: 'Danh sách',
         title_diagnostic: 'Nhập Điểm - IG.BH Đầu Vào',
         student: 'Học sinh',
         dob: 'Sinh',
@@ -567,6 +599,34 @@ const messages = {
         math: 'Toán học (1-5)',
         creative: 'Sáng tạo (1-5)'
       }
+    },
+    system: {
+      title: 'Quản lý người dùng',
+      desc: 'Quản lý tài khoản và phân quyền truy cập',
+      add_btn: '+ Thêm người dùng',
+      search: 'Tìm theo tên, email...',
+      no_data: 'Không tìm thấy người dùng.',
+      modal_add: 'Thêm người dùng mới',
+      modal_edit: 'Sửa người dùng',
+      cols: {
+        username: 'Tên đăng nhập',
+        role: 'Vai trò',
+        branch: 'Cơ sở',
+        teacher: 'Giáo viên',
+        password: 'Mật khẩu',
+        reset_pwd: 'Đặt lại mật khẩu'
+      },
+      roles: {
+        admin: 'Quản trị viên',
+        team_leader: 'Trưởng nhóm GV',
+        teacher: 'Giáo viên'
+      },
+      pwd_placeholder: 'Để trống để giữ nguyên',
+      default_pwd: 'Mặc định: @12345678',
+      select_branch: '-- Chọn cơ sở --',
+      select_teacher: '-- Chọn giáo viên --',
+      select_student: '-- Tìm học sinh --',
+      select_class: '-- Chọn lớp học --'
     }
   }
 };

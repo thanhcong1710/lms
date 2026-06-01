@@ -62,7 +62,7 @@
           </div>
 
           <!-- Group: Center Management -->
-          <div class="border-t border-brand-border/50 pt-3">
+          <div v-if="userRole === 'admin' || userRole === 'team_leader'" class="border-t border-brand-border/50 pt-3">
             <button @click="toggleGroup('center')" :class="['w-full flex items-center justify-between px-3 py-2.5 text-xs font-bold uppercase tracking-wider transition rounded-xl mb-1', expandedGroup === 'center' ? 'text-indigo-500 bg-indigo-500/10' : 'text-brand-desc hover:text-brand-text hover:bg-brand-input/50']">
               <div class="flex items-center gap-2.5">
                 <span class="text-base">🏢</span>
@@ -71,14 +71,39 @@
               <svg :class="{'rotate-180': expandedGroup === 'center'}" class="w-4 h-4 transition-transform duration-300 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
             </button>
             <div v-show="expandedGroup === 'center'" class="space-y-1 pl-2">
-              <router-link to="/branches" @click="isMobileMenuOpen = false" class="flex items-center gap-3 px-4 py-2.5 rounded-xl transition hover:bg-brand-input hover:text-brand-text text-brand-desc text-sm" active-class="bg-indigo-600/10 text-indigo-500 font-medium">
+              <router-link v-if="userRole === 'admin'" to="/branches" @click="isMobileMenuOpen = false" class="flex items-center gap-3 px-4 py-2.5 rounded-xl transition hover:bg-brand-input hover:text-brand-text text-brand-desc text-sm" active-class="bg-indigo-600/10 text-indigo-500 font-medium">
                 <span class="w-2 h-2 rounded-full bg-current opacity-40"></span>
                 <span>{{ $t('sidebar.branches') }}</span>
               </router-link>
-              <router-link to="/teachers" @click="isMobileMenuOpen = false" class="flex items-center gap-3 px-4 py-2.5 rounded-xl transition hover:bg-brand-input hover:text-brand-text text-brand-desc text-sm" active-class="bg-indigo-600/10 text-indigo-500 font-medium">
+              <router-link v-if="userRole === 'admin' || userRole === 'team_leader'" to="/teachers" @click="isMobileMenuOpen = false" class="flex items-center gap-3 px-4 py-2.5 rounded-xl transition hover:bg-brand-input hover:text-brand-text text-brand-desc text-sm" active-class="bg-indigo-600/10 text-indigo-500 font-medium">
                 <span class="w-2 h-2 rounded-full bg-current opacity-40"></span>
                 <span>{{ $t('sidebar.teachers') }}</span>
               </router-link>
+              <router-link to="/classes" @click="isMobileMenuOpen = false" class="flex items-center gap-3 px-4 py-2.5 rounded-xl transition hover:bg-brand-input hover:text-brand-text text-brand-desc text-sm" active-class="bg-indigo-600/10 text-indigo-500 font-medium">
+                <span class="w-2 h-2 rounded-full bg-current opacity-40"></span>
+                <span>{{ $t('sidebar.classes') }}</span>
+              </router-link>
+              <router-link to="/students" @click="isMobileMenuOpen = false" class="flex items-center gap-3 px-4 py-2.5 rounded-xl transition hover:bg-brand-input hover:text-brand-text text-brand-desc text-sm" active-class="bg-indigo-600/10 text-indigo-500 font-medium">
+                <span class="w-2 h-2 rounded-full bg-current opacity-40"></span>
+                <span>{{ $t('sidebar.students') }}</span>
+              </router-link>
+              <router-link to="/contracts" @click="isMobileMenuOpen = false" class="flex items-center gap-3 px-4 py-2.5 rounded-xl transition hover:bg-brand-input hover:text-brand-text text-brand-desc text-sm" active-class="bg-indigo-600/10 text-indigo-500 font-medium">
+                <span class="w-2 h-2 rounded-full bg-current opacity-40"></span>
+                <span>{{ $t('sidebar.contracts') }}</span>
+              </router-link>
+            </div>
+          </div>
+
+          <!-- Group for teacher role: Classes + Students + Contracts only -->
+          <div v-if="userRole === 'teacher'" class="border-t border-brand-border/50 pt-3">
+            <button @click="toggleGroup('center')" :class="['w-full flex items-center justify-between px-3 py-2.5 text-xs font-bold uppercase tracking-wider transition rounded-xl mb-1', expandedGroup === 'center' ? 'text-indigo-500 bg-indigo-500/10' : 'text-brand-desc hover:text-brand-text hover:bg-brand-input/50']">
+              <div class="flex items-center gap-2.5">
+                <span class="text-base">🏢</span>
+                <span>{{ $t('sidebar.group_center') }}</span>
+              </div>
+              <svg :class="{'rotate-180': expandedGroup === 'center'}" class="w-4 h-4 transition-transform duration-300 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+            </button>
+            <div v-show="expandedGroup === 'center'" class="space-y-1 pl-2">
               <router-link to="/classes" @click="isMobileMenuOpen = false" class="flex items-center gap-3 px-4 py-2.5 rounded-xl transition hover:bg-brand-input hover:text-brand-text text-brand-desc text-sm" active-class="bg-indigo-600/10 text-indigo-500 font-medium">
                 <span class="w-2 h-2 rounded-full bg-current opacity-40"></span>
                 <span>{{ $t('sidebar.classes') }}</span>
@@ -143,6 +168,23 @@
               </router-link>
             </div>
           </div>
+
+          <!-- Group: System (Admin only) -->
+          <div v-if="userRole === 'admin'" class="border-t border-brand-border/50 pt-3">
+            <button @click="toggleGroup('system')" :class="['w-full flex items-center justify-between px-3 py-2.5 text-xs font-bold uppercase tracking-wider transition rounded-xl mb-1', expandedGroup === 'system' ? 'text-indigo-500 bg-indigo-500/10' : 'text-brand-desc hover:text-brand-text hover:bg-brand-input/50']">
+              <div class="flex items-center gap-2.5">
+                <span class="text-base">⚙️</span>
+                <span>{{ $t('sidebar.group_system') }}</span>
+              </div>
+              <svg :class="{'rotate-180': expandedGroup === 'system'}" class="w-4 h-4 transition-transform duration-300 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+            </button>
+            <div v-show="expandedGroup === 'system'" class="space-y-1 pl-2">
+              <router-link to="/system/users" @click="isMobileMenuOpen = false" class="flex items-center gap-3 px-4 py-2.5 rounded-xl transition hover:bg-brand-input hover:text-brand-text text-brand-desc text-sm" active-class="bg-indigo-600/10 text-indigo-500 font-medium">
+                <span class="w-2 h-2 rounded-full bg-current opacity-40"></span>
+                <span>{{ $t('sidebar.users') }}</span>
+              </router-link>
+            </div>
+          </div>
         </nav>
       </div>
 
@@ -150,11 +192,11 @@
       <div class="border-t border-brand-border pt-4">
         <div class="flex items-center gap-3 mb-4">
           <div class="h-9 w-9 rounded-full bg-indigo-500/10 flex items-center justify-center font-bold text-indigo-500 border border-indigo-500/20">
-            A
+            {{ (userName || 'A').charAt(0).toUpperCase() }}
           </div>
           <div class="min-w-0 flex-1">
-            <p class="text-sm font-semibold truncate">Administrator</p>
-            <p class="text-xs text-brand-desc truncate">admin@lms.com</p>
+            <p class="text-sm font-semibold truncate">{{ userName || 'User' }}</p>
+            <p class="text-xs text-brand-desc truncate">{{ userRoleLabel }}</p>
           </div>
         </div>
         <button @click="logout" class="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl border border-red-500/20 text-red-500 hover:bg-red-500/10 transition text-sm font-medium">
@@ -205,7 +247,15 @@ export default {
       isMobileMenuOpen: false,
       theme: localStorage.getItem('theme') || 'dark',
       currentLocale: localStorage.getItem('locale') || 'vi',
-      expandedGroup: 'center'
+      expandedGroup: 'center',
+      userRole: localStorage.getItem('user_role') || 'admin',
+      userName: localStorage.getItem('user_name') || 'Admin',
+    }
+  },
+  computed: {
+    userRoleLabel() {
+      const labels = { admin: 'Admin', team_leader: 'Team Leader', teacher: 'Teacher' };
+      return labels[this.userRole] || this.userRole;
     }
   },
   watch: {
@@ -233,7 +283,9 @@ export default {
   methods: {
     updateExpandedGroup() {
       const path = this.$route.path;
-      if (path.includes('/ucrea')) {
+      if (path.includes('/system')) {
+        this.expandedGroup = 'system';
+      } else if (path.includes('/ucrea')) {
         this.expandedGroup = 'ucrea';
       } else if (path.includes('/igbh')) {
         this.expandedGroup = 'igbh';
@@ -250,9 +302,15 @@ export default {
     },
     checkAuth() {
       this.isAuthenticated = !!localStorage.getItem('token');
+      this.userRole = localStorage.getItem('user_role') || 'admin';
+      this.userName = localStorage.getItem('user_name') || 'Admin';
     },
     logout() {
       localStorage.removeItem('token');
+      localStorage.removeItem('user_role');
+      localStorage.removeItem('user_name');
+      localStorage.removeItem('user_branch_id');
+      localStorage.removeItem('user_teacher_id');
       this.$router.push('/login');
     },
     toggleTheme() {

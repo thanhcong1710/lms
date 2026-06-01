@@ -68,19 +68,35 @@
         <h3 class="text-lg font-bold text-brand-text">{{ editingId ? $t('contracts.modal_edit') : $t('contracts.modal_add') }}</h3>
 
         <form @submit.prevent="saveContract" class="space-y-4">
-          <div class="grid grid-cols-2 gap-4">
-            <div>
-              <label class="block text-xs font-semibold text-brand-desc uppercase mb-2">{{ $t('contracts.cols.student') }}</label>
-              <input type="text" v-model="form.student_name" required class="w-full px-4 py-2.5 rounded-xl bg-brand-input border border-brand-border text-brand-text placeholder-gray-600 focus:outline-none focus:border-indigo-500 text-sm">
-            </div>
-            <div>
-              <label class="block text-xs font-semibold text-brand-desc uppercase mb-2">{{ $t('contracts.cols.class') }}</label>
-              <input type="text" v-model="form.class_name" required class="w-full px-4 py-2.5 rounded-xl bg-brand-input border border-brand-border text-brand-text placeholder-gray-600 focus:outline-none focus:border-indigo-500 text-sm">
-            </div>
-          </div>
+          <!-- Move Branch to Top -->
           <div>
             <label class="block text-xs font-semibold text-brand-desc uppercase mb-2">{{ $t('common.branch') }}</label>
-            <input type="text" v-model="form.branch_name" required class="w-full px-4 py-2.5 rounded-xl bg-brand-input border border-brand-border text-brand-text placeholder-gray-600 focus:outline-none focus:border-indigo-500 text-sm">
+            <select v-model="form.branch_id" @change="onBranchChange" required class="w-full px-4 py-2.5 rounded-xl bg-brand-input border border-brand-border text-brand-text focus:outline-none focus:border-indigo-500 text-sm">
+              <option value="">{{ $t('system.select_branch') }}</option>
+              <option v-for="b in branchOptions" :key="b.id" :value="b.id">{{ b.name }} ({{ b.id_lms }})</option>
+            </select>
+          </div>
+
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-semibold text-brand-desc uppercase mb-2">{{ $t('contracts.cols.class') }}</label>
+              <select v-model="form.class_id" @change="onClassChange" :disabled="!form.branch_id" required class="w-full px-4 py-2.5 rounded-xl bg-brand-input border border-brand-border text-brand-text focus:outline-none focus:border-indigo-500 text-sm">
+                <option value="">{{ $t('system.select_class') }}</option>
+                <option v-for="c in filteredClassOptions" :key="c.id" :value="c.id">{{ c.cls_name }} ({{ c.level_name }})</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-brand-desc uppercase mb-2">{{ $t('contracts.cols.student') }}</label>
+              <div class="relative">
+                <input type="text" v-model="studentSearch" @input="searchStudents" :disabled="!form.class_id" :placeholder="$t('system.select_student')" class="w-full px-4 py-2.5 rounded-xl bg-brand-input border border-brand-border text-brand-text placeholder-gray-600 focus:outline-none focus:border-indigo-500 text-sm">
+                <div v-if="studentResults.length > 0" class="absolute z-10 w-full mt-1 bg-brand-card border border-brand-border rounded-xl shadow-xl max-h-48 overflow-y-auto">
+                  <div v-for="s in studentResults" :key="s.id" @click="selectStudent(s)" class="px-4 py-2.5 hover:bg-brand-input cursor-pointer text-sm text-brand-text border-b border-brand-border/50 last:border-0">
+                    {{ s.name }} <span class="text-brand-desc">({{ s.id_lms }})</span>
+                  </div>
+                </div>
+              </div>
+              <p v-if="form.student_id" class="text-xs text-indigo-400 mt-1">ID: {{ form.student_id }} - {{ form.student_name }}</p>
+            </div>
           </div>
           <div class="grid grid-cols-2 gap-4">
             <div>
@@ -133,10 +149,15 @@ export default {
       search: '',
       showModal: false,
       editingId: null,
+      studentSearch: '',
+      studentResults: [],
+      branchOptions: [],
+      classOptions: [],
       form: {
+        student_id: '',
         student_name: '',
-        class_name: '',
-        branch_name: '',
+        class_id: '',
+        branch_id: '',
         enrolment_start_date: '',
         enrolment_last_date: '',
         valid_cd: 'VC005',
@@ -155,11 +176,17 @@ export default {
   },
   created() {
     this.fetchContracts(1);
+    this.fetchFormOptions();
   },
   computed: {
     filteredContracts() {
-      const q = this.search.toLowerCase();
-      return this.contracts.filter(c => c.student_name.toLowerCase().includes(q) || c.class_name.toLowerCase().includes(q));
+      return this.contracts;
+    },
+    filteredClassOptions() {
+      if (!this.form.branch_id) return [];
+      const selectedBranch = this.branchOptions.find(b => b.id === this.form.branch_id);
+      if (!selectedBranch) return [];
+      return this.classOptions.filter(c => c.branch_id_lms === selectedBranch.id_lms);
     }
   },
   methods: {
@@ -190,6 +217,47 @@ export default {
         console.error("Error fetching contracts", error);
       }
     },
+    onBranchChange() {
+      this.form.class_id = '';
+      this.form.student_id = '';
+      this.form.student_name = '';
+      this.studentSearch = '';
+    },
+    onClassChange() {
+      this.form.student_id = '';
+      this.form.student_name = '';
+      this.studentSearch = '';
+    },
+    async fetchFormOptions() {
+      try {
+        const headers = { Authorization: `Bearer ${localStorage.getItem('token')}` };
+        const [brRes, clRes] = await Promise.all([
+          axios.get('/api/options/branches', { headers }),
+          axios.get('/api/options/classes', { headers })
+        ]);
+        this.branchOptions = brRes.data.data || [];
+        this.classOptions = clRes.data.data || [];
+      } catch (e) { console.error(e); }
+    },
+    async searchStudents() {
+      if (this.studentSearch.length < 2 || !this.form.class_id) {
+        this.studentResults = [];
+        return;
+      }
+      try {
+        const res = await axios.get('/api/options/students', {
+          params: { search: this.studentSearch, class_id: this.form.class_id },
+          headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+        });
+        this.studentResults = res.data.data || [];
+      } catch (e) { console.error(e); }
+    },
+    selectStudent(student) {
+      this.form.student_id = student.id;
+      this.form.student_name = student.name;
+      this.studentSearch = student.name;
+      this.studentResults = [];
+    },
     onPageChange(page) {
       this.fetchContracts(page);
     },
@@ -198,23 +266,43 @@ export default {
       this.fetchContracts(1);
     },
     openModal(contract = null) {
+      this.studentSearch = '';
+      this.studentResults = [];
       if (contract) {
         this.editingId = contract.id;
-        this.form = { ...contract };
+        this.form = {
+          student_id: contract.student_id || '',
+          student_name: contract.student_name || '',
+          class_id: contract.class_id || '',
+          branch_id: contract.branch_id || '',
+          enrolment_start_date: contract.enrolment_start_date || '',
+          enrolment_last_date: contract.enrolment_last_date || '',
+          valid_cd: contract.valid_cd || 'VC005',
+          status: contract.status || 'SS001',
+          remark: contract.remark || ''
+        };
+        this.studentSearch = contract.student_name || '';
       } else {
         this.editingId = null;
-        this.form = { student_name: '', class_name: '', branch_name: '', enrolment_start_date: '', enrolment_last_date: '', valid_cd: 'VC005', status: 'SS001', remark: '' };
+        this.form = { student_id: '', student_name: '', class_id: '', branch_id: '', enrolment_start_date: '', enrolment_last_date: '', valid_cd: 'VC005', status: 'SS001', remark: '' };
       }
       this.showModal = true;
     },
-    saveContract() {
-      if (this.editingId) {
-        const idx = this.contracts.findIndex(c => c.id === this.editingId);
-        this.contracts[idx] = { ...this.form, id: this.editingId };
-      } else {
-        this.contracts.push({ ...this.form, id: Date.now() });
+    async saveContract() {
+      try {
+        const headers = { Authorization: `Bearer ${localStorage.getItem('token')}` };
+        const payload = { ...this.form };
+        if (this.editingId) {
+          await axios.put(`/api/contracts/${this.editingId}`, payload, { headers });
+        } else {
+          await axios.post('/api/contracts', payload, { headers });
+        }
+        this.showModal = false;
+        this.fetchContracts(this.pagination.current_page);
+      } catch (error) {
+        const msg = error.response?.data?.message || 'Save failed';
+        alert(msg);
       }
-      this.showModal = false;
     },
     deleteContract(id) {
       if (confirm('Are you sure you want to delete this contract?')) {

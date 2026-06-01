@@ -4,16 +4,49 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Student;
+use App\Models\Contract;
+use App\Models\LmsClass;
 
 class StudentController extends Controller
 {
-        public function index(Request $request)
+    public function index(Request $request)
     {
         $limit = $request->query('per_page', 20);
         if (!in_array($limit, [20, 50, 100])) {
             $limit = 20;
         }
-        return response()->json(Student::paginate($limit));
+
+        $query = Student::query();
+
+        // Role-based filtering
+        $user = AuthController::resolveUser($request);
+        if ($user && !$user->isAdmin()) {
+            // Get accessible student IDs via contracts/classes
+            $classQuery = LmsClass::query();
+            if ($user->isTeacher()) {
+                $teacherIdLms = $user->getTeacherIdLms();
+                if ($teacherIdLms) {
+                    $classQuery->where('teacher_id_lms', $teacherIdLms);
+                }
+            } elseif ($user->isTeamLeader()) {
+                $branchIds = $user->getAccessibleBranchLmsIds();
+                if ($branchIds !== null) {
+                    $classQuery->whereIn('branch_id_lms', $branchIds);
+                }
+            }
+            $classIds = $classQuery->pluck('id')->toArray();
+            $studentIds = Contract::whereIn('class_id', $classIds)->pluck('student_id')->unique()->toArray();
+            $query->whereIn('id', $studentIds);
+        }
+
+        if ($search = $request->query('search')) {
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'LIKE', "%{$search}%")
+                  ->orWhere('id_lms', 'LIKE', "%{$search}%");
+            });
+        }
+
+        return response()->json($query->paginate($limit));
     }
 
     public function store(Request $request)

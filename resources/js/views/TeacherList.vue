@@ -74,18 +74,19 @@
 
         <form @submit.prevent="saveTeacher" class="space-y-4">
           <div>
+            <label class="block text-xs font-semibold text-brand-desc uppercase mb-2">{{ $t('teachers.cols.branch_lms_id') }}</label>
+            <select v-model="form.branch_id_lms" required class="w-full px-4 py-2.5 rounded-xl bg-brand-input border border-brand-border text-brand-text focus:outline-none focus:border-indigo-500 text-sm">
+              <option value="">{{ $t('system.select_branch') }}</option>
+              <option v-for="b in branchOptions" :key="b.id" :value="b.id_lms">{{ b.name }} ({{ b.id_lms }})</option>
+            </select>
+          </div>
+          <div>
             <label class="block text-xs font-semibold text-brand-desc uppercase mb-2">{{ $t('teachers.form.name') }}</label>
             <input type="text" v-model="form.ins_name" required class="w-full px-4 py-2.5 rounded-xl bg-brand-input border border-brand-border text-brand-text placeholder-gray-600 focus:outline-none focus:border-indigo-500 text-sm">
           </div>
-          <div class="grid grid-cols-2 gap-4">
-            <div>
-              <label class="block text-xs font-semibold text-brand-desc uppercase mb-2">{{ $t('common.lms_id') }}</label>
-              <input type="text" v-model="form.id_lms" required class="w-full px-4 py-2.5 rounded-xl bg-brand-input border border-brand-border text-brand-text placeholder-gray-600 focus:outline-none focus:border-indigo-500 text-sm">
-            </div>
-            <div>
-              <label class="block text-xs font-semibold text-brand-desc uppercase mb-2">{{ $t('teachers.cols.branch_lms_id') }}</label>
-              <input type="text" v-model="form.branch_id_lms" required class="w-full px-4 py-2.5 rounded-xl bg-brand-input border border-brand-border text-brand-text placeholder-gray-600 focus:outline-none focus:border-indigo-500 text-sm">
-            </div>
+          <div>
+            <label class="block text-xs font-semibold text-brand-desc uppercase mb-2">{{ $t('common.lms_id') }}</label>
+            <input type="text" v-model="form.id_lms" required class="w-full px-4 py-2.5 rounded-xl bg-brand-input border border-brand-border text-brand-text placeholder-gray-600 focus:outline-none focus:border-indigo-500 text-sm">
           </div>
           <div class="grid grid-cols-2 gap-4">
             <div>
@@ -143,6 +144,7 @@ export default {
         head: 'N',
         status: 'US001'
       },
+      branchOptions: [],
       pagination: {
         current_page: 1,
         per_page: 20,
@@ -155,6 +157,7 @@ export default {
   },
   created() {
     this.fetchTeachers(1);
+    this.fetchBranchOptions();
   },
   computed: {
     filteredTeachers() {
@@ -189,6 +192,12 @@ export default {
       } catch (error) {
         console.error("Error fetching teachers", error);
       }
+    },
+    async fetchBranchOptions() {
+      try {
+        const res = await axios.get('/api/options/branches', { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } });
+        this.branchOptions = res.data.data || [];
+      } catch (e) { console.error(e); }
     },
     onPageChange(page) {
       this.fetchTeachers(page);

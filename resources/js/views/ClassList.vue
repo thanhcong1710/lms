@@ -73,6 +73,13 @@
 
         <form @submit.prevent="saveClass" class="space-y-4">
           <div>
+            <label class="block text-xs font-semibold text-brand-desc uppercase mb-2">{{ $t('common.branch') }}</label>
+            <select v-model="form.branch_id_lms" required class="w-full px-4 py-2.5 rounded-xl bg-brand-input border border-brand-border text-brand-text focus:outline-none focus:border-indigo-500 text-sm">
+              <option value="">{{ $t('system.select_branch') }}</option>
+              <option v-for="b in branchOptions" :key="b.id" :value="b.id_lms">{{ b.name }} ({{ b.id_lms }})</option>
+            </select>
+          </div>
+          <div>
             <label class="block text-xs font-semibold text-brand-desc uppercase mb-2">{{ $t('classes.cols.class_name') }}</label>
             <input type="text" v-model="form.cls_name" required class="w-full px-4 py-2.5 rounded-xl bg-brand-input border border-brand-border text-brand-text placeholder-gray-600 focus:outline-none focus:border-indigo-500 text-sm">
           </div>
@@ -86,7 +93,7 @@
               <input type="text" v-model="form.level_name" required class="w-full px-4 py-2.5 rounded-xl bg-brand-input border border-brand-border text-brand-text placeholder-gray-600 focus:outline-none focus:border-indigo-500 text-sm">
             </div>
           </div>
-          <div class="grid grid-cols-3 gap-4">
+          <div class="grid grid-cols-2 gap-4">
             <div>
               <label class="block text-xs font-semibold text-brand-desc uppercase mb-2">{{ $t('classes.cols.type') }}</label>
               <select v-model="form.cls_type" class="w-full px-4 py-2.5 rounded-xl bg-brand-input border border-brand-border text-brand-text focus:outline-none focus:border-indigo-500 text-sm">
@@ -96,11 +103,10 @@
             </div>
             <div>
               <label class="block text-xs font-semibold text-brand-desc uppercase mb-2">{{ $t('classes.cols.teacher_id') }}</label>
-              <input type="text" v-model="form.teacher_id_lms" required class="w-full px-4 py-2.5 rounded-xl bg-brand-input border border-brand-border text-brand-text placeholder-gray-600 focus:outline-none focus:border-indigo-500 text-sm">
-            </div>
-            <div>
-              <label class="block text-xs font-semibold text-brand-desc uppercase mb-2">{{ $t('common.branch') }}</label>
-              <input type="text" v-model="form.branch_id_lms" required class="w-full px-4 py-2.5 rounded-xl bg-brand-input border border-brand-border text-brand-text placeholder-gray-600 focus:outline-none focus:border-indigo-500 text-sm">
+              <select v-model="form.teacher_id_lms" required class="w-full px-4 py-2.5 rounded-xl bg-brand-input border border-brand-border text-brand-text focus:outline-none focus:border-indigo-500 text-sm">
+                <option value="">{{ $t('system.select_teacher') }}</option>
+                <option v-for="t in teacherOptions" :key="t.id" :value="t.id_lms">{{ t.ins_name }} ({{ t.id_lms }})</option>
+              </select>
             </div>
           </div>
           <div>
@@ -140,6 +146,8 @@ export default {
         branch_id_lms: '',
         cls_status: 'US001'
       },
+      branchOptions: [],
+      teacherOptions: [],
       pagination: {
         current_page: 1,
         per_page: 20,
@@ -152,6 +160,7 @@ export default {
   },
   created() {
     this.fetchClasses(1);
+    this.fetchFormOptions();
   },
   computed: {
     filteredClasses() {
@@ -186,6 +195,17 @@ export default {
       } catch (error) {
         console.error("Error fetching classes", error);
       }
+    },
+    async fetchFormOptions() {
+      try {
+        const headers = { Authorization: `Bearer ${localStorage.getItem('token')}` };
+        const [brRes, teRes] = await Promise.all([
+          axios.get('/api/options/branches', { headers }),
+          axios.get('/api/options/teachers', { headers })
+        ]);
+        this.branchOptions = brRes.data.data || [];
+        this.teacherOptions = teRes.data.data || [];
+      } catch (e) { console.error(e); }
     },
     onPageChange(page) {
       this.fetchClasses(page);

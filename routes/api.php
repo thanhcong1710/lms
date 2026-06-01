@@ -10,17 +10,27 @@ use App\Http\Controllers\StudentController;
 use App\Http\Controllers\ContractController;
 use App\Http\Controllers\LmsTestController;
 use App\Http\Controllers\IgbhConfigController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\OptionsController;
 use App\Http\Controllers\Api\UcreaEvaluationController;
 use App\Http\Controllers\Api\IgbhEvaluationController;
 
 Route::post('/login', [AuthController::class, 'login']);
+Route::get('/me', [AuthController::class, 'me']);
 
 Route::apiResource('branches', BranchController::class);
 Route::apiResource('teachers', TeacherController::class);
 Route::apiResource('classes', ClassController::class);
 Route::apiResource('students', StudentController::class);
 Route::apiResource('contracts', ContractController::class);
+Route::apiResource('users', UserController::class);
 Route::get('/tests', [LmsTestController::class, 'index']);
+
+// Options endpoints for form select boxes
+Route::get('/options/branches', [OptionsController::class, 'branches']);
+Route::get('/options/teachers', [OptionsController::class, 'teachers']);
+Route::get('/options/classes', [OptionsController::class, 'classes']);
+Route::get('/options/students', [OptionsController::class, 'students']);
 
 Route::get('/ucrea/results', [UcreaEvaluationController::class, 'getResults']);
 Route::get('/ucrea/init-data', [UcreaEvaluationController::class, 'getInitData']);

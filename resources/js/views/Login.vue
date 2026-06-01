@@ -117,6 +117,12 @@ export default {
           password: this.password
         });
         localStorage.setItem('token', response.data.token);
+        if (response.data.user) {
+          localStorage.setItem('user_role', response.data.user.role || 'admin');
+          localStorage.setItem('user_name', response.data.user.name || 'Admin');
+          localStorage.setItem('user_branch_id', response.data.user.branch_id || '');
+          localStorage.setItem('user_teacher_id', response.data.user.teacher_id || '');
+        }
         this.$router.push('/');
       } catch (err) {
         this.error = err.response?.data?.message || 'Login failed. Please check your credentials.';
