@@ -22,7 +22,7 @@ const messages = {
       users: 'User Management'
     },
     header: {
-      welcome: 'Welcome to CMS EDU LMS Management Portal',
+      welcome: 'Welcome to LMS Management Portal',
       light_mode: 'Light Mode',
       dark_mode: 'Dark Mode',
       system_live: 'System Live',
@@ -336,7 +336,7 @@ const messages = {
       users: 'Quản lý người dùng'
     },
     header: {
-      welcome: 'Chào mừng đến với Cổng Quản Lý LMS CMS EDU',
+      welcome: 'Chào mừng đến với hệ thống LMS',
       light_mode: 'Giao diện sáng',
       dark_mode: 'Giao diện tối',
       system_live: 'Hệ thống online',

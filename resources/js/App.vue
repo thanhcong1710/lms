@@ -6,7 +6,7 @@
         <div class="h-9 w-9 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center font-bold text-white shadow-lg">
           LMS
         </div>
-        <span class="font-bold text-base leading-none">CMS EDU</span>
+        <span class="font-bold text-base leading-none">Logiclab</span>
       </div>
       
       <div class="flex items-center gap-2">
@@ -43,8 +43,7 @@
               LMS
             </div>
             <div>
-              <h1 class="font-bold text-lg leading-none">CMS EDU</h1>
-              <span class="text-xs text-indigo-500 font-medium">LMS PORTAL</span>
+              <h1 class="font-bold text-lg leading-none">Logiclab</h1>
             </div>
           </div>
           <button @click="isMobileMenuOpen = false" class="md:hidden p-1.5 rounded-lg bg-brand-input hover:bg-brand-border">
@@ -245,7 +244,7 @@ export default {
     return {
       isAuthenticated: false,
       isMobileMenuOpen: false,
-      theme: localStorage.getItem('theme') || 'dark',
+      theme: localStorage.getItem('theme') || 'light',
       currentLocale: localStorage.getItem('locale') || 'vi',
       expandedGroup: 'center',
       userRole: localStorage.getItem('user_role') || 'admin',
