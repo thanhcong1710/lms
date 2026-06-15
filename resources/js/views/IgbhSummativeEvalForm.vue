@@ -1,5 +1,14 @@
 <template>
   <div class="space-y-6 mx-auto" style="max-width: 100%; padding: 0 10px;">
+    <!-- Full page saving overlay -->
+    <div v-if="saving" class="fixed inset-0 bg-gray-900 bg-opacity-50 z-50 flex flex-col items-center justify-center backdrop-blur-sm transition-opacity">
+      <div class="bg-white p-6 rounded-xl shadow-2xl flex flex-col items-center min-w-[200px]">
+        <div class="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-indigo-600 mb-4"></div>
+        <p class="text-gray-800 font-semibold">Đang lưu dữ liệu...</p>
+        <p class="text-gray-500 text-sm mt-1">Vui lòng đợi trong giây lát</p>
+      </div>
+    </div>
+
     <div class="flex items-center justify-between">
       <router-link :to="{ name: 'igbh-summative-evaluations' }" class="flex items-center gap-2 text-brand-desc hover:text-indigo-400 transition font-medium">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">

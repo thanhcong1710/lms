@@ -1,5 +1,14 @@
 <template>
   <div class="space-y-6">
+    <!-- Full page saving overlay -->
+    <div v-if="submitting" class="fixed inset-0 bg-gray-900 bg-opacity-50 z-50 flex flex-col items-center justify-center backdrop-blur-sm transition-opacity">
+      <div class="bg-white p-6 rounded-xl shadow-2xl flex flex-col items-center min-w-[200px]">
+        <div class="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-indigo-600 mb-4"></div>
+        <p class="text-gray-800 font-semibold">Đang lưu dữ liệu...</p>
+        <p class="text-gray-500 text-sm mt-1">Vui lòng đợi trong giây lát</p>
+      </div>
+    </div>
+
     <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
       <div>
         <h2 class="text-2xl font-bold text-brand-text">Đánh Giá Năng Lực UCREA</h2>
