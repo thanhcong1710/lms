@@ -84,11 +84,24 @@ class UcreaEvaluationController extends Controller
             ->where('ucrea_student_result_id', $id)
             ->get();
 
+        $relatedResults = DB::table('ucrea_student_results')
+            ->leftJoin('ucrea_tests', function($join) {
+                $join->on('ucrea_student_results.test_cd', '=', 'ucrea_tests.test_cd')
+                     ->on('ucrea_student_results.level_cd', '=', 'ucrea_tests.level_cd')
+                     ->on('ucrea_student_results.test_seq', '=', 'ucrea_tests.test_seq');
+            })
+            ->where('ucrea_student_results.stu_nm', $result->stu_nm)
+            ->where('ucrea_student_results.level_cd', $result->level_cd)
+            ->whereIn('ucrea_student_results.result_cd', ['IS002', 'IS003', 'IS004'])
+            ->select('ucrea_student_results.id', 'ucrea_student_results.test_cd', 'ucrea_student_results.report_data', 'ucrea_tests.test_nm')
+            ->get();
+
         return response()->json([
             'status' => 'success',
             'data' => [
                 'general' => $result,
-                'rubrics' => $details
+                'rubrics' => $details,
+                'related_results' => $relatedResults
             ]
         ]);
     }

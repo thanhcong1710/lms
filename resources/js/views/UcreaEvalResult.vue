@@ -102,7 +102,24 @@
           </div>
 
           <!-- 2. Kết quả đánh giá -->
-          <h2 class="text-base font-extrabold text-[#1b3664] mb-4 border-b-2 border-[#1b3664] pb-1">Kết quả đánh giá</h2>
+          <div class="flex flex-col md:flex-row md:items-center justify-between border-b-2 border-[#1b3664] pb-1 mb-4 print:border-b-2">
+            <h2 class="text-base font-extrabold text-[#1b3664] mb-0 border-none pb-0">Kết quả đánh giá</h2>
+            
+            <!-- Checkboxes for related tests -->
+            <div class="flex items-center gap-4 text-[11px] font-bold text-gray-700 mt-2 md:mt-0 print:hidden">
+              <label v-for="t in allTests" :key="t.test_cd" 
+                     class="flex items-center gap-1.5" 
+                     :class="{ 'cursor-pointer': t.hasData && !t.isCurrent, 'opacity-40 cursor-not-allowed': !t.hasData, 'cursor-not-allowed': t.isCurrent }">
+                <input type="checkbox" 
+                       :value="t.dataId" 
+                       v-model="selectedTestIds" 
+                       @change="initCharts" 
+                       :disabled="!t.hasData || t.isCurrent"
+                       class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 disabled:opacity-70">
+                <span class="uppercase">{{ t.name }}</span>
+              </label>
+            </div>
+          </div>
           
           <!-- Tư duy cơ bản -->
           <div class="grid-section grid grid-cols-12 gap-4 mb-8 items-center">
@@ -351,10 +368,44 @@ export default {
     return {
       result: null,
       loading: true,
-      charts: []
+      charts: [],
+      selectedTestIds: []
     }
   },
   computed: {
+    availableTests() {
+      if (!this.result || !this.result.related_results) return [];
+      return this.result.related_results.map(r => {
+        let rd = {};
+        try { rd = JSON.parse(r.report_data); } catch(e) {}
+        return {
+          id: r.id,
+          test_cd: r.test_cd, // TT001, TT002, TT003
+          name: rd.name || r.test_nm,
+          reportData: rd
+        };
+      }).sort((a,b) => {
+        return a.test_cd.localeCompare(b.test_cd);
+      });
+    },
+    allTests() {
+      const types = [
+        { test_cd: 'TT001', name: 'Đầu kỳ' },
+        { test_cd: 'TT002', name: 'Giữa kỳ' },
+        { test_cd: 'TT003', name: 'Cuối kỳ' }
+      ];
+
+      return types.map(type => {
+        const found = this.availableTests.find(t => t.test_cd === type.test_cd);
+        return {
+          test_cd: type.test_cd,
+          name: type.name,
+          hasData: !!found,
+          dataId: found ? found.id : null,
+          isCurrent: found && this.result && found.id == this.result.general.id
+        };
+      });
+    },
     reportData() {
       if (!this.result || !this.result.general.report_data) return {};
       try {
@@ -390,6 +441,10 @@ export default {
         });
         if (response.data.status === 'success') {
           this.result = response.data.data;
+          
+          // Select all tests by default
+          this.selectedTestIds = this.availableTests.map(t => t.id);
+
           this.loading = false;
           this.$nextTick(() => {
             this.initCharts();
@@ -438,8 +493,21 @@ export default {
       });
     },
     initCharts() {
-      const rd = this.reportData;
-      if(!rd.name) return;
+      const selectedData = this.availableTests.filter(t => this.selectedTestIds.includes(t.id));
+      if (selectedData.length === 0) {
+          // Could clear charts, but we leave it.
+          return;
+      }
+
+      const getColor = (test_cd) => {
+          if (test_cd === 'TT001') return '#cccccc'; // Đầu kỳ
+          if (test_cd === 'TT002') return '#003366'; // Giữa kỳ
+          if (test_cd === 'TT003') return '#8cc63f'; // Cuối kỳ
+          return '#dc3545';
+      };
+
+      const legendData = selectedData.map(t => t.name);
+      const legendTopRight = { top: 0, right: 0, data: legendData, itemGap: 5, itemWidth: 15, itemHeight: 10, textStyle: { fontSize: 10, color: '#666' } };
 
       const commonOpts = {
         grid: { top: 30, bottom: 25, left: 25, right: 5 },
@@ -449,67 +517,104 @@ export default {
         animation: false
       };
 
-      const legendTopRight = { top: 0, right: 0, data: [rd.name, 'Giữa kỳ', 'Cuối kỳ'], itemGap: 5, itemWidth: 15, itemHeight: 10, textStyle: { fontSize: 10, color: '#666' } };
-
       // 1. Tư duy cơ bản
-      const c1 = echarts.init(this.$refs.chart1);
+      const c1 = echarts.getInstanceByDom(this.$refs.chart1) || echarts.init(this.$refs.chart1);
       c1.setOption({
         ...commonOpts,
         title: { text: 'Tư duy cơ bản', left: 'center', textStyle: { fontSize: 13, color: '#333', fontWeight: 'bold' } },
         legend: legendTopRight,
         xAxis: { ...commonOpts.xAxis, data: ['Năng lực\nchú ý', 'Năng lực\nquan sát', 'Năng lực\nghi nhớ'] },
-        series: [{ name: rd.name, type: 'bar', data: [rd.sk11, rd.sk12, rd.sk13], barMaxWidth: 20, itemStyle: { color: '#dc3545' } }]
-      });
+        series: selectedData.map(t => ({
+          name: t.name,
+          type: 'bar',
+          data: [t.reportData.sk11, t.reportData.sk12, t.reportData.sk13],
+          barMaxWidth: 20,
+          itemStyle: { color: getColor(t.test_cd) }
+        }))
+      }, true);
 
       // 2. Tư duy toán học
-      const c2 = echarts.init(this.$refs.chart2);
+      const c2 = echarts.getInstanceByDom(this.$refs.chart2) || echarts.init(this.$refs.chart2);
       c2.setOption({
         ...commonOpts,
         title: { text: 'Tư duy toán học', left: 'center', textStyle: { fontSize: 13, color: '#333', fontWeight: 'bold' } },
         legend: legendTopRight,
         xAxis: { ...commonOpts.xAxis, data: ['Số và\ntính toán', 'Hình học\nkhông gian', 'Đo lường', 'Kiểu mẫu'] },
-        series: [{ name: rd.name, type: 'bar', data: [rd.kn11, rd.kn12, rd.kn13, rd.kn14], barMaxWidth: 20, itemStyle: { color: '#dc3545' } }]
-      });
+        series: selectedData.map(t => ({
+          name: t.name,
+          type: 'bar',
+          data: [t.reportData.kn11, t.reportData.kn12, t.reportData.kn13, t.reportData.kn14],
+          barMaxWidth: 20,
+          itemStyle: { color: getColor(t.test_cd) }
+        }))
+      }, true);
 
       // 3. Tư duy logic
-      const c3 = echarts.init(this.$refs.chart3);
+      const c3 = echarts.getInstanceByDom(this.$refs.chart3) || echarts.init(this.$refs.chart3);
       c3.setOption({
         ...commonOpts,
         title: { text: 'Tư duy logic', left: 'center', textStyle: { fontSize: 13, color: '#333', fontWeight: 'bold' } },
         legend: legendTopRight,
         xAxis: { ...commonOpts.xAxis, data: ['Hiểu biết', 'Ứng dụng', 'Phân tích', 'Tổng hợp'] },
-        series: [{ name: rd.name, type: 'bar', data: [rd.sk21, rd.sk22, rd.sk23, rd.sk24], barMaxWidth: 20, itemStyle: { color: '#dc3545' } }]
-      });
+        series: selectedData.map(t => ({
+          name: t.name,
+          type: 'bar',
+          data: [t.reportData.sk21, t.reportData.sk22, t.reportData.sk23, t.reportData.sk24],
+          barMaxWidth: 20,
+          itemStyle: { color: getColor(t.test_cd) }
+        }))
+      }, true);
 
       // 4. Tư duy sáng tạo
-      const c4 = echarts.init(this.$refs.chart4);
+      const c4 = echarts.getInstanceByDom(this.$refs.chart4) || echarts.init(this.$refs.chart4);
       c4.setOption({
         ...commonOpts,
         title: { text: 'Tư duy sáng tạo', left: 'center', textStyle: { fontSize: 13, color: '#333', fontWeight: 'bold' } },
         legend: legendTopRight,
         xAxis: { ...commonOpts.xAxis, data: ['Sự trôi\nchảy', 'Tính linh\nhoạt', 'Tính độc\nđáo', 'Tính chính\nxác'] },
-        series: [{ name: rd.name, type: 'bar', data: [rd.sk31, rd.sk32, rd.sk33, rd.sk34], barMaxWidth: 20, itemStyle: { color: '#dc3545' } }]
-      });
+        series: selectedData.map(t => ({
+          name: t.name,
+          type: 'bar',
+          data: [t.reportData.sk31, t.reportData.sk32, t.reportData.sk33, t.reportData.sk34],
+          barMaxWidth: 20,
+          itemStyle: { color: getColor(t.test_cd) }
+        }))
+      }, true);
 
       // 5. Đánh giá tổng quát
-      const cOverall = echarts.init(this.$refs.chartOverall);
-      const avg1 = Math.round((Number(rd.sk11 || 0) + Number(rd.sk12 || 0) + Number(rd.sk13 || 0)) / 3);
-      const avg2 = Math.round((Number(rd.kn11 || 0) + Number(rd.kn12 || 0) + Number(rd.kn13 || 0) + Number(rd.kn14 || 0)) / 4);
-      const avg3 = Math.round((Number(rd.sk21 || 0) + Number(rd.sk22 || 0) + Number(rd.sk23 || 0) + Number(rd.sk24 || 0)) / 4);
-      const avg4 = Math.round((Number(rd.sk31 || 0) + Number(rd.sk32 || 0) + Number(rd.sk33 || 0) + Number(rd.sk34 || 0)) / 4);
+      const cOverall = echarts.getInstanceByDom(this.$refs.chartOverall) || echarts.init(this.$refs.chartOverall);
       
-      const stuName = this.result.general.stu_nm || 'Học sinh';
+      const overallSeries = selectedData.map(t => {
+        const rd = t.reportData;
+        const avg1 = Math.round((Number(rd.sk11 || 0) + Number(rd.sk12 || 0) + Number(rd.sk13 || 0)) / 3);
+        const avg2 = Math.round((Number(rd.kn11 || 0) + Number(rd.kn12 || 0) + Number(rd.kn13 || 0) + Number(rd.kn14 || 0)) / 4);
+        const avg3 = Math.round((Number(rd.sk21 || 0) + Number(rd.sk22 || 0) + Number(rd.sk23 || 0) + Number(rd.sk24 || 0)) / 4);
+        const avg4 = Math.round((Number(rd.sk31 || 0) + Number(rd.sk32 || 0) + Number(rd.sk33 || 0) + Number(rd.sk34 || 0)) / 4);
+        return {
+          name: t.name,
+          type: 'bar',
+          data: [avg1, avg2, avg3, avg4],
+          barMaxWidth: 20,
+          itemStyle: { color: getColor(t.test_cd) }
+        };
+      });
+      
+      // Keep average line/bar
+      overallSeries.push({
+         name: 'Bình quân tất cả HS', 
+         type: 'bar', 
+         data: [66, 71, 69, 61], 
+         barMaxWidth: 20, 
+         itemStyle: { color: '#f39c12' }
+      });
 
       cOverall.setOption({
         ...commonOpts,
         title: { text: 'Bình quân tổng quát', left: 'center', textStyle: { fontSize: 13, color: '#333', fontWeight: 'bold' } },
-        legend: { top: 0, right: 0, data: [stuName, 'Bình quân tất cả HS'], itemGap: 5, itemWidth: 15, itemHeight: 10, textStyle: { fontSize: 10, color: '#666' } },
+        legend: { top: 0, right: 0, data: [...legendData, 'Bình quân tất cả HS'], itemGap: 5, itemWidth: 15, itemHeight: 10, textStyle: { fontSize: 10, color: '#666' } },
         xAxis: { ...commonOpts.xAxis, data: ['Tư duy\ncơ bản', 'Tư duy\ntoán học', 'Tư duy\nlogic', 'Tư duy\nsáng tạo'] },
-        series: [
-          { name: stuName, type: 'bar', data: [avg1, avg2, avg3, avg4], barMaxWidth: 20, itemStyle: { color: '#dc3545' } },
-          { name: 'Bình quân tất cả HS', type: 'bar', data: [66, 71, 69, 61], barMaxWidth: 20, itemStyle: { color: '#cccccc' } }
-        ]
-      });
+        series: overallSeries
+      }, true);
 
       this.charts = [c1, c2, c3, c4, cOverall];
       
