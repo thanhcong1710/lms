@@ -193,10 +193,88 @@ class IgbhWeeklyEvaluationController extends Controller
                     'created_at' => now(),
                     'updated_at' => now(),
                 ];
+
+                // Sync with summative results so it shows up in Summative list
+                $summativeExists = DB::table('igbh_summative_results')
+                    ->where('test_seq', $eval->test_seq)
+                    ->where('stu_seq', $student['stu_seq'])
+                    ->first();
+
+                if (!$summativeExists) {
+                    $summativeId = DB::table('igbh_summative_results')->insertGetId([
+                        'test_seq' => $eval->test_seq,
+                        'stu_seq' => $student['stu_seq'],
+                        'stu_nm' => $student['stu_nm'] ?? null,
+                        'class_seq' => $eval->class_seq,
+                        'class_nm' => $eval->class_nm,
+                        'teacher_nm' => $eval->teacher_nm ?? null,
+                        'total_score' => 0,
+                        'eval_dt' => $eval->eval_ymd,
+                        'status' => 'D',
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ]);
+                } else {
+                    $summativeId = $summativeExists->id;
+                    DB::table('igbh_summative_results')
+                        ->where('id', $summativeId)
+                        ->update([
+                            'stu_nm' => $student['stu_nm'] ?? null,
+                            'class_seq' => $eval->class_seq,
+                            'class_nm' => $eval->class_nm,
+                            'teacher_nm' => $eval->teacher_nm ?? null,
+                            'eval_dt' => $eval->eval_ymd,
+                            'updated_at' => now(),
+                        ]);
+                }
+
+                $studentUpdates[] = [
+                    'stu_seq' => $student['stu_seq'],
+                    'summativeId' => $summativeId
+                ];
             }
 
             if (!empty($insertData)) {
                 DB::table('igbh_weekly_eval_details')->insert($insertData);
+            }
+
+            // Recalculate total_score after inserting details
+            if (!empty($studentUpdates)) {
+                foreach ($studentUpdates as $su) {
+                    $allWeeks = DB::table('igbh_weekly_eval_details as d')
+                        ->join('igbh_weekly_evals as e', 'd.weekly_eval_id', '=', 'e.id')
+                        ->where('e.test_seq', $eval->test_seq)
+                        ->where('d.stu_seq', $su['stu_seq'])
+                        ->get();
+
+                    $totalWorkbook = 0;
+                    $sumAttitude = 0;
+                    $sumDetection = 0;
+                    $weekCount = $allWeeks->count();
+
+                    if ($weekCount > 0) {
+                        foreach ($allWeeks as $w) {
+                            $totalWorkbook += $w->workbook;
+                            $sumAttitude += ($w->attd_listen + $w->attd_join + $w->attd_express + $w->attd_coop);
+                            $sumDetection += ($w->detect_normal + $w->detect_leadersh + $w->detect_math + $w->detect_creative);
+                        }
+                        $avgAttitude = ($sumAttitude / $weekCount) / 4 * 2;
+                        $avgDetection = ($sumDetection / $weekCount) / 4 * 2;
+                    } else {
+                        $avgAttitude = 0;
+                        $avgDetection = 0;
+                    }
+
+                    $subjectiveScore = DB::table('igbh_summative_result_details')
+                        ->where('summative_result_id', $su['summativeId'])
+                        ->sum('score');
+
+                    $finalTotalScore = round($totalWorkbook + $avgAttitude + $avgDetection + $subjectiveScore, 1);
+
+                    DB::table('igbh_summative_results')
+                        ->where('id', $su['summativeId'])
+                        ->update(['total_score' => $finalTotalScore]);
+                }
             }
 
             DB::commit();

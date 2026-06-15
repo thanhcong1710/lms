@@ -59,3 +59,5 @@ Route::post('/igbh/weekly/results/{id}/grade', [\App\Http\Controllers\Api\IgbhWe
 
 Route::get('/igbh/summative/results', [\App\Http\Controllers\Api\IgbhSummativeEvaluationController::class, 'getResults']);
 Route::get('/igbh/summative/results/{id}', [\App\Http\Controllers\Api\IgbhSummativeEvaluationController::class, 'getReport']);
+Route::get('/igbh/summative/form-data/{id}', [\App\Http\Controllers\Api\IgbhSummativeEvaluationController::class, 'getFormData']);
+Route::post('/igbh/summative/save/{id}', [\App\Http\Controllers\Api\IgbhSummativeEvaluationController::class, 'saveFormData']);

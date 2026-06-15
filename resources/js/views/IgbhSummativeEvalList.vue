@@ -64,6 +64,15 @@
             <td class="px-6 py-4 text-right sticky right-0 bg-brand-bg z-10 border-l border-brand-border shadow-[-4px_0_10px_rgba(0,0,0,0.1)] group-hover:bg-brand-card transition-colors">
               <div class="flex justify-end items-center gap-2">
                 <router-link 
+                  :to="{ name: 'igbh-summative-eval-form', params: { id: item.id } }"
+                  :title="$t('common.edit')"
+                  class="inline-flex items-center justify-center p-2 rounded-lg bg-blue-600 hover:bg-blue-500 text-white transition shadow-lg shadow-blue-600/30"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                  </svg>
+                </router-link>
+                <router-link 
                   :to="{ name: 'igbh-summative-eval-report', params: { id: item.id } }"
                   :title="$t('igbh.actions.view_report')"
                   class="inline-flex items-center justify-center p-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white transition shadow-lg shadow-emerald-600/30"
