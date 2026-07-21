@@ -14,6 +14,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\OptionsController;
 use App\Http\Controllers\Api\UcreaEvaluationController;
 use App\Http\Controllers\Api\IgbhEvaluationController;
+use App\Http\Controllers\IntegrationController;
 
 Route::post('/login', [AuthController::class, 'login']);
 Route::get('/me', [AuthController::class, 'me']);
@@ -61,3 +62,15 @@ Route::get('/igbh/summative/results', [\App\Http\Controllers\Api\IgbhSummativeEv
 Route::get('/igbh/summative/results/{id}', [\App\Http\Controllers\Api\IgbhSummativeEvaluationController::class, 'getReport']);
 Route::get('/igbh/summative/form-data/{id}', [\App\Http\Controllers\Api\IgbhSummativeEvaluationController::class, 'getFormData']);
 Route::post('/igbh/summative/save/{id}', [\App\Http\Controllers\Api\IgbhSummativeEvaluationController::class, 'saveFormData']);
+
+Route::prefix('v1')->group(function () {
+    Route::post('auth/sys/token.do', [IntegrationController::class, 'getToken']);
+    Route::post('user/centerRegAction.do', [IntegrationController::class, 'centerRegAction']);
+    Route::post('user/centerModAction.do', [IntegrationController::class, 'centerModAction']);
+    Route::post('user/teacherRegAction.do', [IntegrationController::class, 'teacherRegAction']);
+    Route::post('user/teacherModAction.do', [IntegrationController::class, 'teacherModAction']);
+    Route::post('cntr/classRegAction.do', [IntegrationController::class, 'classRegAction']);
+    Route::post('cntr/classModAction.do', [IntegrationController::class, 'classModAction']);
+    Route::post('cntr/studentRegAction.do', [IntegrationController::class, 'studentRegAction']);
+    Route::post('cntr/studentModAction.do', [IntegrationController::class, 'studentModAction']);
+});
