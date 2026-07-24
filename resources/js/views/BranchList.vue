@@ -37,8 +37,8 @@
             <td class="px-6 py-4">{{ branch.email || 'N/A' }}</td>
             <td class="px-6 py-4">{{ branch.hotline || 'N/A' }}</td>
             <td class="px-6 py-4">
-              <span :class="branch.status === 'US001' ? 'bg-green-500/10 text-green-400 border border-green-500/20' : 'bg-red-500/10 text-red-400 border border-red-500/20'" class="px-2.5 py-1 rounded-full text-xs font-medium uppercase">
-                {{ branch.status === 'US001' ? $t('common.active') : $t('common.inactive') }}
+              <span :class="isBranchActive(branch.status) ? 'bg-green-500/10 text-green-400 border border-green-500/20' : 'bg-red-500/10 text-red-400 border border-red-500/20'" class="px-2.5 py-1 rounded-full text-xs font-medium uppercase">
+                {{ isBranchActive(branch.status) ? $t('common.active') : $t('common.inactive') }}
               </span>
             </td>
             <td class="px-6 py-4 text-right space-x-2">
@@ -136,10 +136,13 @@ export default {
   computed: {
     filteredBranches() {
       const q = this.search.toLowerCase();
-      return this.branches.filter(b => b.name.toLowerCase().includes(q) || b.id_lms.toLowerCase().includes(q));
+      return this.branches.filter(b => b.name.toLowerCase().includes(q) || (b.id_lms && b.id_lms.toLowerCase().includes(q)));
     }
   },
   methods: {
+    isBranchActive(status) {
+      return status == 1 || status === '1' || status === 'US001' || status === 'active';
+    },
     async fetchBranches(page = 1) {
       try {
         const response = await axios.get('/api/branches', {
@@ -177,25 +180,41 @@ export default {
     openModal(branch = null) {
       if (branch) {
         this.editingId = branch.id;
-        this.form = { ...branch };
+        this.form = {
+          ...branch,
+          status: this.isBranchActive(branch.status) ? 'US001' : 'US002'
+        };
       } else {
         this.editingId = null;
         this.form = { name: '', id_lms: '', email: '', hotline: '', status: 'US001' };
       }
       this.showModal = true;
     },
-    saveBranch() {
-      if (this.editingId) {
-        const idx = this.branches.findIndex(b => b.id === this.editingId);
-        this.branches[idx] = { ...this.form, id: this.editingId };
-      } else {
-        this.branches.push({ ...this.form, id: Date.now() });
+    async saveBranch() {
+      try {
+        const token = localStorage.getItem('token');
+        const headers = token ? { Authorization: `Bearer ${token}` } : {};
+        if (this.editingId) {
+          await axios.put(`/api/branches/${this.editingId}`, this.form, { headers });
+        } else {
+          await axios.post('/api/branches', this.form, { headers });
+        }
+        this.showModal = false;
+        await this.fetchBranches(this.pagination.current_page);
+      } catch (error) {
+        console.error("Error saving branch", error);
       }
-      this.showModal = false;
     },
-    deleteBranch(id) {
-      if (confirm('Are you sure you want to delete this branch?')) {
-        this.branches = this.branches.filter(b => b.id !== id);
+    async deleteBranch(id) {
+      if (confirm('Bạn có chắc chắn muốn xóa cơ sở này?')) {
+        try {
+          const token = localStorage.getItem('token');
+          const headers = token ? { Authorization: `Bearer ${token}` } : {};
+          await axios.delete(`/api/branches/${id}`, { headers });
+          await this.fetchBranches(this.pagination.current_page);
+        } catch (error) {
+          console.error("Error deleting branch", error);
+        }
       }
     }
   }

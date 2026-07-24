@@ -7,18 +7,40 @@ use App\Models\Branch;
 
 class BranchController extends Controller
 {
-        public function index(Request $request)
+    public function index(Request $request)
     {
         $limit = $request->query('per_page', 20);
         if (!in_array($limit, [20, 50, 100])) {
             $limit = 20;
         }
-        return response()->json(Branch::paginate($limit));
+
+        $query = Branch::query();
+
+        if ($search = $request->query('search')) {
+            $search = trim($search);
+            if (!empty($search)) {
+                $query->where(function ($q) use ($search) {
+                    $q->where('name', 'like', "%{$search}%")
+                      ->orWhere('id_lms', 'like', "%{$search}%")
+                      ->orWhere('email', 'like', "%{$search}%");
+                });
+            }
+        }
+
+        return response()->json($query->paginate($limit));
     }
 
     public function store(Request $request)
     {
-        $branch = Branch::create($request->all());
+        $validated = $request->validate([
+            'name' => 'required|string',
+            'id_lms' => 'nullable|string',
+            'email' => 'nullable|email',
+            'hotline' => 'nullable|string',
+            'status' => 'nullable|string',
+        ]);
+
+        $branch = Branch::create($validated);
         return response()->json($branch, 201);
     }
 
@@ -30,7 +52,15 @@ class BranchController extends Controller
     public function update(Request $request, $id)
     {
         $branch = Branch::findOrFail($id);
-        $branch->update($request->all());
+        $validated = $request->validate([
+            'name' => 'sometimes|required|string',
+            'id_lms' => 'nullable|string',
+            'email' => 'nullable|email',
+            'hotline' => 'nullable|string',
+            'status' => 'nullable|string',
+        ]);
+
+        $branch->update($validated);
         return response()->json($branch);
     }
 
@@ -40,3 +70,4 @@ class BranchController extends Controller
         return response()->json(['message' => 'Deleted successfully']);
     }
 }
+

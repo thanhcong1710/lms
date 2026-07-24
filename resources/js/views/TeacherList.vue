@@ -38,13 +38,13 @@
             <td class="px-6 py-4">{{ teacher.branch_id_lms || 'N/A' }}</td>
             <td class="px-6 py-4">{{ teacher.email }}</td>
             <td class="px-6 py-4">
-              <span :class="teacher.head === 'Y' ? 'text-indigo-400 bg-indigo-500/10' : 'text-brand-desc bg-gray-500/10'" class="px-2 py-0.5 rounded text-xs font-semibold">
-                {{ teacher.head === 'Y' ? $t('teachers.form.yes') : $t('teachers.form.no') }}
+              <span :class="isHeadTeacher(teacher.head) ? 'text-indigo-400 bg-indigo-500/10' : 'text-brand-desc bg-gray-500/10'" class="px-2 py-0.5 rounded text-xs font-semibold">
+                {{ isHeadTeacher(teacher.head) ? $t('teachers.form.yes') : $t('teachers.form.no') }}
               </span>
             </td>
             <td class="px-6 py-4">
-              <span :class="teacher.status === 'US001' ? 'bg-green-500/10 text-green-400 border border-green-500/20' : 'bg-red-500/10 text-red-400 border border-red-500/20'" class="px-2.5 py-1 rounded-full text-xs font-medium uppercase">
-                {{ teacher.status === 'US001' ? $t('common.active') : $t('common.inactive') }}
+              <span :class="isTeacherActive(teacher.status) ? 'bg-green-500/10 text-green-400 border border-green-500/20' : 'bg-red-500/10 text-red-400 border border-red-500/20'" class="px-2.5 py-1 rounded-full text-xs font-medium uppercase">
+                {{ isTeacherActive(teacher.status) ? $t('common.active') : $t('common.inactive') }}
               </span>
             </td>
             <td class="px-6 py-4 text-right space-x-2">
@@ -162,10 +162,16 @@ export default {
   computed: {
     filteredTeachers() {
       const q = this.search.toLowerCase();
-      return this.teachers.filter(t => t.ins_name.toLowerCase().includes(q) || t.id_lms.toLowerCase().includes(q));
+      return this.teachers.filter(t => t.ins_name.toLowerCase().includes(q) || (t.id_lms && t.id_lms.toLowerCase().includes(q)));
     }
   },
   methods: {
+    isHeadTeacher(head) {
+      return head === 'Y' || head == 1 || head === '1' || head === true;
+    },
+    isTeacherActive(status) {
+      return status == 1 || status === '1' || status === 'US001' || status === 'active';
+    },
     async fetchTeachers(page = 1) {
       try {
         const response = await axios.get('/api/teachers', {
@@ -209,25 +215,42 @@ export default {
     openModal(teacher = null) {
       if (teacher) {
         this.editingId = teacher.id;
-        this.form = { ...teacher };
+        this.form = {
+          ...teacher,
+          head: this.isHeadTeacher(teacher.head) ? 'Y' : 'N',
+          status: this.isTeacherActive(teacher.status) ? 'US001' : 'US002'
+        };
       } else {
         this.editingId = null;
         this.form = { ins_name: '', id_lms: '', branch_id_lms: '', email: '', phone: '', head: 'N', status: 'US001' };
       }
       this.showModal = true;
     },
-    saveTeacher() {
-      if (this.editingId) {
-        const idx = this.teachers.findIndex(t => t.id === this.editingId);
-        this.teachers[idx] = { ...this.form, id: this.editingId };
-      } else {
-        this.teachers.push({ ...this.form, id: Date.now() });
+    async saveTeacher() {
+      try {
+        const token = localStorage.getItem('token');
+        const headers = token ? { Authorization: `Bearer ${token}` } : {};
+        if (this.editingId) {
+          await axios.put(`/api/teachers/${this.editingId}`, this.form, { headers });
+        } else {
+          await axios.post('/api/teachers', this.form, { headers });
+        }
+        this.showModal = false;
+        await this.fetchTeachers(this.pagination.current_page);
+      } catch (error) {
+        console.error("Error saving teacher", error);
       }
-      this.showModal = false;
     },
-    deleteTeacher(id) {
-      if (confirm('Are you sure you want to delete this teacher?')) {
-        this.teachers = this.teachers.filter(t => t.id !== id);
+    async deleteTeacher(id) {
+      if (confirm('Bạn có chắc chắn muốn xóa giáo viên này?')) {
+        try {
+          const token = localStorage.getItem('token');
+          const headers = token ? { Authorization: `Bearer ${token}` } : {};
+          await axios.delete(`/api/teachers/${id}`, { headers });
+          await this.fetchTeachers(this.pagination.current_page);
+        } catch (error) {
+          console.error("Error deleting teacher", error);
+        }
       }
     }
   }

@@ -39,11 +39,23 @@ class TeacherController extends Controller
 
     public function store(Request $request)
     {
-        $teacher = Teacher::create($request->all());
+        $validated = $request->validate([
+            'ins_name' => 'required|string',
+            'id_lms' => 'required|string',
+            'branch_id_lms' => 'nullable|string',
+            'email' => 'nullable|email',
+            'phone' => 'nullable|string',
+            'head' => 'nullable|string',
+            'status' => 'nullable|string',
+            'remark' => 'nullable|string',
+        ]);
+
+        $teacher = Teacher::create($validated);
 
         // Automatically create a user account for the teacher
         $username = $request->id_lms;
         $email = $request->email ?: $username . '@lms.local';
+        $isHead = $request->head === 'Y' || $request->head == 1;
 
         // Only create if user doesn't already exist
         $existingUser = User::where('email', $email)->orWhere('name', $username)->first();
@@ -52,7 +64,7 @@ class TeacherController extends Controller
                 'name' => $username,
                 'email' => $email,
                 'password' => Hash::make('@12345678'),
-                'role' => 'teacher',
+                'role' => $isHead ? 'team_leader' : 'teacher',
                 'teacher_id' => $teacher->id,
                 'branch_id' => null,
                 'status' => 1,
@@ -71,7 +83,26 @@ class TeacherController extends Controller
     public function update(Request $request, $id)
     {
         $teacher = Teacher::findOrFail($id);
-        $teacher->update($request->all());
+        $validated = $request->validate([
+            'ins_name' => 'sometimes|required|string',
+            'id_lms' => 'nullable|string',
+            'branch_id_lms' => 'nullable|string',
+            'email' => 'nullable|email',
+            'phone' => 'nullable|string',
+            'head' => 'nullable|string',
+            'status' => 'nullable|string',
+            'remark' => 'nullable|string',
+        ]);
+
+        $teacher->update($validated);
+
+        if ($teacher->user_id) {
+            $isHead = $teacher->head === 'Y' || $teacher->head == 1;
+            User::where('id', $teacher->user_id)->update([
+                'role' => $isHead ? 'team_leader' : 'teacher',
+            ]);
+        }
+
         return response()->json($teacher);
     }
 
@@ -81,3 +112,4 @@ class TeacherController extends Controller
         return response()->json(['message' => 'Deleted successfully']);
     }
 }
+
