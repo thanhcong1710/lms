@@ -154,29 +154,30 @@ class IntegrationController extends Controller
 
     public function classRegAction(Request $request)
     {
+        $branch = Branch::where('id_lms', $request->input('cntrId'))->first();
+        $teacher = Teacher::where('id_lms', $request->input('clsTch'))->first();
+
         $classLms = LmsClass::where('cls_name', $request->input('clsNm'))
                             ->where('branch_id_lms', $request->input('cntrId'))
                             ->first();
 
-        if (!$classLms) {
-            $classLms = LmsClass::create([
-                'cls_name' => $request->input('clsNm'),
-                'teacher_id_lms' => $request->input('clsTch'),
-                'level_name' => $request->input('clsLevel'),
-                'cls_status' => $request->input('clsStat') == 'US001' ? 'US001' : 'US002',
-                'cls_type' => $request->input('clsType'),
-                'branch_id_lms' => $request->input('cntrId'),
-            ]);
+        $classData = [
+            'cls_name' => $request->input('clsNm'),
+            'teacher_id_lms' => $request->input('clsTch'),
+            'teacher_id' => $teacher ? $teacher->id : null,
+            'level_name' => $request->input('clsLevel'),
+            'cls_status' => $request->input('clsStat') == 'US001' ? 'US001' : 'US002',
+            'cls_type' => $request->input('clsType'),
+            'branch_id_lms' => $request->input('cntrId'),
+            'branch_id' => $branch ? $branch->id : null,
+        ];
 
+        if (!$classLms) {
+            $classLms = LmsClass::create($classData);
             $classLms->class_seq = $classLms->id;
             $classLms->save();
         } else {
-            $classLms->update([
-                'teacher_id_lms' => $request->input('clsTch'),
-                'level_name' => $request->input('clsLevel'),
-                'cls_status' => $request->input('clsStat') == 'US001' ? 'US001' : 'US002',
-                'cls_type' => $request->input('clsType'),
-            ]);
+            $classLms->update($classData);
         }
 
         return response()->json([
@@ -189,6 +190,9 @@ class IntegrationController extends Controller
 
     public function classModAction(Request $request)
     {
+        $branch = Branch::where('id_lms', $request->input('cntrId'))->first();
+        $teacher = Teacher::where('id_lms', $request->input('clsTch'))->first();
+
         $classSeq = $request->input('classSeq');
         $classLms = null;
         if ($classSeq) {
@@ -200,26 +204,22 @@ class IntegrationController extends Controller
                                 ->first();
         }
 
+        $classData = [
+            'cls_name' => $request->input('clsNm'),
+            'pre_teacher_id_lms' => $request->input('prevClsTch'),
+            'teacher_id_lms' => $request->input('clsTch'),
+            'teacher_id' => $teacher ? $teacher->id : null,
+            'level_name' => $request->input('clsLevel'),
+            'cls_status' => $request->input('clsStat') == 'US001' ? 'US001' : 'US002',
+            'cls_type' => $request->input('clsType'),
+            'branch_id_lms' => $request->input('cntrId'),
+            'branch_id' => $branch ? $branch->id : null,
+        ];
+
         if ($classLms) {
-            $classLms->update([
-                'cls_name' => $request->input('clsNm'),
-                'pre_teacher_id_lms' => $request->input('prevClsTch'),
-                'teacher_id_lms' => $request->input('clsTch'),
-                'level_name' => $request->input('clsLevel'),
-                'cls_status' => $request->input('clsStat') == 'US001' ? 'US001' : 'US002',
-                'cls_type' => $request->input('clsType'),
-                'branch_id_lms' => $request->input('cntrId'),
-            ]);
+            $classLms->update($classData);
         } else {
-            $classLms = LmsClass::create([
-                'cls_name' => $request->input('clsNm'),
-                'teacher_id_lms' => $request->input('clsTch'),
-                'pre_teacher_id_lms' => $request->input('prevClsTch'),
-                'level_name' => $request->input('clsLevel'),
-                'cls_status' => $request->input('clsStat') == 'US001' ? 'US001' : 'US002',
-                'cls_type' => $request->input('clsType'),
-                'branch_id_lms' => $request->input('cntrId'),
-            ]);
+            $classLms = LmsClass::create($classData);
             $classLms->class_seq = $classLms->id;
             $classLms->save();
         }

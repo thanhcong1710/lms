@@ -20,6 +20,14 @@ class IgbhEvaluationController extends Controller
             ->leftJoin('igbh_tests', 'igbh_student_results.test_seq', '=', 'igbh_tests.test_seq')
             ->select('igbh_student_results.*', 'igbh_tests.test_nm');
 
+        // Role-based filtering
+        $user = \App\Http\Controllers\AuthController::resolveUser($request);
+        if ($user && !$user->isAdmin()) {
+            $studentQuery = $user->scopeStudents(\App\Models\Student::query());
+            $studentNames = $studentQuery->pluck('name')->toArray();
+            $query->whereIn('igbh_student_results.stu_nm', $studentNames);
+        }
+
         // Search logic
         if (!empty($search)) {
             $query->where(function($q) use ($search) {
@@ -205,10 +213,26 @@ class IgbhEvaluationController extends Controller
     /**
      * Get initial data for dialog creation.
      */
-    public function getInitData()
+    public function getInitData(Request $request)
     {
-        $students = DB::table('students')->select('id', 'name')->orderBy('name')->get();
-        $teachers = DB::table('teachers')->select('id', 'ins_name as name')->orderBy('ins_name')->get();
+        $user = \App\Http\Controllers\AuthController::resolveUser($request);
+        $studentQuery = \App\Models\Student::query();
+        $teacherQuery = \App\Models\Teacher::query();
+
+        if ($user) {
+            $user->scopeStudents($studentQuery);
+            if ($user->isTeacher() && $user->teacher_id) {
+                $teacherQuery->where('id', $user->teacher_id);
+            } elseif ($user->isTeamLeader()) {
+                $branchIds = $user->getAccessibleBranchLmsIds();
+                if ($branchIds !== null) {
+                    $teacherQuery->whereIn('branch_id_lms', $branchIds);
+                }
+            }
+        }
+
+        $students = $studentQuery->select('id', 'name')->orderBy('name')->get();
+        $teachers = $teacherQuery->select('id', 'ins_name as name')->orderBy('ins_name')->get();
         $tests = DB::table('igbh_tests')->orderBy('test_nm')->get();
 
         return response()->json([

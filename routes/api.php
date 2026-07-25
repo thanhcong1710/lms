@@ -15,9 +15,11 @@ use App\Http\Controllers\OptionsController;
 use App\Http\Controllers\Api\UcreaEvaluationController;
 use App\Http\Controllers\Api\IgbhEvaluationController;
 use App\Http\Controllers\IntegrationController;
+use App\Http\Controllers\DashboardController;
 
 Route::post('/login', [AuthController::class, 'login']);
 Route::get('/me', [AuthController::class, 'me']);
+Route::get('/dashboard/stats', [DashboardController::class, 'stats']);
 
 Route::apiResource('branches', BranchController::class);
 Route::apiResource('teachers', TeacherController::class);

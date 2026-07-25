@@ -11,5 +11,26 @@ class LmsClass extends Model
 
     protected $table = 'classes';
 
-    protected $fillable = ['cls_name', 'teacher_id_lms', 'pre_teacher_id_lms', 'level_name', 'cls_type', 'cls_status', 'branch_id_lms', 'class_seq'];
+    protected $fillable = [
+        'branch_id',
+        'teacher_id',
+        'cls_name',
+        'teacher_id_lms',
+        'pre_teacher_id_lms',
+        'level_name',
+        'cls_type',
+        'cls_status',
+        'branch_id_lms',
+        'class_seq'
+    ];
+
+    public function branch()
+    {
+        return $this->belongsTo(Branch::class, 'branch_id');
+    }
+
+    public function teacher()
+    {
+        return $this->belongsTo(Teacher::class, 'teacher_id');
+    }
 }

@@ -21,9 +21,13 @@ class TeacherController extends Controller
         // Role-based filtering
         $user = AuthController::resolveUser($request);
         if ($user) {
-            $branchIds = $user->getAccessibleBranchLmsIds();
-            if ($branchIds !== null) {
-                $query->whereIn('branch_id_lms', $branchIds);
+            if ($user->isTeacher() && $user->teacher_id) {
+                $query->where('id', $user->teacher_id);
+            } elseif ($user->isTeamLeader()) {
+                $branchIds = $user->getAccessibleBranchLmsIds();
+                if ($branchIds !== null) {
+                    $query->whereIn('branch_id_lms', $branchIds);
+                }
             }
         }
 

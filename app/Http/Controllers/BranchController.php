@@ -16,6 +16,15 @@ class BranchController extends Controller
 
         $query = Branch::query();
 
+        // Role-based filtering
+        $user = AuthController::resolveUser($request);
+        if ($user) {
+            $branchIds = $user->getAccessibleBranchLmsIds();
+            if ($branchIds !== null) {
+                $query->whereIn('id_lms', $branchIds);
+            }
+        }
+
         if ($search = $request->query('search')) {
             $search = trim($search);
             if (!empty($search)) {

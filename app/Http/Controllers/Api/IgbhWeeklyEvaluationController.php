@@ -27,6 +27,14 @@ class IgbhWeeklyEvaluationController extends Controller
             ->selectRaw('(SELECT COUNT(*) FROM igbh_weekly_eval_details WHERE weekly_eval_id = e.id) as graded_cnt')
             ->selectRaw('(SELECT COUNT(*) FROM contracts c JOIN classes cl ON c.class_id = cl.id WHERE cl.class_seq = e.class_seq AND c.status != "SS004") as total_cnt');
 
+        // Role-based filtering
+        $user = \App\Http\Controllers\AuthController::resolveUser($request);
+        if ($user && !$user->isAdmin()) {
+            $classQuery = $user->scopeClasses(\App\Models\LmsClass::query());
+            $classNames = $classQuery->pluck('cls_name')->toArray();
+            $query->whereIn('e.class_nm', $classNames);
+        }
+
         if ($request->has('search')) {
             $search = $request->input('search');
             $query->where(function ($q) use ($search) {
@@ -43,8 +51,14 @@ class IgbhWeeklyEvaluationController extends Controller
         return response()->json($results);
     }
 
-    public function getInitData()
+    public function getInitData(Request $request)
     {
+        $user = \App\Http\Controllers\AuthController::resolveUser($request);
+        $classQuery = \App\Models\LmsClass::query();
+        if ($user) {
+            $user->scopeClasses($classQuery);
+        }
+
         // For summative tests (where weekly evaluations apply)
         // From previous analysis, summative tests have configs in igbh_summative_themes
         $tests = DB::table('igbh_tests')
@@ -56,7 +70,7 @@ class IgbhWeeklyEvaluationController extends Controller
             ->select('test_seq', 'test_nm', 'level_cd')
             ->get();
 
-        $classes = DB::table('classes')->select('class_seq', 'cls_name as class_nm')->get();
+        $classes = $classQuery->select('class_seq', 'cls_name as class_nm')->get();
 
         $weeks = [];
         for ($i = 1; $i <= 12; $i++) {

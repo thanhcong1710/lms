@@ -15,10 +15,16 @@ class OptionsController extends Controller
      */
     public function branches(Request $request)
     {
-        $branches = Branch::select('id', 'name', 'id_lms')
-            ->orderBy('name')
-            ->get();
+        $query = Branch::select('id', 'name', 'id_lms');
+        $user = AuthController::resolveUser($request);
+        if ($user) {
+            $branchIds = $user->getAccessibleBranchLmsIds();
+            if ($branchIds !== null) {
+                $query->whereIn('id_lms', $branchIds);
+            }
+        }
 
+        $branches = $query->orderBy('name')->get();
         return response()->json(['data' => $branches]);
     }
 
@@ -28,13 +34,23 @@ class OptionsController extends Controller
     public function teachers(Request $request)
     {
         $query = Teacher::select('id', 'ins_name', 'id_lms', 'branch_id_lms');
+        $user = AuthController::resolveUser($request);
+        if ($user) {
+            if ($user->isTeacher() && $user->teacher_id) {
+                $query->where('id', $user->teacher_id);
+            } elseif ($user->isTeamLeader()) {
+                $branchIds = $user->getAccessibleBranchLmsIds();
+                if ($branchIds !== null) {
+                    $query->whereIn('branch_id_lms', $branchIds);
+                }
+            }
+        }
 
         if ($branchLms = $request->query('branch_id_lms')) {
             $query->where('branch_id_lms', $branchLms);
         }
 
         $teachers = $query->orderBy('ins_name')->get();
-
         return response()->json(['data' => $teachers]);
     }
 
@@ -44,6 +60,10 @@ class OptionsController extends Controller
     public function classes(Request $request)
     {
         $query = LmsClass::select('id', 'cls_name', 'class_seq', 'branch_id_lms', 'teacher_id_lms', 'level_name');
+        $user = AuthController::resolveUser($request);
+        if ($user) {
+            $user->scopeClasses($query);
+        }
 
         if ($branchLms = $request->query('branch_id_lms')) {
             $query->where('branch_id_lms', $branchLms);
@@ -53,7 +73,6 @@ class OptionsController extends Controller
         }
 
         $classes = $query->orderBy('cls_name')->get();
-
         return response()->json(['data' => $classes]);
     }
 
@@ -63,6 +82,10 @@ class OptionsController extends Controller
     public function students(Request $request)
     {
         $query = Student::select('id', 'name', 'id_lms', 'date_of_birth');
+        $user = AuthController::resolveUser($request);
+        if ($user) {
+            $user->scopeStudents($query);
+        }
 
         if ($classId = $request->query('class_id')) {
             $studentIds = \App\Models\Contract::where('class_id', $classId)->pluck('student_id')->toArray();
@@ -80,7 +103,6 @@ class OptionsController extends Controller
         }
 
         $students = $query->orderBy('name')->limit(50)->get();
-
         return response()->json(['data' => $students]);
     }
 }

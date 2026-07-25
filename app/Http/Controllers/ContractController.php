@@ -19,21 +19,8 @@ class ContractController extends Controller
 
         // Role-based filtering
         $user = AuthController::resolveUser($request);
-        if ($user && !$user->isAdmin()) {
-            $classQuery = LmsClass::query();
-            if ($user->isTeacher()) {
-                $teacherIdLms = $user->getTeacherIdLms();
-                if ($teacherIdLms) {
-                    $classQuery->where('teacher_id_lms', $teacherIdLms);
-                }
-            } elseif ($user->isTeamLeader()) {
-                $branchIds = $user->getAccessibleBranchLmsIds();
-                if ($branchIds !== null) {
-                    $classQuery->whereIn('branch_id_lms', $branchIds);
-                }
-            }
-            $classIds = $classQuery->pluck('id')->toArray();
-            $query->whereIn('class_id', $classIds);
+        if ($user) {
+            $user->scopeContracts($query);
         }
 
         if ($search = $request->query('search')) {

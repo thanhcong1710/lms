@@ -57,6 +57,14 @@
       </table>
     </div>
 
+    <!-- Pagination -->
+    <Pagination 
+      v-if="pagination.total > 0"
+      :pagination="pagination"
+      @page-change="onPageChange"
+      @per-page-change="onPerPageChange"
+    />
+
     <!-- Modal Form -->
     <div v-if="showModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
       <div class="bg-brand-card border border-brand-border rounded-2xl w-full max-w-lg p-6 shadow-2xl space-y-4">
@@ -128,8 +136,12 @@
 
 <script>
 import axios from 'axios';
+import Pagination from '../components/Pagination.vue';
 
 export default {
+  components: {
+    Pagination
+  },
   data() {
     return {
       users: [],
@@ -182,6 +194,13 @@ export default {
       } catch (error) {
         console.error("Error fetching users", error);
       }
+    },
+    onPageChange(page) {
+      this.fetchUsers(page);
+    },
+    onPerPageChange(perPage) {
+      this.pagination.per_page = perPage;
+      this.fetchUsers(1);
     },
     async fetchOptions() {
       try {

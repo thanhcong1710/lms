@@ -19,17 +19,7 @@ class ClassController extends Controller
         // Role-based filtering
         $user = AuthController::resolveUser($request);
         if ($user) {
-            if ($user->isTeacher()) {
-                $teacherIdLms = $user->getTeacherIdLms();
-                if ($teacherIdLms) {
-                    $query->where('teacher_id_lms', $teacherIdLms);
-                }
-            } elseif ($user->isTeamLeader()) {
-                $branchIds = $user->getAccessibleBranchLmsIds();
-                if ($branchIds !== null) {
-                    $query->whereIn('branch_id_lms', $branchIds);
-                }
-            }
+            $user->scopeClasses($query);
         }
 
         if ($search = $request->query('search')) {

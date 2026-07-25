@@ -21,6 +21,25 @@ const messages = {
       group_system: 'System',
       users: 'User Management'
     },
+    dashboard: {
+      title: 'Dashboard Overview',
+      desc: 'Quick statistics and operational status of LMS Portal',
+      total_branches: 'Total Branches',
+      active_operational: '↑ Active & Operational',
+      total_teachers: 'Total Teachers',
+      licensed_instructors: 'Licensed Instructors',
+      active_classes: 'Active Classes',
+      ucrea_igbh: 'U-Crea & i-Garten',
+      enrolled_students: 'Enrolled Students',
+      synced_crm: 'Synchronized with CRM',
+      ucrea_title: 'U-Crea Program',
+      ucrea_desc: 'Visual math & creative thinking classes evaluating cognitive capabilities.',
+      ucrea_link: 'Manage U-Crea Classes →',
+      igbh_title: 'i-Garten Program',
+      igbh_desc: 'Kindergarten and early childhood development tracking weekly and final achievements.',
+      igbh_link: 'Manage i-Garten Classes →',
+      classes_count: '{count} Classes'
+    },
     header: {
       welcome: 'Welcome to LMS Management Portal',
       light_mode: 'Light Mode',
@@ -334,6 +353,25 @@ const messages = {
       igbh_summative: 'ĐG Cuối kỳ IG.BH',
       group_system: 'Hệ thống',
       users: 'Quản lý người dùng'
+    },
+    dashboard: {
+      title: 'Tổng quan Bảng điều khiển',
+      desc: 'Thống kê nhanh và trạng thái hoạt động của Cổng thông tin LMS',
+      total_branches: 'Tổng số Cơ sở',
+      active_operational: '↑ Hoạt động & Vận hành',
+      total_teachers: 'Tổng số Giáo viên',
+      licensed_instructors: 'Giáo viên giảng dạy',
+      active_classes: 'Lớp học Hoạt động',
+      ucrea_igbh: 'U-Crea, i-Garten & BH',
+      enrolled_students: 'Học sinh Đã đăng ký',
+      synced_crm: 'Đồng bộ từ CRM',
+      ucrea_title: 'Chương trình U-Crea',
+      ucrea_desc: 'Lớp học toán tư duy trực quan và tư duy sáng tạo đánh giá năng lực nhận thức.',
+      ucrea_link: 'Quản lý Lớp U-Crea →',
+      igbh_title: 'Chương trình i-Garten & BH',
+      igbh_desc: 'Phát triển mầm non (BH/IG) và theo dõi kết quả đánh giá tuần và cuối kỳ.',
+      igbh_link: 'Quản lý Lớp i-Garten & BH →',
+      classes_count: '{count} Lớp'
     },
     header: {
       welcome: 'Chào mừng đến với hệ thống LMS',

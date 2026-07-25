@@ -33,6 +33,14 @@ class UcreaEvaluationController extends Controller
             $query->whereNotIn('ucrea_student_results.result_cd', ['IS002', 'IS003', 'IS004']);
         }
 
+        // Role-based filtering
+        $user = \App\Http\Controllers\AuthController::resolveUser($request);
+        if ($user && !$user->isAdmin()) {
+            $classQuery = $user->scopeClasses(\App\Models\LmsClass::query());
+            $classNames = $classQuery->pluck('cls_name')->toArray();
+            $query->whereIn('ucrea_student_results.class_nm', $classNames);
+        }
+
         // Search logic
         if (!empty($search)) {
             $query->where(function($q) use ($search) {
@@ -238,11 +246,30 @@ class UcreaEvaluationController extends Controller
     /**
      * Get initial data (students, teachers, classes, tests) for creating evaluation
      */
-    public function getInitData()
+    public function getInitData(Request $request)
     {
-        $students = DB::table('students')->select('id', 'name')->orderBy('name')->get();
-        $teachers = DB::table('teachers')->select('id', 'ins_name as name')->orderBy('ins_name')->get();
-        $classes = DB::table('classes')->select('id', 'cls_name as name')->orderBy('cls_name')->get();
+        $user = \App\Http\Controllers\AuthController::resolveUser($request);
+
+        $studentQuery = \App\Models\Student::query();
+        $classQuery = \App\Models\LmsClass::query();
+        $teacherQuery = \App\Models\Teacher::query();
+
+        if ($user) {
+            $user->scopeStudents($studentQuery);
+            $user->scopeClasses($classQuery);
+            if ($user->isTeacher() && $user->teacher_id) {
+                $teacherQuery->where('id', $user->teacher_id);
+            } elseif ($user->isTeamLeader()) {
+                $branchIds = $user->getAccessibleBranchLmsIds();
+                if ($branchIds !== null) {
+                    $teacherQuery->whereIn('branch_id_lms', $branchIds);
+                }
+            }
+        }
+
+        $students = $studentQuery->select('id', 'name')->orderBy('name')->get();
+        $teachers = $teacherQuery->select('id', 'ins_name as name')->orderBy('ins_name')->get();
+        $classes = $classQuery->select('id', 'cls_name as name')->orderBy('cls_name')->get();
         $tests = DB::table('ucrea_tests')->orderBy('test_nm')->get();
 
         return response()->json([

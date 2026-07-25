@@ -20,23 +20,8 @@ class StudentController extends Controller
 
         // Role-based filtering
         $user = AuthController::resolveUser($request);
-        if ($user && !$user->isAdmin()) {
-            // Get accessible student IDs via contracts/classes
-            $classQuery = LmsClass::query();
-            if ($user->isTeacher()) {
-                $teacherIdLms = $user->getTeacherIdLms();
-                if ($teacherIdLms) {
-                    $classQuery->where('teacher_id_lms', $teacherIdLms);
-                }
-            } elseif ($user->isTeamLeader()) {
-                $branchIds = $user->getAccessibleBranchLmsIds();
-                if ($branchIds !== null) {
-                    $classQuery->whereIn('branch_id_lms', $branchIds);
-                }
-            }
-            $classIds = $classQuery->pluck('id')->toArray();
-            $studentIds = Contract::whereIn('class_id', $classIds)->pluck('student_id')->unique()->toArray();
-            $query->whereIn('id', $studentIds);
+        if ($user) {
+            $user->scopeStudents($query);
         }
 
         if ($search = $request->query('search')) {

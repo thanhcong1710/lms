@@ -27,6 +27,14 @@ class IgbhSummativeEvaluationController extends Controller
                 'r.updated_at'
             );
 
+        // Role-based filtering
+        $user = \App\Http\Controllers\AuthController::resolveUser($request);
+        if ($user && !$user->isAdmin()) {
+            $classQuery = $user->scopeClasses(\App\Models\LmsClass::query());
+            $classNames = $classQuery->pluck('cls_name')->toArray();
+            $query->whereIn('r.class_nm', $classNames);
+        }
+
         if ($request->has('search')) {
             $search = $request->input('search');
             $query->where(function ($q) use ($search) {

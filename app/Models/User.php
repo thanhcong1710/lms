@@ -105,4 +105,71 @@ class User extends Authenticatable
         }
         return null;
     }
+
+    /**
+     * Scope a LmsClass query based on user role.
+     */
+    public function scopeClasses($query)
+    {
+        if ($this->isAdmin()) {
+            return $query;
+        }
+
+        if ($this->isTeacher()) {
+            $teacherIdLms = $this->getTeacherIdLms();
+            return $query->where(function ($q) use ($teacherIdLms) {
+                if ($teacherIdLms) {
+                    $q->where('teacher_id_lms', $teacherIdLms);
+                }
+                if ($this->teacher_id) {
+                    $q->orWhere('teacher_id', $this->teacher_id);
+                }
+            });
+        }
+
+        if ($this->isTeamLeader()) {
+            $branchIds = $this->getAccessibleBranchLmsIds();
+            return $query->where(function ($q) use ($branchIds) {
+                if ($branchIds !== null) {
+                    $q->whereIn('branch_id_lms', $branchIds);
+                }
+                if ($this->branch_id) {
+                    $q->orWhere('branch_id', $this->branch_id);
+                }
+            });
+        }
+
+        return $query;
+    }
+
+    /**
+     * Scope a Student query based on user role.
+     */
+    public function scopeStudents($query)
+    {
+        if ($this->isAdmin()) {
+            return $query;
+        }
+
+        $classQuery = $this->scopeClasses(LmsClass::query());
+        $classIds = $classQuery->pluck('id')->toArray();
+        $studentIds = Contract::whereIn('class_id', $classIds)->pluck('student_id')->unique()->toArray();
+
+        return $query->whereIn('id', $studentIds);
+    }
+
+    /**
+     * Scope a Contract query based on user role.
+     */
+    public function scopeContracts($query)
+    {
+        if ($this->isAdmin()) {
+            return $query;
+        }
+
+        $classQuery = $this->scopeClasses(LmsClass::query());
+        $classIds = $classQuery->pluck('id')->toArray();
+
+        return $query->whereIn('class_id', $classIds);
+    }
 }
