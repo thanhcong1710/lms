@@ -53,7 +53,23 @@ class ClassController extends Controller
 
     public function store(Request $request)
     {
-        $class = LmsClass::create($request->all());
+        $data = $request->all();
+        if (!empty($data['branch_id_lms']) && empty($data['branch_id'])) {
+            $branch = \App\Models\Branch::where('id_lms', $data['branch_id_lms'])->first();
+            if ($branch) $data['branch_id'] = $branch->id;
+        }
+        if (!empty($data['teacher_id_lms']) && empty($data['teacher_id'])) {
+            $teacher = \App\Models\Teacher::where('id_lms', $data['teacher_id_lms'])->first();
+            if ($teacher) $data['teacher_id'] = $teacher->id;
+        }
+        if (empty($data['class_seq'])) {
+            $maxSeq = LmsClass::max('class_seq');
+            $data['class_seq'] = $maxSeq ? ($maxSeq + 1) : 90001;
+        }
+        if (empty($data['cls_status'])) {
+            $data['cls_status'] = '1';
+        }
+        $class = LmsClass::create($data);
         return response()->json($class, 201);
     }
 
@@ -65,7 +81,16 @@ class ClassController extends Controller
     public function update(Request $request, $id)
     {
         $class = LmsClass::findOrFail($id);
-        $class->update($request->all());
+        $data = $request->all();
+        if (!empty($data['branch_id_lms'])) {
+            $branch = \App\Models\Branch::where('id_lms', $data['branch_id_lms'])->first();
+            if ($branch) $data['branch_id'] = $branch->id;
+        }
+        if (!empty($data['teacher_id_lms'])) {
+            $teacher = \App\Models\Teacher::where('id_lms', $data['teacher_id_lms'])->first();
+            if ($teacher) $data['teacher_id'] = $teacher->id;
+        }
+        $class->update($data);
         return response()->json($class);
     }
 

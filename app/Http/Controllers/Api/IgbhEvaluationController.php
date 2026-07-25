@@ -326,22 +326,21 @@ class IgbhEvaluationController extends Controller
         $resultSeq = $maxSeq ? ($maxSeq + 1) : 20001;
 
         $newId = DB::table('igbh_student_results')->insertGetId([
-            'result_seq' => $resultSeq,
-            'test_seq' => $testSeq,
-            'test_nm' => $test->test_nm,
-            'stu_seq' => $stuId,
-            'stu_nm' => $student->name,
-            'class_nm' => $class ? $class->cls_name : null,
-            'stu_birth_dt' => $student->birth ?? null,
-            'reg_name' => $teacherName,
-            'eval_dt' => $evalDt,
-            'reg_date' => now(),
-            'total_score' => 0,
-            'subject_total' => 0,
-            'thinking_total' => 0,
-            'assigned_level' => null,
-            'created_at' => now(),
-            'updated_at' => now()
+            'result_seq'      => $resultSeq,
+            'test_seq'        => $testSeq,
+            'stu_seq'         => $stuId,
+            'stu_nm'          => $student->name,
+            'stu_birth_dt'    => $student->birth ?? null,
+            'reg_name'        => $teacherName,
+            'eval_dt'         => $evalDt,
+            'reg_date'        => now(),
+            'total_score'     => 0,
+            'subject_total'   => 0,
+            'thinking_total'  => 0,
+            'assigned_level'  => null,
+            'class_type_cd'   => $class ? $class->cls_type : null,
+            'created_at'      => now(),
+            'updated_at'      => now()
         ]);
 
         return response()->json([

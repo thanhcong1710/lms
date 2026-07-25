@@ -304,16 +304,16 @@ export default {
       const classId = this.selectedClassObj.id;
       const className = this.selectedClassObj.cls_name;
       const testCd = this.selectedTestObj.test_cd;
-      const testSeq = this.selectedTestObj.test_seq;
 
       // 1. Get all students enrolled in this class
       const classContracts = (this.initData.contracts || []).filter(cnt => cnt.class_id == classId);
       
       // 2. Filter out students who already have a result entry for this class & test
+      // Note: match ONLY by test_cd (not test_seq) because all tests share test_seq=1
       return classContracts.filter(cnt => {
         const hasResult = (this.initData.existing_results || []).some(res => {
           const matchClass = res.class_nm === className;
-          const matchTest = res.test_cd === testCd || res.test_seq == testSeq;
+          const matchTest = res.test_cd === testCd;
           const matchStudent = res.stu_nm === cnt.student_name;
           return matchClass && matchTest && matchStudent;
         });

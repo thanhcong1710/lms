@@ -264,51 +264,45 @@ export default {
       return (this.initData.classes || []).find(c => c.id == this.form.class_id);
     },
     filteredTests() {
-      const allDiagTests = (this.initData.tests || []).filter(t => {
-        const name = (t.test_nm || '').toUpperCase();
-        return !name.includes('SUMMATIVE');
+      // Only tests whose name starts with "PT lớp" (case-insensitive, normalize unicode)
+      const ptTests = (this.initData.tests || []).filter(t => {
+        const name = (t.test_nm || '').trim().toLowerCase().normalize('NFC');
+        return name.startsWith('pt lớp') || name.startsWith('pt lop') || name.startsWith('pt lev.');
       });
 
       if (!this.selectedClassObj) {
-        return allDiagTests;
+        return [];
       }
 
-      const classLevel = (this.selectedClassObj.level_name || '').trim().toUpperCase();
+      const classLevel = (this.selectedClassObj.level_name || '').trim(); // e.g. LW, LB1, LR2
 
-      // Extract number: LB3 -> 3, LP1 -> 1, LR4 -> 4, L2 -> 2
-      const matchNum = classLevel.match(/\d+/);
-      const gradeNum = matchNum ? matchNum[0] : null;
+      // Build expected level_cd from level_name
+      const igMap = { LW: 'IG Lev.W', LJ: 'IG Lev.J', LC: 'IG Lev.C', LQ: 'IG Lev.Q', LT: 'IG Lev.T', LU: 'IG Lev.U' };
 
-      // Extract level code: LB3 -> B3, LP2 -> P2, LG1 -> G1, LR4 -> R4
-      let levelCode = classLevel;
-      if (/^L[BPRG]\d$/i.test(classLevel)) {
-        levelCode = classLevel.substring(1);
+      let expectedLevelCd = null;
+
+      if (igMap[classLevel]) {
+        // IG class
+        expectedLevelCd = igMap[classLevel];
+      } else if (/^L([BRGP])(\d)$/i.test(classLevel)) {
+        // BH class: LB1 -> BH Lev.B1, LR2 -> BH Lev.R2, LG1 -> BH Lev.G1, LP3 -> BH Lev.P3
+        const m = classLevel.match(/^L([BRGP])(\d)$/i);
+        expectedLevelCd = `BH Lev.${m[1].toUpperCase()}${m[2]}`;
+      } else if (/^L(\d+)$/i.test(classLevel)) {
+        // UC L1-L4: map to "Lớp X"
+        const num = classLevel.replace(/^L/i, '');
+        expectedLevelCd = `Lớp ${num}`;
       }
 
-      const exactMatches = allDiagTests.filter(t => {
-        const testLevel = (t.level_cd || '').trim().toUpperCase();
-        const testName = (t.test_nm || '').toUpperCase();
-
-        // 1. Direct match on level code or BH level
-        if (testLevel === classLevel || testLevel.includes(levelCode) || testName.includes(levelCode) || testName.includes(classLevel)) {
-          return true;
-        }
-
-        // 2. Match grade number in "Lớp X" or "Xrd/Xth Grade"
-        if (gradeNum) {
-          if (testLevel === `LỚP ${gradeNum}` || testName.includes(`LỚP ${gradeNum}`) || testName.includes(`${gradeNum}ST`) || testName.includes(`${gradeNum}ND`) || testName.includes(`${gradeNum}RD`) || testName.includes(`${gradeNum}TH`)) {
-            return true;
-          }
-        }
-
-        return false;
-      });
-
-      if (exactMatches.length > 0) {
-        return exactMatches;
+      if (expectedLevelCd) {
+        const matched = ptTests.filter(t => {
+          const testLevel = (t.level_cd || '').trim();
+          return testLevel.toLowerCase() === expectedLevelCd.toLowerCase();
+        });
+        return matched.length > 0 ? matched : ptTests;
       }
 
-      return allDiagTests;
+      return ptTests;
     },
     filteredStudents() {
       if (!this.selectedClassObj) {
