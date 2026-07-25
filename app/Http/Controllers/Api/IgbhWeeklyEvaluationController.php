@@ -70,7 +70,7 @@ class IgbhWeeklyEvaluationController extends Controller
             ->select('test_seq', 'test_nm', 'level_cd')
             ->get();
 
-        $classes = $classQuery->select('class_seq', 'cls_name as class_nm')->get();
+        $classes = $classQuery->select('id', 'class_seq', 'cls_name', 'cls_name as class_nm', 'level_name', 'cls_type', 'branch_id')->get();
 
         $weeks = [];
         for ($i = 1; $i <= 12; $i++) {

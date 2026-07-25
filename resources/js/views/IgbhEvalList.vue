@@ -137,37 +137,55 @@
 
         <!-- Modal Body -->
         <form @submit.prevent="submitCreate" class="p-6 space-y-4">
-          <!-- Student Selector -->
+          <!-- Step 1: Branch Selector -->
           <div class="space-y-1.5">
-            <label class="block text-xs font-semibold text-brand-desc uppercase">{{ $t('igbh.modal.student') }}</label>
-            <select v-model="form.student_id" required class="w-full px-3 py-2 rounded-xl bg-brand-input border border-brand-border text-brand-text focus:outline-none focus:border-indigo-500 transition text-sm">
-              <option value="" disabled>{{ $t('igbh.modal.select_student') }}</option>
-              <option v-for="std in initData.students" :key="std.id" :value="std.id">{{ std.name }}</option>
+            <label class="block text-xs font-semibold text-brand-desc uppercase">1. Trung tâm (Cơ sở)</label>
+            <select v-model="form.branch_id" @change="onBranchChange" required class="w-full px-3 py-2.5 rounded-xl bg-brand-input border border-brand-border text-brand-text focus:outline-none focus:border-indigo-500 transition text-sm">
+              <option :value="null" disabled>-- Chọn trung tâm --</option>
+              <option v-for="b in initData.branches" :key="b.id" :value="b.id">{{ b.name }} ({{ b.id_lms }})</option>
             </select>
           </div>
 
-          <!-- Teacher Selector -->
+          <!-- Step 2: Class Selector (Only DEMO, IG, BH) -->
           <div class="space-y-1.5">
-            <label class="block text-xs font-semibold text-brand-desc uppercase">{{ $t('igbh.modal.teacher_eval') }}</label>
-            <select v-model="form.teacher_name" required class="w-full px-3 py-2 rounded-xl bg-brand-input border border-brand-border text-brand-text focus:outline-none focus:border-indigo-500 transition text-sm">
-              <option value="" disabled>{{ $t('igbh.modal.select_teacher') }}</option>
-              <option v-for="t in initData.teachers" :key="t.id" :value="t.name">{{ t.name }}</option>
+            <label class="block text-xs font-semibold text-brand-desc uppercase">2. Lớp học (Chỉ lớp Demo, IG, BH)</label>
+            <select v-model="form.class_id" @change="onClassChange" required :disabled="!form.branch_id && initData.branches.length > 1" class="w-full px-3 py-2.5 rounded-xl bg-brand-input border border-brand-border text-brand-text focus:outline-none focus:border-indigo-500 transition text-sm disabled:opacity-50">
+              <option value="" disabled>-- Chọn lớp học --</option>
+              <option v-for="c in filteredClasses" :key="c.id" :value="c.id">{{ c.cls_name }} (Level: {{ c.level_name || 'N/A' }})</option>
             </select>
           </div>
 
-          <!-- Test Selector -->
+          <!-- Step 3: Diagnostic / Placement Test Selector -->
           <div class="space-y-1.5">
-            <label class="block text-xs font-semibold text-brand-desc uppercase">{{ $t('igbh.modal.test_igbh') }}</label>
-            <select v-model="form.test_seq" required class="w-full px-3 py-2 rounded-xl bg-brand-input border border-brand-border text-brand-text focus:outline-none focus:border-indigo-500 transition text-sm">
-              <option value="" disabled>{{ $t('igbh.modal.select_test') }}</option>
-              <option v-for="t in initData.tests" :key="t.id" :value="t.test_seq">{{ t.test_nm }}</option>
+            <label class="block text-xs font-semibold text-brand-desc uppercase">3. Bài kiểm tra đầu vào (PT / Diagnostic)</label>
+            <select v-model="form.test_seq" @change="onTestChange" required :disabled="!form.class_id" class="w-full px-3 py-2.5 rounded-xl bg-brand-input border border-brand-border text-brand-text focus:outline-none focus:border-indigo-500 transition text-sm disabled:opacity-50">
+              <option value="" disabled>{{ !form.class_id ? '-- Vui lòng chọn lớp học trước --' : '-- Chọn bài kiểm tra --' }}</option>
+              <option v-for="t in filteredTests" :key="t.id" :value="t.test_seq">{{ t.test_nm }} ({{ t.level_cd || 'N/A' }})</option>
             </select>
           </div>
 
-          <!-- Date Selector -->
+          <!-- Step 4: Student Selector -->
           <div class="space-y-1.5">
-            <label class="block text-xs font-semibold text-brand-desc uppercase">{{ $t('igbh.modal.eval_date') }}</label>
-            <input type="date" v-model="form.eval_dt" required class="w-full px-3 py-2 rounded-xl bg-brand-input border border-brand-border text-brand-text focus:outline-none focus:border-indigo-500 transition text-sm">
+            <label class="block text-xs font-semibold text-brand-desc uppercase">4. Học sinh (Thuộc lớp đã chọn)</label>
+            <select v-model="form.student_id" required :disabled="!form.test_seq || filteredStudents.length === 0" class="w-full px-3 py-2.5 rounded-xl bg-brand-input border border-brand-border text-brand-text focus:outline-none focus:border-indigo-500 transition text-sm disabled:opacity-50">
+              <option value="" disabled>{{ !form.test_seq ? '-- Vui lòng chọn bài kiểm tra trước --' : (filteredStudents.length === 0 ? '-- Không có học sinh trong lớp --' : '-- Chọn học sinh --') }}</option>
+              <option v-for="std in filteredStudents" :key="std.student_id" :value="std.student_id">{{ std.student_name }} ({{ std.student_lms_id }})</option>
+            </select>
+          </div>
+
+          <!-- Step 5: Evaluating Teacher & Date -->
+          <div class="grid grid-cols-2 gap-4">
+            <div class="space-y-1.5">
+              <label class="block text-xs font-semibold text-brand-desc uppercase">Giáo viên đánh giá</label>
+              <select v-model="form.teacher_name" required class="w-full px-3 py-2.5 rounded-xl bg-brand-input border border-brand-border text-brand-text focus:outline-none focus:border-indigo-500 transition text-sm">
+                <option value="" disabled>-- Chọn giáo viên --</option>
+                <option v-for="t in initData.teachers" :key="t.id" :value="t.name">{{ t.name }}</option>
+              </select>
+            </div>
+            <div class="space-y-1.5">
+              <label class="block text-xs font-semibold text-brand-desc uppercase">Ngày đánh giá</label>
+              <input type="date" v-model="form.eval_dt" required class="w-full px-3 py-2.5 rounded-xl bg-brand-input border border-brand-border text-brand-text focus:outline-none focus:border-indigo-500 transition text-sm">
+            </div>
           </div>
 
           <!-- Modal Footer -->
@@ -175,7 +193,7 @@
             <button type="button" @click="closeCreateModal" class="px-4 py-2 rounded-xl border border-brand-border text-brand-desc hover:bg-brand-input hover:text-brand-text transition text-sm font-semibold">
               {{ $t('common.cancel') }}
             </button>
-            <button type="submit" :disabled="creating" class="px-5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold transition text-sm shadow-lg shadow-indigo-600/30 disabled:opacity-50">
+            <button type="submit" :disabled="creating || !form.student_id" class="px-5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold transition text-sm shadow-lg shadow-indigo-600/30 disabled:opacity-50">
               {{ creating ? $t('igbh.modal.creating') : $t('igbh.modal.create_btn') }}
             </button>
           </div>
@@ -210,16 +228,94 @@ export default {
       showModal: false,
       creating: false,
       initData: {
-        students: [],
+        branches: [],
+        classes: [],
         teachers: [],
-        tests: []
+        tests: [],
+        contracts: []
       },
       form: {
+        branch_id: null,
+        class_id: '',
+        test_seq: '',
         student_id: '',
         teacher_name: '',
-        test_seq: '',
         eval_dt: new Date().toISOString().substr(0, 10)
       }
+    }
+  },
+  computed: {
+    filteredClasses() {
+      let list = this.initData.classes || [];
+      if (this.form.branch_id) {
+        list = list.filter(c => c.branch_id == this.form.branch_id);
+      }
+      // ONLY include IG, BH, and DEMO.IG.BH classes: EXCLUDE UC classes (e.g. .U. or CT001)
+      return list.filter(c => {
+        const name = (c.cls_name || '').toUpperCase();
+        if (name.includes('.U.') || c.cls_type === 'CT001') {
+          return false;
+        }
+        return c.cls_type === 'CT004' || c.cls_type === 'CT002' || name.includes('.IG.') || name.includes('.BH.');
+      });
+    },
+    selectedClassObj() {
+      if (!this.form.class_id) return null;
+      return (this.initData.classes || []).find(c => c.id == this.form.class_id);
+    },
+    filteredTests() {
+      const allDiagTests = (this.initData.tests || []).filter(t => {
+        const name = (t.test_nm || '').toUpperCase();
+        return !name.includes('SUMMATIVE');
+      });
+
+      if (!this.selectedClassObj) {
+        return allDiagTests;
+      }
+
+      const classLevel = (this.selectedClassObj.level_name || '').trim().toUpperCase();
+
+      // Extract number: LB3 -> 3, LP1 -> 1, LR4 -> 4, L2 -> 2
+      const matchNum = classLevel.match(/\d+/);
+      const gradeNum = matchNum ? matchNum[0] : null;
+
+      // Extract level code: LB3 -> B3, LP2 -> P2, LG1 -> G1, LR4 -> R4
+      let levelCode = classLevel;
+      if (/^L[BPRG]\d$/i.test(classLevel)) {
+        levelCode = classLevel.substring(1);
+      }
+
+      const exactMatches = allDiagTests.filter(t => {
+        const testLevel = (t.level_cd || '').trim().toUpperCase();
+        const testName = (t.test_nm || '').toUpperCase();
+
+        // 1. Direct match on level code or BH level
+        if (testLevel === classLevel || testLevel.includes(levelCode) || testName.includes(levelCode) || testName.includes(classLevel)) {
+          return true;
+        }
+
+        // 2. Match grade number in "Lớp X" or "Xrd/Xth Grade"
+        if (gradeNum) {
+          if (testLevel === `LỚP ${gradeNum}` || testName.includes(`LỚP ${gradeNum}`) || testName.includes(`${gradeNum}ST`) || testName.includes(`${gradeNum}ND`) || testName.includes(`${gradeNum}RD`) || testName.includes(`${gradeNum}TH`)) {
+            return true;
+          }
+        }
+
+        return false;
+      });
+
+      if (exactMatches.length > 0) {
+        return exactMatches;
+      }
+
+      return allDiagTests;
+    },
+    filteredStudents() {
+      if (!this.selectedClassObj) {
+        return [];
+      }
+      const classId = this.selectedClassObj.id;
+      return (this.initData.contracts || []).filter(cnt => cnt.class_id == classId);
     }
   },
   created() {
@@ -258,6 +354,30 @@ export default {
       this.pagination.per_page = perPage;
       this.fetchData(1);
     },
+    onBranchChange() {
+      this.form.class_id = '';
+      this.form.test_seq = '';
+      this.form.student_id = '';
+      this.form.teacher_name = '';
+    },
+    onClassChange() {
+      const cls = this.selectedClassObj;
+      if (cls && cls.teacher_name) {
+        this.form.teacher_name = cls.teacher_name;
+      }
+      this.form.student_id = '';
+
+      this.$nextTick(() => {
+        if (this.filteredTests.length > 0) {
+          this.form.test_seq = this.filteredTests[0].test_seq;
+        } else {
+          this.form.test_seq = '';
+        }
+      });
+    },
+    onTestChange() {
+      this.form.student_id = '';
+    },
     async openCreateModal() {
       this.showModal = true;
       try {
@@ -268,6 +388,9 @@ export default {
         });
         if (response.data.status === 'success') {
           this.initData = response.data.data;
+          if (this.initData.branches && this.initData.branches.length === 1) {
+            this.form.branch_id = this.initData.branches[0].id;
+          }
         }
       } catch (error) {
         console.error("Error fetching initialization data", error);
@@ -277,9 +400,11 @@ export default {
     closeCreateModal() {
       this.showModal = false;
       this.form = {
+        branch_id: null,
+        class_id: '',
+        test_seq: '',
         student_id: '',
         teacher_name: '',
-        test_seq: '',
         eval_dt: new Date().toISOString().substr(0, 10)
       };
     },

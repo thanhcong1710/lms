@@ -532,11 +532,11 @@ const messages = {
       }
     },
     igbh: {
-      diagnostic_title: 'Quản lý Đánh giá Đầu kỳ IG.BH',
-      diagnostic_desc: 'Quản lý đánh giá đầu kỳ và kết quả bài kiểm tra đầu vào',
-      weekly_title: 'Quản lý Đánh giá Tuần IG.BH',
+      diagnostic_title: 'Quản lý đánh giá đầu vào IG.BH',
+      diagnostic_desc: 'Quản lý đánh giá đầu vào và kết quả bài kiểm tra đầu vào',
+      weekly_title: 'Quản lý đánh giá tuần IG.BH',
       weekly_desc: 'Quản lý đánh giá tuần của lớp và điểm học sinh',
-      summative_title: 'Quản lý Đánh giá Cuối kỳ IG.BH',
+      summative_title: 'Quản lý đánh giá cuối kỳ IG.BH',
       summative_desc: 'Quản lý đánh giá cuối kỳ và kết quả tổng kết',
       add_eval: 'Thêm Mới Nhập Điểm',
       add_weekly: 'Thêm Mới Nhập Điểm Tuần',
@@ -572,7 +572,7 @@ const messages = {
         view_report: 'Xem báo cáo'
       },
       modal: {
-        add_title: 'Thêm Mới Nhập Điểm IG.BH',
+        add_title: 'Thêm Mới Nhập Điểm Đầu Vào IG.BH',
         add_weekly_title: 'Thêm Mới Nhập Điểm Tuần IG.BH',
         student: 'Học sinh',
         teacher_eval: 'Giáo viên đánh giá',

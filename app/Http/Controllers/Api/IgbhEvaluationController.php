@@ -211,16 +211,49 @@ class IgbhEvaluationController extends Controller
     }
 
     /**
-     * Get initial data for dialog creation.
+     * Get initial data for dialog creation (branches, classes, teachers, tests, contracts).
      */
     public function getInitData(Request $request)
     {
         $user = \App\Http\Controllers\AuthController::resolveUser($request);
-        $studentQuery = \App\Models\Student::query();
-        $teacherQuery = \App\Models\Teacher::query();
 
+        // 1. Branches
+        $branchQuery = \App\Models\Branch::query();
         if ($user) {
-            $user->scopeStudents($studentQuery);
+            $branchIds = $user->getAccessibleBranchLmsIds();
+            if ($branchIds !== null) {
+                $branchQuery->whereIn('id_lms', $branchIds);
+            }
+        }
+        $branches = $branchQuery->select('id', 'name', 'id_lms')->orderBy('name')->get();
+
+        // 2. Classes (with teacher relation)
+        $classQuery = \App\Models\LmsClass::query();
+        if ($user) {
+            $user->scopeClasses($classQuery);
+        }
+        $classes = $classQuery->with('teacher')
+            ->select('id', 'cls_name', 'class_seq', 'level_name', 'cls_type', 'branch_id', 'branch_id_lms', 'teacher_id', 'teacher_id_lms')
+            ->orderBy('cls_name')
+            ->get()
+            ->map(function ($c) {
+                return [
+                    'id' => $c->id,
+                    'cls_name' => $c->cls_name,
+                    'class_seq' => $c->class_seq,
+                    'level_name' => $c->level_name,
+                    'cls_type' => $c->cls_type,
+                    'branch_id' => $c->branch_id,
+                    'branch_id_lms' => $c->branch_id_lms,
+                    'teacher_id' => $c->teacher_id,
+                    'teacher_id_lms' => $c->teacher_id_lms,
+                    'teacher_name' => $c->teacher->ins_name ?? $c->teacher_id_lms,
+                ];
+            });
+
+        // 3. Teachers
+        $teacherQuery = \App\Models\Teacher::query();
+        if ($user) {
             if ($user->isTeacher() && $user->teacher_id) {
                 $teacherQuery->where('id', $user->teacher_id);
             } elseif ($user->isTeamLeader()) {
@@ -230,17 +263,35 @@ class IgbhEvaluationController extends Controller
                 }
             }
         }
+        $teachers = $teacherQuery->select('id', 'ins_name as name', 'id_lms', 'branch_id_lms')->orderBy('ins_name')->get();
 
-        $students = $studentQuery->select('id', 'name')->orderBy('name')->get();
-        $teachers = $teacherQuery->select('id', 'ins_name as name')->orderBy('ins_name')->get();
-        $tests = DB::table('igbh_tests')->orderBy('test_nm')->get();
+        // 4. Tests (Diagnostic / PT tests)
+        $tests = DB::table('igbh_tests')
+            ->select('id', 'test_seq', 'test_nm', 'level_cd')
+            ->orderBy('test_nm')
+            ->get();
+
+        // 5. Contracts with students
+        $contracts = \App\Models\Contract::with('student')
+            ->where('status', '!=', 'SS004')
+            ->get()
+            ->map(function ($cnt) {
+                return [
+                    'class_id' => $cnt->class_id,
+                    'student_id' => $cnt->student_id,
+                    'student_name' => $cnt->student->name ?? '',
+                    'student_lms_id' => $cnt->student->id_lms ?? '',
+                ];
+            });
 
         return response()->json([
             'status' => 'success',
             'data' => [
-                'students' => $students,
+                'branches' => $branches,
+                'classes' => $classes,
                 'teachers' => $teachers,
-                'tests' => $tests
+                'tests' => $tests,
+                'contracts' => $contracts,
             ]
         ]);
     }
@@ -254,6 +305,7 @@ class IgbhEvaluationController extends Controller
         $stuId = $request->input('student_id');
         $teacherName = $request->input('teacher_name');
         $evalDt = $request->input('eval_dt', now()->toDateString());
+        $classId = $request->input('class_id');
 
         $student = DB::table('students')->where('id', $stuId)->first();
         if (!$student) {
@@ -265,14 +317,21 @@ class IgbhEvaluationController extends Controller
             return response()->json(['status' => 'error', 'message' => 'Không tìm thấy bài test'], 404);
         }
 
+        $class = null;
+        if ($classId) {
+            $class = DB::table('classes')->where('id', $classId)->first();
+        }
+
         $maxSeq = DB::table('igbh_student_results')->max('result_seq');
         $resultSeq = $maxSeq ? ($maxSeq + 1) : 20001;
 
         $newId = DB::table('igbh_student_results')->insertGetId([
             'result_seq' => $resultSeq,
             'test_seq' => $testSeq,
+            'test_nm' => $test->test_nm,
             'stu_seq' => $stuId,
             'stu_nm' => $student->name,
+            'class_nm' => $class ? $class->cls_name : null,
             'stu_birth_dt' => $student->birth ?? null,
             'reg_name' => $teacherName,
             'eval_dt' => $evalDt,

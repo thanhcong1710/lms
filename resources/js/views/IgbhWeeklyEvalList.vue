@@ -116,18 +116,18 @@
           <!-- Class Selector -->
           <div class="space-y-1.5">
             <label class="block text-xs font-semibold text-brand-desc uppercase">{{ $t('igbh.modal.class') }}</label>
-            <select v-model="form.class_seq" required class="w-full px-3 py-2 rounded-xl bg-brand-input border border-brand-border text-brand-text focus:outline-none focus:border-indigo-500 transition text-sm">
+            <select v-model="form.class_seq" @change="onClassChange" required class="w-full px-3 py-2 rounded-xl bg-brand-input border border-brand-border text-brand-text focus:outline-none focus:border-indigo-500 transition text-sm">
               <option value="" disabled>{{ $t('igbh.modal.select_class') }}</option>
-              <option v-for="cls in initData.classes" :key="cls.class_seq" :value="cls.class_seq">{{ cls.class_nm }}</option>
+              <option v-for="cls in filteredClasses" :key="cls.class_seq" :value="cls.class_seq">{{ cls.class_nm }} (Level: {{ cls.level_name || 'N/A' }})</option>
             </select>
           </div>
 
           <!-- Test Selector -->
           <div class="space-y-1.5">
             <label class="block text-xs font-semibold text-brand-desc uppercase">{{ $t('igbh.modal.test_igbh') }} (Level)</label>
-            <select v-model="form.test_seq" required class="w-full px-3 py-2 rounded-xl bg-brand-input border border-brand-border text-brand-text focus:outline-none focus:border-indigo-500 transition text-sm">
-              <option value="" disabled>{{ $t('igbh.modal.select_test') }}</option>
-              <option v-for="t in initData.tests" :key="t.test_seq" :value="t.test_seq">{{ t.test_nm }}</option>
+            <select v-model="form.test_seq" required :disabled="!form.class_seq" class="w-full px-3 py-2 rounded-xl bg-brand-input border border-brand-border text-brand-text focus:outline-none focus:border-indigo-500 transition text-sm disabled:opacity-50">
+              <option value="" disabled>{{ !form.class_seq ? '-- Vui lòng chọn lớp học trước --' : $t('igbh.modal.select_test') }}</option>
+              <option v-for="t in filteredTests" :key="t.test_seq" :value="t.test_seq">{{ t.test_nm }} ({{ t.level_cd || 'N/A' }})</option>
             </select>
           </div>
 
@@ -198,6 +198,47 @@ export default {
       }
     }
   },
+  computed: {
+    filteredClasses() {
+      let list = this.initData.classes || [];
+      return list.filter(c => {
+        const name = (c.class_nm || c.cls_name || '').toUpperCase();
+        if (name.includes('.U.') || c.cls_type === 'CT001') {
+          return false;
+        }
+        return c.cls_type === 'CT004' || c.cls_type === 'CT002' || name.includes('.IG.') || name.includes('.BH.');
+      });
+    },
+    selectedClassObj() {
+      if (!this.form.class_seq) return null;
+      return (this.initData.classes || []).find(c => c.class_seq == this.form.class_seq);
+    },
+    filteredTests() {
+      const allTests = this.initData.tests || [];
+      if (!this.selectedClassObj) {
+        return allTests;
+      }
+
+      const classLevel = (this.selectedClassObj.level_name || '').trim().toUpperCase();
+      let levelCode = classLevel;
+      if (classLevel.startsWith('L')) {
+        levelCode = classLevel.substring(1);
+      }
+
+      const exactMatches = allTests.filter(t => {
+        const testLevel = (t.level_cd || '').trim().toUpperCase();
+        const testName = (t.test_nm || '').toUpperCase();
+
+        return testLevel === classLevel || (levelCode && (testLevel.includes(levelCode) || testName.includes(levelCode) || testName.includes(classLevel)));
+      });
+
+      if (exactMatches.length > 0) {
+        return exactMatches;
+      }
+
+      return allTests;
+    }
+  },
   created() {
     this.fetchData();
   },
@@ -244,6 +285,15 @@ export default {
     onPerPageChange(perPage) {
       this.pagination.per_page = perPage;
       this.fetchData(1);
+    },
+    onClassChange() {
+      this.$nextTick(() => {
+        if (this.filteredTests.length > 0) {
+          this.form.test_seq = this.filteredTests[0].test_seq;
+        } else {
+          this.form.test_seq = '';
+        }
+      });
     },
     async openCreateModal() {
       this.showModal = true;
