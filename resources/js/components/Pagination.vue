@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-col md:flex-row items-center justify-between gap-4 mt-6">
     <div class="flex items-center gap-2">
-      <span class="text-sm text-brand-desc">Rows per page:</span>
+      <span class="text-sm text-brand-desc">{{ $t('pagination.rows_per_page') }}</span>
       <select 
         v-model="perPageValue" 
         @change="changePerPage"
@@ -15,7 +15,7 @@
     
     <div class="flex items-center gap-2">
       <span class="text-sm text-brand-desc mr-4">
-        Showing {{ from }} to {{ to }} of {{ total }} entries
+        {{ $t('pagination.showing', { from, to, total }) }}
       </span>
       <button 
         @click="prevPage" 
@@ -23,7 +23,7 @@
         :class="['px-3 py-1.5 rounded-lg border text-sm font-medium transition', 
                  currentPage === 1 ? 'border-brand-border text-brand-desc/50 cursor-not-allowed' : 'border-brand-border text-brand-text hover:bg-brand-input']"
       >
-        Previous
+        {{ $t('pagination.prev') }}
       </button>
       
       <!-- Page numbers can go here if needed, keeping it simple for now -->
@@ -45,7 +45,7 @@
         :class="['px-3 py-1.5 rounded-lg border text-sm font-medium transition', 
                  currentPage === lastPage ? 'border-brand-border text-brand-desc/50 cursor-not-allowed' : 'border-brand-border text-brand-text hover:bg-brand-input']"
       >
-        Next
+        {{ $t('pagination.next') }}
       </button>
     </div>
   </div>

@@ -22,7 +22,7 @@
     <!-- Loading State -->
     <div v-if="loading" class="flex flex-col items-center justify-center py-16 space-y-4 print:hidden">
       <div class="animate-spin rounded-full h-10 w-10 border-b-2 border-indigo-600"></div>
-      <p class="text-sm text-brand-desc">Loading report...</p>
+      <p class="text-sm text-brand-desc">{{ $t('igbh.loading') }}</p>
     </div>
 
     <!-- MAIN REPORT (Same for both Screen and Print) -->

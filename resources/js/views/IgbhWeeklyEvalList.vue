@@ -31,7 +31,7 @@
       </div>
       
       <div class="text-xs text-brand-desc font-medium">
-        Showing {{ results.length }} records
+        {{ $t('pagination.showing_count', { count: results.length }) }}
       </div>
     </div>
 
@@ -95,15 +95,12 @@
     </div>
     
     <!-- Pagination -->
-    <div v-if="pagination.total > 0" class="flex items-center justify-between mt-4">
-       <div class="text-sm text-brand-desc">
-         Showing {{ pagination.from }} to {{ pagination.to }} of {{ pagination.total }} entries
-       </div>
-       <div class="flex space-x-2">
-         <button @click="onPageChange(pagination.current_page - 1)" :disabled="pagination.current_page === 1" class="px-3 py-1 rounded-md bg-brand-input border border-brand-border disabled:opacity-50 text-sm">Prev</button>
-         <button @click="onPageChange(pagination.current_page + 1)" :disabled="pagination.current_page === pagination.last_page" class="px-3 py-1 rounded-md bg-brand-input border border-brand-border disabled:opacity-50 text-sm">Next</button>
-       </div>
-    </div>
+    <Pagination 
+      v-if="pagination.total > 0"
+      :pagination="pagination"
+      @page-change="onPageChange"
+      @per-page-change="onPerPageChange"
+    />
 
     <!-- Create Evaluation Modal -->
     <div v-if="showModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
@@ -166,9 +163,13 @@
 
 <script>
 import axios from 'axios';
+import Pagination from '../components/Pagination.vue';
 
 export default {
   name: 'IgbhWeeklyEvalList',
+  components: {
+    Pagination
+  },
   data() {
     return {
       results: [],
@@ -239,6 +240,10 @@ export default {
       if(page > 0 && page <= this.pagination.last_page) {
         this.fetchData(page);
       }
+    },
+    onPerPageChange(perPage) {
+      this.pagination.per_page = perPage;
+      this.fetchData(1);
     },
     async openCreateModal() {
       this.showModal = true;

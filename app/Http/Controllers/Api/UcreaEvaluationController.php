@@ -250,13 +250,42 @@ class UcreaEvaluationController extends Controller
     {
         $user = \App\Http\Controllers\AuthController::resolveUser($request);
 
-        $studentQuery = \App\Models\Student::query();
-        $classQuery = \App\Models\LmsClass::query();
-        $teacherQuery = \App\Models\Teacher::query();
-
+        // 1. Branches
+        $branchQuery = \App\Models\Branch::query();
         if ($user) {
-            $user->scopeStudents($studentQuery);
+            $branchIds = $user->getAccessibleBranchLmsIds();
+            if ($branchIds !== null) {
+                $branchQuery->whereIn('id_lms', $branchIds);
+            }
+        }
+        $branches = $branchQuery->select('id', 'name', 'id_lms')->orderBy('name')->get();
+
+        // 2. Classes (with teacher relation)
+        $classQuery = \App\Models\LmsClass::query();
+        if ($user) {
             $user->scopeClasses($classQuery);
+        }
+        $classes = $classQuery->with('teacher')
+            ->select('id', 'cls_name', 'class_seq', 'level_name', 'cls_type', 'branch_id', 'branch_id_lms', 'teacher_id', 'teacher_id_lms')
+            ->orderBy('cls_name')
+            ->get()
+            ->map(function ($c) {
+                return [
+                    'id' => $c->id,
+                    'cls_name' => $c->cls_name,
+                    'class_seq' => $c->class_seq,
+                    'level_name' => $c->level_name,
+                    'branch_id' => $c->branch_id,
+                    'branch_id_lms' => $c->branch_id_lms,
+                    'teacher_id' => $c->teacher_id,
+                    'teacher_id_lms' => $c->teacher_id_lms,
+                    'teacher_name' => $c->teacher->ins_name ?? $c->teacher_id_lms,
+                ];
+            });
+
+        // 3. Teachers
+        $teacherQuery = \App\Models\Teacher::query();
+        if ($user) {
             if ($user->isTeacher() && $user->teacher_id) {
                 $teacherQuery->where('id', $user->teacher_id);
             } elseif ($user->isTeamLeader()) {
@@ -266,19 +295,41 @@ class UcreaEvaluationController extends Controller
                 }
             }
         }
+        $teachers = $teacherQuery->select('id', 'ins_name as name', 'id_lms', 'branch_id_lms')->orderBy('ins_name')->get();
 
-        $students = $studentQuery->select('id', 'name')->orderBy('name')->get();
-        $teachers = $teacherQuery->select('id', 'ins_name as name')->orderBy('ins_name')->get();
-        $classes = $classQuery->select('id', 'cls_name as name')->orderBy('cls_name')->get();
-        $tests = DB::table('ucrea_tests')->orderBy('test_nm')->get();
+        // 4. Tests
+        $tests = DB::table('ucrea_tests')
+            ->select('id', 'test_cd', 'test_nm', 'level_cd', 'level_cd_nm', 'test_seq')
+            ->orderBy('test_nm')
+            ->get();
+
+        // 5. Existing results
+        $existingResults = DB::table('ucrea_student_results')
+            ->select('stu_nm', 'class_nm', 'test_cd', 'level_cd', 'test_seq')
+            ->get();
+
+        // 6. Contracts with students
+        $contracts = \App\Models\Contract::with('student')
+            ->where('status', '!=', 'SS004')
+            ->get()
+            ->map(function ($cnt) {
+                return [
+                    'class_id' => $cnt->class_id,
+                    'student_id' => $cnt->student_id,
+                    'student_name' => $cnt->student->name ?? '',
+                    'student_lms_id' => $cnt->student->id_lms ?? '',
+                ];
+            });
 
         return response()->json([
             'status' => 'success',
             'data' => [
-                'students' => $students,
-                'teachers' => $teachers,
+                'branches' => $branches,
                 'classes' => $classes,
-                'tests' => $tests
+                'teachers' => $teachers,
+                'tests' => $tests,
+                'existing_results' => $existingResults,
+                'contracts' => $contracts,
             ]
         ]);
     }

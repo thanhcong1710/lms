@@ -22,6 +22,25 @@ class ClassController extends Controller
             $user->scopeClasses($query);
         }
 
+        if ($clsTypeGroup = $request->query('cls_type_group')) {
+            if ($clsTypeGroup === 'ucrea') {
+                $query->where(function ($q) {
+                    $q->whereIn('cls_type', ['CT001', 'CT003'])
+                      ->orWhere('cls_name', 'LIKE', '%.U.%');
+                });
+            } elseif ($clsTypeGroup === 'igaten') {
+                $query->where(function ($q) {
+                    $q->where('cls_name', 'LIKE', '%.IG.%')
+                      ->orWhere('cls_type', 'CT003');
+                });
+            } elseif (in_array($clsTypeGroup, ['black_hold', 'bh', 'bright_heading'])) {
+                $query->where(function ($q) {
+                    $q->whereIn('cls_type', ['CT004', 'CT002'])
+                      ->orWhere('cls_name', 'LIKE', '%.BH.%');
+                });
+            }
+        }
+
         if ($search = $request->query('search')) {
             $query->where(function ($q) use ($search) {
                 $q->where('cls_name', 'LIKE', "%{$search}%")

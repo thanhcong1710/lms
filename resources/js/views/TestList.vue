@@ -23,14 +23,14 @@
       </div>
       
       <div class="text-xs text-brand-desc font-medium">
-        Showing {{ tests.length }} records
+        {{ $t('pagination.showing_count', { count: tests.length }) }}
       </div>
     </div>
 
     <!-- Loading State -->
     <div v-if="loading" class="flex flex-col items-center justify-center py-16 space-y-4">
       <div class="animate-spin rounded-full h-10 w-10 border-b-2 border-indigo-600"></div>
-      <p class="text-sm text-brand-desc">Loading tests...</p>
+      <p class="text-sm text-brand-desc">{{ $t('igbh.loading') }}</p>
     </div>
 
     <!-- Tests Table -->

@@ -47,6 +47,23 @@ const messages = {
       system_live: 'System Live',
       logout: 'Logout'
     },
+    pagination: {
+      rows_per_page: 'Rows per page:',
+      showing: 'Showing {from} to {to} of {total} entries',
+      showing_count: 'Showing {count} records',
+      prev: 'Previous',
+      next: 'Next'
+    },
+    ucrea: {
+      title: 'UCREA Assessment Management',
+      desc: 'Manage student evaluations and test results',
+      add_eval: '+ Add New Score Entry',
+      tab_pending: 'Ungraded',
+      tab_completed: 'Graded',
+      search_placeholder: 'Search by student name or teacher...',
+      loading: 'Loading UCREA data...',
+      no_data: 'No evaluation tests found.'
+    },
     common: {
       search: 'Search...',
       actions: 'Actions',
@@ -379,6 +396,23 @@ const messages = {
       dark_mode: 'Giao diện tối',
       system_live: 'Hệ thống online',
       logout: 'Đăng xuất'
+    },
+    pagination: {
+      rows_per_page: 'Số bản ghi/trang:',
+      showing: 'Hiển thị {from} đến {to} trong tổng số {total} bản ghi',
+      showing_count: 'Hiển thị {count} bản ghi',
+      prev: 'Trước',
+      next: 'Sau'
+    },
+    ucrea: {
+      title: 'Quản Lý Đánh Giá UCREA',
+      desc: 'Quản lý đánh giá học sinh và kết quả kiểm tra UCREA',
+      add_eval: '+ Thêm Mới Nhập Điểm',
+      tab_pending: 'Chưa đánh giá',
+      tab_completed: 'Đã đánh giá',
+      search_placeholder: 'Tìm kiếm theo tên học sinh hoặc giáo viên...',
+      loading: 'Đang tải dữ liệu UCREA...',
+      no_data: 'Không tìm thấy bài kiểm tra nào.'
     },
     common: {
       search: 'Tìm kiếm...',

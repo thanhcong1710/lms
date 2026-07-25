@@ -11,8 +11,17 @@
     </div>
 
     <!-- Search / Filter -->
-    <div class="bg-brand-card/40 border border-brand-border p-4 rounded-xl flex items-center justify-between">
-      <input type="text" v-model="search" @input="fetchClasses(1)" :placeholder="$t('classes.search')" class="px-4 py-2 rounded-xl bg-brand-input border border-brand-border text-brand-text placeholder-gray-600 focus:outline-none focus:border-indigo-500 transition duration-150 text-sm w-72">
+    <div class="bg-brand-card/40 border border-brand-border p-4 rounded-xl flex flex-col md:flex-row gap-4 items-center justify-between">
+      <div class="flex items-center gap-4 flex-wrap w-full md:w-auto">
+        <input type="text" v-model="search" @input="fetchClasses(1)" :placeholder="$t('classes.search')" class="px-4 py-2 rounded-xl bg-brand-input border border-brand-border text-brand-text placeholder-gray-600 focus:outline-none focus:border-indigo-500 transition duration-150 text-sm w-72">
+        
+        <select v-model="selectedTypeGroup" @change="fetchClasses(1)" class="px-4 py-2.5 rounded-xl bg-brand-input border border-brand-border text-brand-text focus:outline-none focus:border-indigo-500 transition text-sm">
+          <option value="">Tất cả loại lớp</option>
+          <option value="ucrea">U-CREA</option>
+          <option value="igaten">BRIGHT IG</option>
+          <option value="black_hold">BLACK HOLD</option>
+        </select>
+      </div>
     </div>
 
     <!-- Table -->
@@ -135,6 +144,7 @@ export default {
     return {
       classes: [],
       search: '',
+      selectedTypeGroup: '',
       showModal: false,
       editingId: null,
       form: {
@@ -174,6 +184,7 @@ export default {
         const response = await axios.get('/api/classes', {
           params: {
             search: this.search,
+            cls_type_group: this.selectedTypeGroup,
             page: page,
             per_page: this.pagination.per_page
           },
