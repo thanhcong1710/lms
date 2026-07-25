@@ -7,6 +7,7 @@ use App\Models\Branch;
 use App\Models\Teacher;
 use App\Models\LmsClass;
 use App\Models\Student;
+use App\Models\Contract;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 
@@ -209,6 +210,9 @@ class IntegrationController extends Controller
     public function studentRegAction(Request $request)
     {
         $student = Student::where('accounting_id', $request->input('stuId'))->first();
+        if (!$student && $request->input('hStuSeq')) {
+            $student = Student::where('id_lms', $request->input('hStuSeq'))->orWhere('id', $request->input('hStuSeq'))->first();
+        }
         
         if (!$student) {
             $student = Student::create([
@@ -220,7 +224,16 @@ class IntegrationController extends Controller
 
             $student->id_lms = $student->id;
             $student->save();
+        } else {
+            $student->update([
+                'name' => $request->input('stuNm'),
+                'date_of_birth' => $request->input('stuBirthDt'),
+                'gender' => $request->input('stuGen'),
+                'accounting_id' => $request->input('stuId') ?: $student->accounting_id,
+            ]);
         }
+
+        $this->createOrUpdateStudentContract($student, $request);
 
         return response()->json([
             'status' => 'SUCCESS',
@@ -242,9 +255,62 @@ class IntegrationController extends Controller
                 'name' => $request->input('stuNm'),
                 'date_of_birth' => $request->input('stuBirthDt'),
                 'gender' => $request->input('stuGen'),
-                'accounting_id' => $request->input('stuId'),
+                'accounting_id' => $request->input('stuId') ?: $student->accounting_id,
             ]);
+        } else {
+            $student = Student::create([
+                'accounting_id' => $request->input('stuId'),
+                'name' => $request->input('stuNm'),
+                'date_of_birth' => $request->input('stuBirthDt'),
+                'gender' => $request->input('stuGen'),
+            ]);
+            $student->id_lms = $student->id;
+            $student->save();
         }
+
+        $this->createOrUpdateStudentContract($student, $request);
+
         return response()->json(['status' => 'SUCCESS']);
+    }
+
+    private function createOrUpdateStudentContract(Student $student, Request $request)
+    {
+        $classSeq = $request->input('classSeq');
+        $classLms = $classSeq ? LmsClass::where('class_seq', $classSeq)->orWhere('id', $classSeq)->first() : null;
+
+        $cntrId = $request->input('cntrId') ?: $request->input('hMembId') ?: ($classLms ? $classLms->branch_id_lms : null);
+        $branch = $cntrId ? Branch::where('id_lms', $cntrId)->orWhere('id', $cntrId)->first() : null;
+
+        $contractData = [
+            'class_id' => $classLms ? $classLms->id : null,
+            'branch_id' => $branch ? $branch->id : null,
+        ];
+
+        if ($request->filled('startDt')) {
+            $contractData['enrolment_start_date'] = $request->input('startDt');
+        }
+        if ($request->filled('endDt')) {
+            $contractData['enrolment_last_date'] = $request->input('endDt');
+        }
+        if ($request->filled('validCd')) {
+            $contractData['valid_cd'] = $request->input('validCd');
+        }
+        if ($request->filled('stuStat')) {
+            $contractData['status'] = $request->input('stuStat');
+        }
+        if ($request->has('remark')) {
+            $contractData['remark'] = $request->input('remark');
+        }
+
+        $contract = Contract::where('student_id', $student->id)->first();
+        if ($contract) {
+            $contract->update(array_filter($contractData, fn($v) => !is_null($v)));
+        } else {
+            Contract::create(array_merge([
+                'student_id' => $student->id,
+                'valid_cd' => 'VC005',
+                'status' => 'SS002',
+            ], $contractData));
+        }
     }
 }
