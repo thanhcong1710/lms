@@ -55,63 +55,87 @@ class IntegrationController extends Controller
     public function teacherRegAction(Request $request)
     {
         $teacher = Teacher::where('id_lms', $request->input('membId'))->first();
-        if (!$teacher) {
-            $teacher = Teacher::create([
-                'id_lms' => $request->input('membId'),
-                'ins_name' => $request->input('tchNm'),
-                'email' => $request->input('tchEmail'),
-                'phone' => $request->input('tchContact'),
-                'status' => $request->input('tchStat') == 'US001' ? 1 : 0,
-                'head' => $request->input('head') == 'Y' ? 1 : 0,
-                'branch_id_lms' => $request->input('cntrId'),
-            ]);
-            $this->createOrUpdateTeacherUser($teacher, $request);
+        if (!$teacher && $request->input('tchEmail')) {
+            $teacher = Teacher::where('email', $request->input('tchEmail'))->first();
         }
+
+        $teacherData = [
+            'id_lms' => $request->input('membId'),
+            'ins_name' => $request->input('tchNm'),
+            'email' => $request->input('tchEmail'),
+            'phone' => $request->input('tchContact'),
+            'status' => $request->input('tchStat') == 'US001' ? 1 : 0,
+            'head' => $request->input('head') == 'Y' ? 1 : 0,
+            'branch_id_lms' => $request->input('cntrId'),
+        ];
+
+        if (!$teacher) {
+            $teacher = Teacher::create($teacherData);
+        } else {
+            $teacher->update($teacherData);
+        }
+
+        $this->createOrUpdateTeacherUser($teacher, $request);
         return response()->json(['status' => 'SUCCESS']);
     }
 
     public function teacherModAction(Request $request)
     {
         $teacher = Teacher::where('id_lms', $request->input('membId'))->first();
-        if ($teacher) {
-            $teacher->update([
-                'ins_name' => $request->input('tchNm'),
-                'email' => $request->input('tchEmail'),
-                'phone' => $request->input('tchContact'),
-                'status' => $request->input('tchStat') == 'US001' ? 1 : 0,
-                'head' => $request->input('head') == 'Y' ? 1 : 0,
-                'branch_id_lms' => $request->input('cntrId'),
-            ]);
-            $this->createOrUpdateTeacherUser($teacher, $request);
+        if (!$teacher && $request->input('tchEmail')) {
+            $teacher = Teacher::where('email', $request->input('tchEmail'))->first();
         }
+
+        $teacherData = [
+            'id_lms' => $request->input('membId'),
+            'ins_name' => $request->input('tchNm'),
+            'email' => $request->input('tchEmail'),
+            'phone' => $request->input('tchContact'),
+            'status' => $request->input('tchStat') == 'US001' ? 1 : 0,
+            'head' => $request->input('head') == 'Y' ? 1 : 0,
+            'branch_id_lms' => $request->input('cntrId'),
+        ];
+
+        if ($teacher) {
+            $teacher->update($teacherData);
+        } else {
+            $teacher = Teacher::create($teacherData);
+        }
+
+        $this->createOrUpdateTeacherUser($teacher, $request);
         return response()->json(['status' => 'SUCCESS']);
     }
 
-    private function createOrUpdateTeacherUser($teacher, Request $request)
+    public function createOrUpdateTeacherUser($teacher, Request $request = null)
     {
-        $branch = Branch::where('id_lms', $request->input('cntrId'))->first();
-        $email = $request->input('tchEmail');
+        $cntrId = $request ? $request->input('cntrId') : $teacher->branch_id_lms;
+        $branch = Branch::where('id_lms', $cntrId)->first();
+        
+        $email = $request ? $request->input('tchEmail') : $teacher->email;
         if (empty($email)) {
-            $email = $request->input('membId') . '@cms.vn';
+            $email = $teacher->id_lms . '@cms.vn';
         }
 
-        $role = $request->input('head') == 'Y' ? 'team_leader' : 'teacher';
-        
+        $tchNm = $request ? $request->input('tchNm') : $teacher->ins_name;
+        $isHead = $request ? ($request->input('head') == 'Y') : ($teacher->head == 1);
+        $role = $isHead ? 'team_leader' : 'teacher';
+        $status = $request ? ($request->input('tchStat') == 'US001' ? 1 : 0) : ($teacher->status ?? 1);
+
         $userData = [
-            'name' => $request->input('tchNm'),
+            'name' => $tchNm ?: $teacher->ins_name,
             'email' => $email,
             'role' => $role,
             'branch_id' => $branch ? $branch->id : null,
             'teacher_id' => $teacher->id,
-            'status' => $request->input('tchStat') == 'US001' ? 1 : 0,
+            'status' => $status,
         ];
         
-        if ($request->has('tchPasswd') && $request->input('tchPasswd')) {
+        if ($request && $request->has('tchPasswd') && $request->input('tchPasswd')) {
             $userData['password'] = Hash::make($request->input('tchPasswd'));
         }
 
         $user = User::where('teacher_id', $teacher->id)->first();
-        if (!$user) {
+        if (!$user && !empty($email)) {
             $user = User::where('email', $email)->first();
         }
 
@@ -125,6 +149,7 @@ class IntegrationController extends Controller
         }
 
         $teacher->update(['user_id' => $user->id]);
+        return $user;
     }
 
     public function classRegAction(Request $request)

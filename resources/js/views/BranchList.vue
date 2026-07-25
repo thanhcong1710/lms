@@ -5,7 +5,7 @@
         <h2 class="text-2xl font-bold text-brand-text">{{ $t('branches.title') }}</h2>
         <p class="text-sm text-brand-desc">{{ $t('branches.desc') }}</p>
       </div>
-      <button @click="openModal()" class="px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-brand-text text-sm font-semibold transition duration-150 shadow-lg shadow-indigo-600/20">
+      <button @click="openModal()" class="btn-primary">
         {{ $t('branches.add_btn') }}
       </button>
     </div>
@@ -30,7 +30,7 @@
           </tr>
         </thead>
         <tbody class="divide-y divide-brand-border text-sm text-brand-text/90">
-          <tr v-for="(branch, index) in branches" :key="branch.id" class="hover:bg-gray-800/20 transition duration-150">
+          <tr v-for="(branch, index) in branches" :key="branch.id" class="hover:bg-brand-card/40 transition duration-150">
             <td class="px-6 py-4 text-brand-desc">{{ (pagination.current_page - 1) * pagination.per_page + index + 1 }}</td>
             <td class="px-6 py-4 font-medium text-brand-text">{{ branch.name }}</td>
             <td class="px-6 py-4 font-mono text-indigo-400">{{ branch.id_lms || 'N/A' }}</td>
@@ -94,8 +94,8 @@
           </div>
 
           <div class="flex justify-end gap-3 pt-4 border-t border-brand-border">
-            <button type="button" @click="showModal = false" class="px-4 py-2 rounded-xl border border-brand-border text-brand-text/90 hover:bg-gray-800 text-sm transition">{{ $t('common.cancel') }}</button>
-            <button type="submit" class="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-brand-text text-sm font-semibold transition shadow-lg shadow-indigo-600/20">{{ $t('common.save') }}</button>
+            <button type="button" @click="showModal = false" class="btn-secondary">{{ $t('common.cancel') }}</button>
+            <button type="submit" class="btn-primary">{{ $t('common.save') }}</button>
           </div>
         </form>
       </div>

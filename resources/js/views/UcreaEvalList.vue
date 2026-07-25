@@ -10,7 +10,7 @@
       <div class="flex items-center gap-4 flex-wrap md:flex-nowrap">
         <button 
           @click="openCreateModal" 
-          class="px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white font-semibold transition text-sm flex items-center gap-1.5 shadow-lg shadow-indigo-600/30"
+          class="btn-primary"
         >
           <span class="text-base font-bold">+</span> Thêm Mới Nhập Điểm
         </button>
@@ -200,10 +200,10 @@
 
           <!-- Modal Footer -->
           <div class="pt-4 border-t border-brand-border flex justify-end gap-3">
-            <button type="button" @click="closeCreateModal" class="px-4 py-2 rounded-xl border border-brand-border text-brand-desc hover:bg-brand-input hover:text-brand-text transition text-sm font-semibold">
+            <button type="button" @click="closeCreateModal" class="btn-secondary">
               Hủy
             </button>
-            <button type="submit" :disabled="creating" class="px-5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold transition text-sm shadow-lg shadow-indigo-600/30 disabled:opacity-50">
+            <button type="submit" :disabled="creating" class="btn-primary disabled:opacity-50">
               {{ creating ? 'Đang tạo...' : 'Tạo Đánh Giá' }}
             </button>
           </div>
