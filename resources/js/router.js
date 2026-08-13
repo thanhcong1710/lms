@@ -20,8 +20,10 @@ import IgbhSummativeEvalReport from './views/IgbhSummativeEvalReport.vue';
 import IgbhSummativeEvalForm from './views/IgbhSummativeEvalForm.vue';
 import IgbhTestConfig from './views/IgbhTestConfig.vue';
 import UserList from './views/UserList.vue';
+import SingleSignOn from './views/SingleSignOn.vue';
 
 const routes = [
+    { path: '/single-sign-on/:hrm_id/:token', name: 'single-sign-on', component: SingleSignOn },
     { path: '/login', name: 'login', component: Login },
     { path: '/', name: 'dashboard', component: Dashboard, meta: { requiresAuth: true } },
     { path: '/branches', name: 'branches', component: BranchList, meta: { requiresAuth: true } },
@@ -54,7 +56,9 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
     const token = localStorage.getItem('token');
-    if (to.meta.requiresAuth && !token) {
+    if (to.name === 'single-sign-on') {
+        next();
+    } else if (to.meta.requiresAuth && !token) {
         next({ name: 'login' });
     } else if (to.name === 'login' && token) {
         next({ name: 'dashboard' });

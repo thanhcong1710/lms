@@ -18,6 +18,8 @@ use App\Http\Controllers\IntegrationController;
 use App\Http\Controllers\DashboardController;
 
 Route::post('/login', [AuthController::class, 'login']);
+Route::post('/single-sign-on', [AuthController::class, 'singleSignOn']);
+Route::get('/get-login-redirect', [AuthController::class, 'getLoginRedirect']);
 Route::get('/me', [AuthController::class, 'me']);
 Route::get('/dashboard/stats', [DashboardController::class, 'stats']);
 

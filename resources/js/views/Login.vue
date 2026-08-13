@@ -113,6 +113,16 @@ export default {
       error: ''
     }
   },
+  async mounted() {
+    try {
+      const response = await axios.get('/api/get-login-redirect');
+      if (response.data) {
+        window.location.href = response.data;
+      }
+    } catch (e) {
+      console.error('Error fetching login redirect:', e);
+    }
+  },
   methods: {
     async login() {
       this.error = '';
