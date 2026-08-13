@@ -16,7 +16,7 @@ class TeacherController extends Controller
             $limit = 20;
         }
 
-        $query = Teacher::query();
+        $query = Teacher::with('user');
 
         // Role-based filtering
         $user = AuthController::resolveUser($request);
@@ -34,7 +34,10 @@ class TeacherController extends Controller
         if ($search = $request->query('search')) {
             $query->where(function ($q) use ($search) {
                 $q->where('ins_name', 'LIKE', "%{$search}%")
-                  ->orWhere('id_lms', 'LIKE', "%{$search}%");
+                  ->orWhere('id_lms', 'LIKE', "%{$search}%")
+                  ->orWhereHas('user', function ($uq) use ($search) {
+                      $uq->where('hrm_id', 'LIKE', "%{$search}%");
+                  });
             });
         }
 

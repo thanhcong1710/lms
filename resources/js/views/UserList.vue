@@ -22,6 +22,7 @@
           <tr class="border-b border-brand-border bg-brand-header text-xs font-semibold text-brand-desc uppercase">
             <th class="px-6 py-4 w-16">{{ $t('common.stt') }}</th>
             <th class="px-6 py-4">{{ $t('system.cols.username') }}</th>
+            <th class="px-6 py-4">Mã NV (HRM ID)</th>
             <th class="px-6 py-4">{{ $t('common.email') }}</th>
             <th class="px-6 py-4">{{ $t('system.cols.role') }}</th>
             <th class="px-6 py-4">{{ $t('system.cols.branch') }}</th>
@@ -33,6 +34,7 @@
           <tr v-for="(user, index) in users" :key="user.id" class="hover:bg-brand-card/40 transition">
             <td class="px-6 py-4 text-brand-desc">{{ (pagination.current_page - 1) * pagination.per_page + index + 1 }}</td>
             <td class="px-6 py-4 font-medium text-brand-text">{{ user.name }}</td>
+            <td class="px-6 py-4 font-mono text-amber-400">{{ user.hrm_id || '-' }}</td>
             <td class="px-6 py-4">{{ user.email }}</td>
             <td class="px-6 py-4">
               <span :class="roleClass(user.role)" class="px-2.5 py-1 rounded-full text-xs font-semibold uppercase">
@@ -82,13 +84,17 @@
 
           <div class="grid grid-cols-2 gap-4">
             <div>
+              <label class="block text-xs font-semibold text-brand-desc uppercase mb-2">Mã nhân viên (HRM ID)</label>
+              <input type="text" v-model="form.hrm_id" placeholder="Nhập mã NV..." class="w-full px-4 py-2.5 rounded-xl bg-brand-input border border-brand-border text-brand-text placeholder-gray-600 focus:outline-none focus:border-indigo-500 text-sm">
+            </div>
+            <div>
               <label class="block text-xs font-semibold text-brand-desc uppercase mb-2">{{ $t('system.cols.username') }}</label>
               <input type="text" v-model="form.name" required class="w-full px-4 py-2.5 rounded-xl bg-brand-input border border-brand-border text-brand-text placeholder-gray-600 focus:outline-none focus:border-indigo-500 text-sm">
             </div>
-            <div>
-              <label class="block text-xs font-semibold text-brand-desc uppercase mb-2">{{ $t('common.email') }}</label>
-              <input type="email" v-model="form.email" required class="w-full px-4 py-2.5 rounded-xl bg-brand-input border border-brand-border text-brand-text placeholder-gray-600 focus:outline-none focus:border-indigo-500 text-sm">
-            </div>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-brand-desc uppercase mb-2">{{ $t('common.email') }}</label>
+            <input type="email" v-model="form.email" required class="w-full px-4 py-2.5 rounded-xl bg-brand-input border border-brand-border text-brand-text placeholder-gray-600 focus:outline-none focus:border-indigo-500 text-sm">
           </div>
 
           <div class="grid grid-cols-2 gap-4">
@@ -153,6 +159,7 @@ export default {
       form: {
         name: '',
         email: '',
+        hrm_id: '',
         password: '',
         role: 'teacher',
         branch_id: null,
@@ -225,6 +232,7 @@ export default {
         this.form = {
           name: user.name,
           email: user.email,
+          hrm_id: user.hrm_id || '',
           password: '',
           role: user.role,
           branch_id: user.branch_id,
@@ -233,7 +241,7 @@ export default {
         };
       } else {
         this.editingId = null;
-        this.form = { name: '', email: '', password: '', role: 'teacher', branch_id: null, teacher_id: null, status: 1 };
+        this.form = { name: '', email: '', hrm_id: '', password: '', role: 'teacher', branch_id: null, teacher_id: null, status: 1 };
       }
       this.showModal = true;
     },

@@ -23,6 +23,7 @@
             <th class="px-6 py-4 w-16">{{ $t('common.stt') }}</th>
             <th class="px-6 py-4">{{ $t('teachers.form.name') }}</th>
             <th class="px-6 py-4">{{ $t('common.lms_id') }}</th>
+            <th class="px-6 py-4">Mã NV (HRM ID)</th>
             <th class="px-6 py-4">{{ $t('teachers.cols.branch_lms_id') }}</th>
             <th class="px-6 py-4">{{ $t('common.email') }}</th>
             <th class="px-6 py-4">{{ $t('teachers.cols.head_teacher') }}</th>
@@ -35,6 +36,7 @@
             <td class="px-6 py-4 text-brand-desc">{{ (pagination.current_page - 1) * pagination.per_page + index + 1 }}</td>
             <td class="px-6 py-4 font-medium text-brand-text">{{ teacher.ins_name }}</td>
             <td class="px-6 py-4 font-mono text-indigo-400">{{ teacher.id_lms }}</td>
+            <td class="px-6 py-4 font-mono text-amber-400">{{ teacher.user?.hrm_id || 'N/A' }}</td>
             <td class="px-6 py-4">{{ teacher.branch_id_lms || 'N/A' }}</td>
             <td class="px-6 py-4">{{ teacher.email }}</td>
             <td class="px-6 py-4">

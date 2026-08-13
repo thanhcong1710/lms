@@ -22,7 +22,8 @@ class UserController extends Controller
         if ($search = $request->query('search')) {
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'LIKE', "%{$search}%")
-                  ->orWhere('email', 'LIKE', "%{$search}%");
+                  ->orWhere('email', 'LIKE', "%{$search}%")
+                  ->orWhere('hrm_id', 'LIKE', "%{$search}%");
             });
         }
 
@@ -44,6 +45,7 @@ class UserController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
+            'hrm_id' => 'nullable|string|max:255',
             'password' => 'nullable|string|min:6',
             'role' => 'required|in:admin,team_leader,teacher',
             'branch_id' => 'nullable|exists:branches,id',
@@ -53,6 +55,7 @@ class UserController extends Controller
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
+            'hrm_id' => $request->hrm_id,
             'password' => Hash::make($request->password ?? '@12345678'),
             'role' => $request->role,
             'branch_id' => $request->branch_id,
@@ -75,6 +78,7 @@ class UserController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,' . $id,
+            'hrm_id' => 'nullable|string|max:255',
             'role' => 'required|in:admin,team_leader,teacher',
             'branch_id' => 'nullable|exists:branches,id',
             'teacher_id' => 'nullable|exists:teachers,id',
@@ -83,6 +87,7 @@ class UserController extends Controller
         $data = [
             'name' => $request->name,
             'email' => $request->email,
+            'hrm_id' => $request->hrm_id,
             'role' => $request->role,
             'branch_id' => $request->branch_id,
             'teacher_id' => $request->teacher_id,
