@@ -121,9 +121,12 @@ class IntegrationController extends Controller
         $role = $isHead ? 'team_leader' : 'teacher';
         $status = $request ? ($request->input('tchStat') == 'US001' ? 1 : 0) : ($teacher->status ?? 1);
 
+        $hrmId = $request ? ($request->input('hrmId') ?: $request->input('hrm_id') ?: $request->input('membId')) : $teacher->id_lms;
+
         $userData = [
             'name' => $tchNm ?: $teacher->ins_name,
             'email' => $email,
+            'hrm_id' => $hrmId ?: $teacher->id_lms,
             'role' => $role,
             'branch_id' => $branch ? $branch->id : null,
             'teacher_id' => $teacher->id,
@@ -135,6 +138,9 @@ class IntegrationController extends Controller
         }
 
         $user = User::where('teacher_id', $teacher->id)->first();
+        if (!$user && !empty($hrmId)) {
+            $user = User::where('hrm_id', $hrmId)->first();
+        }
         if (!$user && !empty($email)) {
             $user = User::where('email', $email)->first();
         }

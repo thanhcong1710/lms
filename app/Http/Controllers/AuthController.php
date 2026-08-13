@@ -46,7 +46,8 @@ class AuthController extends Controller
         $key = "CMS@abcd1234";
 
         if ($token === md5($key . $hrm_id)) {
-            $user = User::where('id', $hrm_id)
+            $user = User::where('hrm_id', $hrm_id)
+                ->orWhere('id', $hrm_id)
                 ->orWhere('email', $hrm_id)
                 ->first();
 
@@ -62,6 +63,7 @@ class AuthController extends Controller
                         'id' => $user->id,
                         'name' => $user->name,
                         'email' => $user->email,
+                        'hrm_id' => $user->hrm_id,
                         'role' => $user->role,
                         'branch_id' => $user->branch_id,
                         'teacher_id' => $user->teacher_id,
