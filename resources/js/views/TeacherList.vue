@@ -24,7 +24,7 @@
             <th class="px-6 py-4">{{ $t('teachers.form.name') }}</th>
             <th class="px-6 py-4">{{ $t('common.lms_id') }}</th>
             <th class="px-6 py-4">Mã NV (HRM ID)</th>
-            <th class="px-6 py-4">{{ $t('teachers.cols.branch_lms_id') }}</th>
+            <th class="px-6 py-4">{{ $t('common.branch') }}</th>
             <th class="px-6 py-4">{{ $t('common.email') }}</th>
             <th class="px-6 py-4">{{ $t('teachers.cols.head_teacher') }}</th>
             <th class="px-6 py-4">{{ $t('common.status') }}</th>
@@ -37,7 +37,7 @@
             <td class="px-6 py-4 font-medium text-brand-text">{{ teacher.ins_name }}</td>
             <td class="px-6 py-4 font-mono text-indigo-400">{{ teacher.id_lms }}</td>
             <td class="px-6 py-4 font-mono text-amber-400">{{ teacher.user?.hrm_id || 'N/A' }}</td>
-            <td class="px-6 py-4">{{ teacher.branch_id_lms || 'N/A' }}</td>
+            <td class="px-6 py-4">{{ branchName(teacher.branch_id_lms) }}</td>
             <td class="px-6 py-4">{{ teacher.email }}</td>
             <td class="px-6 py-4">
               <span :class="isHeadTeacher(teacher.head) ? 'text-indigo-400 bg-indigo-500/10' : 'text-brand-desc bg-gray-500/10'" class="px-2 py-0.5 rounded text-xs font-semibold">
@@ -79,7 +79,7 @@
             <label class="block text-xs font-semibold text-brand-desc uppercase mb-2">{{ $t('teachers.cols.branch_lms_id') }}</label>
             <select v-model="form.branch_id_lms" required class="w-full px-4 py-2.5 rounded-xl bg-brand-input border border-brand-border text-brand-text focus:outline-none focus:border-indigo-500 text-sm">
               <option value="">{{ $t('system.select_branch') }}</option>
-              <option v-for="b in branchOptions" :key="b.id" :value="b.id_lms">{{ b.name }} ({{ b.id_lms }})</option>
+              <option v-for="b in branchOptions" :key="b.id" :value="b.id_lms">{{ b.name }}</option>
             </select>
           </div>
           <div>
@@ -168,6 +168,11 @@ export default {
     }
   },
   methods: {
+    branchName(idLms) {
+      if (!idLms) return 'N/A';
+      const b = this.branchOptions.find(x => x.id_lms === idLms || x.id == idLms);
+      return b ? b.name : idLms;
+    },
     isHeadTeacher(head) {
       return head === 'Y' || head == 1 || head === '1' || head === true;
     },

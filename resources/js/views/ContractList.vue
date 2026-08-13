@@ -73,7 +73,7 @@
             <label class="block text-xs font-semibold text-brand-desc uppercase mb-2">{{ $t('common.branch') }}</label>
             <select v-model="form.branch_id" @change="onBranchChange" required class="w-full px-4 py-2.5 rounded-xl bg-brand-input border border-brand-border text-brand-text focus:outline-none focus:border-indigo-500 text-sm">
               <option value="">{{ $t('system.select_branch') }}</option>
-              <option v-for="b in branchOptions" :key="b.id" :value="b.id">{{ b.name }} ({{ b.id_lms }})</option>
+              <option v-for="b in branchOptions" :key="b.id" :value="b.id">{{ b.name }}</option>
             </select>
           </div>
 

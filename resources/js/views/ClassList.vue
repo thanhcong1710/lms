@@ -50,7 +50,7 @@
               </span>
             </td>
             <td class="px-6 py-4 text-sm">{{ teacherName(cls.teacher_id_lms) }}</td>
-            <td class="px-6 py-4">{{ cls.branch_id_lms }}</td>
+            <td class="px-6 py-4">{{ branchName(cls.branch_id_lms) }}</td>
             <td class="px-6 py-4">
               <span :class="['US001','1'].includes(String(cls.cls_status)) ? 'bg-green-500/10 text-green-400 border border-green-500/20' : 'bg-red-500/10 text-red-400 border border-red-500/20'" class="px-2.5 py-1 rounded-full text-xs font-medium uppercase">
                 {{ ['US001','1'].includes(String(cls.cls_status)) ? $t('common.active') : $t('common.inactive') }}
@@ -84,7 +84,7 @@
             <label class="block text-xs font-semibold text-brand-desc uppercase mb-2">{{ $t('common.branch') }}</label>
             <select v-model="form.branch_id_lms" required class="w-full px-4 py-2.5 rounded-xl bg-brand-input border border-brand-border text-brand-text focus:outline-none focus:border-indigo-500 text-sm">
               <option value="">{{ $t('system.select_branch') }}</option>
-              <option v-for="b in branchOptions" :key="b.id" :value="b.id_lms">{{ b.name }} ({{ b.id_lms }})</option>
+              <option v-for="b in branchOptions" :key="b.id" :value="b.id_lms">{{ b.name }}</option>
             </select>
           </div>
 
@@ -347,6 +347,11 @@ export default {
       if (!idLms) return '—';
       const t = this.teacherOptions.find(x => x.id_lms === idLms);
       return t ? t.ins_name : idLms;
+    },
+    branchName(idLms) {
+      if (!idLms) return '—';
+      const b = this.branchOptions.find(x => x.id_lms === idLms || x.id == idLms);
+      return b ? b.name : idLms;
     }
   }
 }

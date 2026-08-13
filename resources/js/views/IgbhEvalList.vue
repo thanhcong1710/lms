@@ -142,7 +142,7 @@
             <label class="block text-xs font-semibold text-brand-desc uppercase">1. Trung tâm (Cơ sở)</label>
             <select v-model="form.branch_id" @change="onBranchChange" required class="w-full px-3 py-2.5 rounded-xl bg-brand-input border border-brand-border text-brand-text focus:outline-none focus:border-indigo-500 transition text-sm">
               <option :value="null" disabled>-- Chọn trung tâm --</option>
-              <option v-for="b in initData.branches" :key="b.id" :value="b.id">{{ b.name }} ({{ b.id_lms }})</option>
+              <option v-for="b in initData.branches" :key="b.id" :value="b.id">{{ b.name }}</option>
             </select>
           </div>
 
