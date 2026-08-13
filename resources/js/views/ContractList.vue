@@ -5,7 +5,7 @@
         <h2 class="text-2xl font-bold text-brand-text">{{ $t('contracts.title') }}</h2>
         <p class="text-sm text-brand-desc">{{ $t('contracts.desc') }}</p>
       </div>
-      <button @click="openModal()" class="btn-primary">
+      <button v-if="userRole === 'admin'" @click="openModal()" class="btn-primary">
         {{ $t('contracts.add_btn') }}
       </button>
     </div>
@@ -28,7 +28,7 @@
             <th class="px-6 py-4">{{ $t('contracts.cols.end_date') }}</th>
             <th class="px-6 py-4">{{ $t('contracts.cols.valid_cd') }}</th>
             <th class="px-6 py-4">{{ $t('common.status') }}</th>
-            <th class="px-6 py-4 text-right">{{ $t('common.actions') }}</th>
+            <th v-if="userRole === 'admin'" class="px-6 py-4 text-right">{{ $t('common.actions') }}</th>
           </tr>
         </thead>
         <tbody class="divide-y divide-brand-border text-sm text-brand-text/90">
@@ -45,7 +45,7 @@
                 {{ contract.status === 'SS001' ? 'Enrolled' : 'Pending' }}
               </span>
             </td>
-            <td class="px-6 py-4 text-right space-x-2">
+            <td v-if="userRole === 'admin'" class="px-6 py-4 text-right space-x-2">
               <button @click="openModal(contract)" class="text-sm text-indigo-400 hover:text-indigo-300 font-medium">{{ $t('common.edit') }}</button>
               <button @click="deleteContract(contract.id)" class="text-sm text-red-400 hover:text-red-300 font-medium">{{ $t('common.delete') }}</button>
             </td>
@@ -145,6 +145,7 @@ import axios from 'axios';
 export default {
   data() {
     return {
+      userRole: localStorage.getItem('user_role') || 'admin',
       contracts: [],
       search: '',
       showModal: false,
@@ -266,6 +267,7 @@ export default {
       this.fetchContracts(1);
     },
     openModal(contract = null) {
+      if (this.userRole !== 'admin') return;
       this.studentSearch = '';
       this.studentResults = [];
       if (contract) {
@@ -289,6 +291,7 @@ export default {
       this.showModal = true;
     },
     async saveContract() {
+      if (this.userRole !== 'admin') return;
       try {
         const headers = { Authorization: `Bearer ${localStorage.getItem('token')}` };
         const payload = { ...this.form };
@@ -305,6 +308,7 @@ export default {
       }
     },
     deleteContract(id) {
+      if (this.userRole !== 'admin') return;
       if (confirm('Are you sure you want to delete this contract?')) {
         this.contracts = this.contracts.filter(c => c.id !== id);
       }

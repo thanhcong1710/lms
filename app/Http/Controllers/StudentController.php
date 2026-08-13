@@ -36,6 +36,11 @@ class StudentController extends Controller
 
     public function store(Request $request)
     {
+        $user = AuthController::resolveUser($request);
+        if (!$user || $user->role !== 'admin') {
+            return response()->json(['message' => 'Unauthorized action.'], 403);
+        }
+
         $student = Student::create($request->all());
         return response()->json($student, 201);
     }
@@ -47,13 +52,23 @@ class StudentController extends Controller
 
     public function update(Request $request, $id)
     {
+        $user = AuthController::resolveUser($request);
+        if (!$user || $user->role !== 'admin') {
+            return response()->json(['message' => 'Unauthorized action.'], 403);
+        }
+
         $student = Student::findOrFail($id);
         $student->update($request->all());
         return response()->json($student);
     }
 
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
+        $user = AuthController::resolveUser($request);
+        if (!$user || $user->role !== 'admin') {
+            return response()->json(['message' => 'Unauthorized action.'], 403);
+        }
+
         Student::destroy($id);
         return response()->json(['message' => 'Deleted successfully']);
     }

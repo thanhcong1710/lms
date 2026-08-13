@@ -3,10 +3,7 @@
     <!-- Mobile Hamburger Header -->
     <header class="md:hidden w-full bg-brand-card/80 backdrop-blur-md border-b border-brand-border h-16 fixed top-0 left-0 z-40 flex items-center justify-between px-4" v-if="isAuthenticated">
       <div class="flex items-center gap-3">
-        <div class="h-9 w-9 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center font-bold text-white shadow-lg">
-          LMS
-        </div>
-        <span class="font-bold text-base leading-none">Logiclab</span>
+        <img src="/logo.png" alt="LogicLab Logo" class="h-8 w-auto object-contain" />
       </div>
       
       <div class="flex items-center gap-2">
@@ -39,12 +36,7 @@
         <!-- Logo and Close Button (Mobile) -->
         <div class="flex items-center justify-between mb-8">
           <div class="flex items-center gap-3">
-            <div class="h-10 w-10 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center font-bold text-white shadow-lg shadow-indigo-500/20">
-              LMS
-            </div>
-            <div>
-              <h1 class="font-bold text-lg leading-none">Logiclab</h1>
-            </div>
+            <img src="/logo.png" alt="LogicLab Logo" class="h-10 w-auto object-contain" />
           </div>
           <button @click="isMobileMenuOpen = false" class="md:hidden p-1.5 rounded-lg bg-brand-input hover:bg-brand-border">
             ✕

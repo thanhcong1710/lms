@@ -13,9 +13,7 @@
       </svg>
 
       <div class="relative z-10 p-16 max-w-2xl text-slate-800">
-        <div class="h-20 w-20 rounded-3xl bg-blue-600 flex items-center justify-center font-bold text-white shadow-2xl mb-8 text-3xl shadow-blue-500/30">
-          LMS
-        </div>
+        <img src="/logo.png" alt="LogicLab Logo" class="h-14 w-auto object-contain mb-8" />
         <h1 class="text-5xl font-black mb-6 leading-tight tracking-tight text-slate-900">
           Khơi nguồn <br>
           <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-teal-500">Đam mê Toán học</span>
@@ -45,9 +43,7 @@
       <div class="w-full max-w-md relative z-10">
         <!-- Logo for mobile only -->
         <div class="lg:hidden flex justify-center mb-8">
-           <div class="h-16 w-16 rounded-3xl bg-blue-600 flex items-center justify-center font-bold text-white shadow-xl text-2xl shadow-blue-500/30">
-            LL
-          </div>
+          <img src="/logo.png" alt="LogicLab Logo" class="h-12 w-auto object-contain" />
         </div>
 
         <div class="text-center lg:text-left mb-10">

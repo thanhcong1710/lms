@@ -5,7 +5,7 @@
         <h2 class="text-2xl font-bold text-brand-text">{{ $t('classes.title') }}</h2>
         <p class="text-sm text-brand-desc">{{ $t('classes.desc') }}</p>
       </div>
-      <button @click="openModal()" class="btn-primary">
+      <button v-if="userRole === 'admin'" @click="openModal()" class="btn-primary">
         {{ $t('classes.add_btn') }}
       </button>
     </div>
@@ -36,7 +36,7 @@
             <th class="px-6 py-4">Giáo viên</th>
             <th class="px-6 py-4">{{ $t('common.branch') }}</th>
             <th class="px-6 py-4">{{ $t('common.status') }}</th>
-            <th class="px-6 py-4 text-right">{{ $t('common.actions') }}</th>
+            <th v-if="userRole === 'admin'" class="px-6 py-4 text-right">{{ $t('common.actions') }}</th>
           </tr>
         </thead>
         <tbody class="divide-y divide-brand-border text-sm text-brand-text/90">
@@ -56,7 +56,7 @@
                 {{ ['US001','1'].includes(String(cls.cls_status)) ? $t('common.active') : $t('common.inactive') }}
               </span>
             </td>
-            <td class="px-6 py-4 text-right space-x-2">
+            <td v-if="userRole === 'admin'" class="px-6 py-4 text-right space-x-2">
               <button @click="openModal(cls)" class="text-sm text-indigo-400 hover:text-indigo-300 font-medium">{{ $t('common.edit') }}</button>
               <button @click="deleteClass(cls.id)" class="text-sm text-red-400 hover:text-red-300 font-medium">{{ $t('common.delete') }}</button>
             </td>
@@ -151,6 +151,7 @@ import axios from 'axios';
 export default {
   data() {
     return {
+      userRole: localStorage.getItem('user_role') || 'admin',
       classes: [],
       search: '',
       selectedTypeGroup: '',
@@ -270,6 +271,7 @@ export default {
       }
     },
     openModal(cls = null) {
+      if (this.userRole !== 'admin') return;
       if (cls) {
         this.editingId = cls.id;
         this.form = {
@@ -297,6 +299,7 @@ export default {
       this.showModal = true;
     },
     async saveClass() {
+      if (this.userRole !== 'admin') return;
       this.saving = true;
       try {
         const headers = { Authorization: `Bearer ${localStorage.getItem('token')}` };
@@ -315,6 +318,7 @@ export default {
       }
     },
     async deleteClass(id) {
+      if (this.userRole !== 'admin') return;
       if (confirm('Bạn có chắc chắn muốn xóa lớp học này?')) {
         try {
           const headers = { Authorization: `Bearer ${localStorage.getItem('token')}` };

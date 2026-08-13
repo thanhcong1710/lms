@@ -53,6 +53,11 @@ class ClassController extends Controller
 
     public function store(Request $request)
     {
+        $user = AuthController::resolveUser($request);
+        if (!$user || $user->role !== 'admin') {
+            return response()->json(['message' => 'Unauthorized action.'], 403);
+        }
+
         $data = $request->all();
         if (!empty($data['branch_id_lms']) && empty($data['branch_id'])) {
             $branch = \App\Models\Branch::where('id_lms', $data['branch_id_lms'])->first();
@@ -80,6 +85,11 @@ class ClassController extends Controller
 
     public function update(Request $request, $id)
     {
+        $user = AuthController::resolveUser($request);
+        if (!$user || $user->role !== 'admin') {
+            return response()->json(['message' => 'Unauthorized action.'], 403);
+        }
+
         $class = LmsClass::findOrFail($id);
         $data = $request->all();
         if (!empty($data['branch_id_lms'])) {
@@ -94,8 +104,13 @@ class ClassController extends Controller
         return response()->json($class);
     }
 
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
+        $user = AuthController::resolveUser($request);
+        if (!$user || $user->role !== 'admin') {
+            return response()->json(['message' => 'Unauthorized action.'], 403);
+        }
+
         LmsClass::destroy($id);
         return response()->json(['message' => 'Deleted successfully']);
     }

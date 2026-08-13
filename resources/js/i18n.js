@@ -57,7 +57,7 @@ const messages = {
     ucrea: {
       title: 'UCREA Assessment Management',
       desc: 'Manage student evaluations and test results',
-      add_eval: '+ Add New Score Entry',
+      add_eval: 'Add New Score Entry',
       tab_pending: 'Ungraded',
       tab_completed: 'Graded',
       search_placeholder: 'Search by student name or teacher...',
@@ -407,7 +407,7 @@ const messages = {
     ucrea: {
       title: 'Quản Lý Đánh Giá UCREA',
       desc: 'Quản lý đánh giá học sinh và kết quả kiểm tra UCREA',
-      add_eval: '+ Thêm Mới Nhập Điểm',
+      add_eval: 'Thêm Mới Nhập Điểm',
       tab_pending: 'Chưa đánh giá',
       tab_completed: 'Đã đánh giá',
       search_placeholder: 'Tìm kiếm theo tên học sinh hoặc giáo viên...',

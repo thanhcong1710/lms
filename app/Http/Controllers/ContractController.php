@@ -46,6 +46,11 @@ class ContractController extends Controller
 
     public function store(Request $request)
     {
+        $user = AuthController::resolveUser($request);
+        if (!$user || $user->role !== 'admin') {
+            return response()->json(['message' => 'Unauthorized action.'], 403);
+        }
+
         $contract = Contract::create($request->all());
         return response()->json($contract, 201);
     }
@@ -57,13 +62,23 @@ class ContractController extends Controller
 
     public function update(Request $request, $id)
     {
+        $user = AuthController::resolveUser($request);
+        if (!$user || $user->role !== 'admin') {
+            return response()->json(['message' => 'Unauthorized action.'], 403);
+        }
+
         $contract = Contract::findOrFail($id);
         $contract->update($request->all());
         return response()->json($contract);
     }
 
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
+        $user = AuthController::resolveUser($request);
+        if (!$user || $user->role !== 'admin') {
+            return response()->json(['message' => 'Unauthorized action.'], 403);
+        }
+
         Contract::destroy($id);
         return response()->json(['message' => 'Deleted successfully']);
     }

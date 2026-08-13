@@ -5,7 +5,7 @@
         <h2 class="text-2xl font-bold text-brand-text">{{ $t('students.title') }}</h2>
         <p class="text-sm text-brand-desc">{{ $t('students.desc') }}</p>
       </div>
-      <button @click="openModal()" class="btn-primary">
+      <button v-if="userRole === 'admin'" @click="openModal()" class="btn-primary">
         {{ $t('students.add_btn') }}
       </button>
     </div>
@@ -26,7 +26,7 @@
             <th class="px-6 py-4">{{ $t('students.cols.accounting_id') }}</th>
             <th class="px-6 py-4">{{ $t('students.cols.dob') }}</th>
             <th class="px-6 py-4">{{ $t('students.cols.gender') }}</th>
-            <th class="px-6 py-4 text-right">{{ $t('common.actions') }}</th>
+            <th v-if="userRole === 'admin'" class="px-6 py-4 text-right">{{ $t('common.actions') }}</th>
           </tr>
         </thead>
         <tbody class="divide-y divide-brand-border text-sm text-brand-text/90">
@@ -42,7 +42,7 @@
                 {{ (student.gender === 'M' || student.gender === 'Nam') ? $t('students.form.male') : $t('students.form.female') }}
               </span>
             </td>
-            <td class="px-6 py-4 text-right space-x-2">
+            <td v-if="userRole === 'admin'" class="px-6 py-4 text-right space-x-2">
               <button @click="openModal(student)" class="text-sm text-indigo-400 hover:text-indigo-300 font-medium">{{ $t('common.edit') }}</button>
               <button @click="deleteStudent(student.id)" class="text-sm text-red-400 hover:text-red-300 font-medium">{{ $t('common.delete') }}</button>
             </td>
@@ -112,6 +112,7 @@ import axios from 'axios';
 export default {
   data() {
     return {
+      userRole: localStorage.getItem('user_role') || 'admin',
       students: [],
       search: '',
       showModal: false,
@@ -178,6 +179,7 @@ export default {
       this.fetchStudents(1);
     },
     openModal(student = null) {
+      if (this.userRole !== 'admin') return;
       if (student) {
         this.editingId = student.id;
         this.form = { ...student };
@@ -188,6 +190,7 @@ export default {
       this.showModal = true;
     },
     saveStudent() {
+      if (this.userRole !== 'admin') return;
       if (this.editingId) {
         const idx = this.students.findIndex(s => s.id === this.editingId);
         this.students[idx] = { ...this.form, id: this.editingId };
@@ -197,6 +200,7 @@ export default {
       this.showModal = false;
     },
     deleteStudent(id) {
+      if (this.userRole !== 'admin') return;
       if (confirm('Are you sure you want to delete this student?')) {
         this.students = this.students.filter(s => s.id !== id);
       }
