@@ -34,7 +34,7 @@
         <!-- Header (Dark blue background with white pill student info) -->
         <div class="bg-[#1b3664] text-white px-6 py-4 flex flex-col md:flex-row md:items-center justify-between rounded-t-lg print:rounded-none">
           <div class="flex items-center gap-6">
-            <h1 class="text-2xl font-black tracking-tight text-white">CMS<span class="text-xs font-normal">EDU</span></h1>
+            <h1 class="text-2xl font-black tracking-tight text-white">Logic<span class="text-xs font-normal">lab</span></h1>
             <div class="text-left border-l border-white/20 pl-4">
                <p class="text-[9px] uppercase text-white/70 font-semibold mb-0 leading-none">Ucrea Assessment</p>
                <h2 class="text-[16px] font-bold text-[#f5c518] uppercase tracking-wide leading-none mt-1">{{ reportData.name || 'ĐÁNH GIÁ ĐẦU KỲ' }}</h2>

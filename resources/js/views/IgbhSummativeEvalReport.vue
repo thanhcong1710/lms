@@ -27,7 +27,7 @@
       <div class="bg-[#fdb913] text-white p-4 relative mb-6 rounded-t-sm">
         <div class="flex justify-between items-center mb-2">
           <div class="flex items-center gap-4">
-            <h1 class="text-4xl font-extrabold tracking-tight drop-shadow-md">CMS<span class="text-xl font-normal align-top">EDU</span></h1>
+            <h1 class="text-4xl font-extrabold tracking-tight drop-shadow-md">Logic<span class="text-xl font-normal align-top">lab</span></h1>
             <h2 class="text-2xl font-bold uppercase drop-shadow-md">ĐÁNH GIÁ CUỐI KỲ</h2>
           </div>
           <div class="text-sm font-medium border-l-2 border-white/50 pl-3">
@@ -273,7 +273,7 @@
 
       <!-- Footer -->
       <div class="text-right text-xs text-gray-500 mt-8 mb-4 border-t border-gray-200 pt-4">
-        Copyright © CMS Edu Co., Ltd. All rights reserved.<br>
+        Copyright © Logiclab Co., Ltd. All rights reserved.<br>
         <span class="inline-block mt-2 font-medium">Page 1</span>
       </div>
       
@@ -284,7 +284,7 @@
         <div class="bg-[#fdb913] text-white p-4 relative mb-6 rounded-t-sm">
           <div class="flex justify-between items-center mb-2">
             <div class="flex items-center gap-4">
-              <h1 class="text-4xl font-extrabold tracking-tight drop-shadow-md">CMS<span class="text-xl font-normal align-top">EDU</span></h1>
+              <h1 class="text-4xl font-extrabold tracking-tight drop-shadow-md">Logic<span class="text-xl font-normal align-top">lab</span></h1>
               <h2 class="text-2xl font-bold uppercase drop-shadow-md">Đánh giá nội dung câu hỏi tự luận</h2>
             </div>
             <div class="text-sm font-medium border-l-2 border-white/50 pl-3">
