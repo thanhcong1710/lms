@@ -240,14 +240,14 @@ class IntegrationController extends Controller
 
     public function studentRegAction(Request $request)
     {
-        $student = Student::where('accounting_id', $request->input('stuId'))->first();
+        $student = Student::where('crm_id', $request->input('stuId'))->first();
         if (!$student && $request->input('hStuSeq')) {
             $student = Student::where('id_lms', $request->input('hStuSeq'))->orWhere('id', $request->input('hStuSeq'))->first();
         }
         
         if (!$student) {
             $student = Student::create([
-                'accounting_id' => $request->input('stuId'),
+                'crm_id' => $request->input('stuId'),
                 'name' => $request->input('stuNm'),
                 'date_of_birth' => $request->input('stuBirthDt'),
                 'gender' => $request->input('stuGen'),
@@ -260,7 +260,7 @@ class IntegrationController extends Controller
                 'name' => $request->input('stuNm'),
                 'date_of_birth' => $request->input('stuBirthDt'),
                 'gender' => $request->input('stuGen'),
-                'accounting_id' => $request->input('stuId') ?: $student->accounting_id,
+                'crm_id' => $request->input('stuId') ?: $student->crm_id,
             ]);
         }
 
@@ -276,7 +276,7 @@ class IntegrationController extends Controller
 
     public function studentModAction(Request $request)
     {
-        $student = Student::where('accounting_id', $request->input('stuId'))->first();
+        $student = Student::where('crm_id', $request->input('stuId'))->first();
         if (!$student && $request->input('hStuSeq')) {
             $student = Student::where('id_lms', $request->input('hStuSeq'))->orWhere('id', $request->input('hStuSeq'))->first();
         }
@@ -286,11 +286,11 @@ class IntegrationController extends Controller
                 'name' => $request->input('stuNm'),
                 'date_of_birth' => $request->input('stuBirthDt'),
                 'gender' => $request->input('stuGen'),
-                'accounting_id' => $request->input('stuId') ?: $student->accounting_id,
+                'crm_id' => $request->input('stuId') ?: $student->crm_id,
             ]);
         } else {
             $student = Student::create([
-                'accounting_id' => $request->input('stuId'),
+                'crm_id' => $request->input('stuId'),
                 'name' => $request->input('stuNm'),
                 'date_of_birth' => $request->input('stuBirthDt'),
                 'gender' => $request->input('stuGen'),

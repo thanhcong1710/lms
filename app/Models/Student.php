@@ -9,7 +9,7 @@ class Student extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'date_of_birth', 'gender', 'accounting_id', 'id_lms'];
+    protected $fillable = ['name', 'date_of_birth', 'gender', 'crm_id', 'id_lms'];
 
     public function contracts()
     {
