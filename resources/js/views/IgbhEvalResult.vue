@@ -722,7 +722,7 @@ export default {
       // Datasets
       const datasets = [
         { label: 'Các thí sinh', color: '#1e3a8a', bg: 'rgba(30,58,138,0.1)', data: values.map(v => Math.min(100, Math.max(30, v - 15))) },
-        { label: 'Học sinh Logiclab', color: '#65a30d', bg: 'rgba(101,163,13,0.1)', data: values.map(v => Math.min(100, Math.max(40, v - 5))) },
+        { label: 'HS Logiclab', color: '#65a30d', bg: 'rgba(101,163,13,0.1)', data: values.map(v => Math.min(100, Math.max(40, v - 5))) },
         { label: 'Thí sinh', color: '#ef4444', bg: 'rgba(239,68,68,0.4)', data: values }
       ];
 
@@ -852,7 +852,7 @@ export default {
        const datasets = [
          { label: 'Thí sinh', color: '#ef4444' },
          { label: 'Các thí sinh', color: '#1e3a8a' },
-         { label: 'Học sinh Logiclab', color: '#65a30d' }
+         { label: 'HS Logiclab', color: '#65a30d' }
        ];
        const legendY = canvas.height - 15;
        const legendW = 70;
@@ -883,7 +883,7 @@ export default {
        const data = [
          { label: 'Thí sinh', color: '#ef4444', pct: studentPct },
          { label: 'Các thí sinh', color: '#1e3a8a', pct: allPct },
-         { label: 'Học sinh Logiclab', color: '#65a30d', pct: cmsPct }
+         { label: 'HS Logiclab', color: '#65a30d', pct: cmsPct }
        ];
 
        const barH = 18;
