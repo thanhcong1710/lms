@@ -27,7 +27,7 @@ class StudentController extends Controller
         if ($search = $request->query('search')) {
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'LIKE', "%{$search}%")
-                  ->orWhere('id_lms', 'LIKE', "%{$search}%");
+                  ->orWhere('crm_id', 'LIKE', "%{$search}%");
             });
         }
 

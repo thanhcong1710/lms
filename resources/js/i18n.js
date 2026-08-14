@@ -140,7 +140,7 @@ const messages = {
       modal_edit: 'Edit Student',
       cols: {
         student_name: 'Student Name',
-        accounting_id: 'Accounting ID',
+        crm_id: 'CRM ID',
         dob: 'Date of Birth',
         gender: 'Gender'
       },
@@ -490,7 +490,7 @@ const messages = {
       modal_edit: 'Sửa Học viên',
       cols: {
         student_name: 'Tên Học viên',
-        accounting_id: 'Mã Kế toán',
+        crm_id: 'Mã Học viên',
         dob: 'Ngày sinh',
         gender: 'Giới tính'
       },

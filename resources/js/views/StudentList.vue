@@ -22,8 +22,7 @@
           <tr class="border-b border-brand-border bg-brand-header text-xs font-semibold text-brand-desc uppercase">
             <th class="px-6 py-4 w-16">{{ $t('common.stt') }}</th>
             <th class="px-6 py-4">{{ $t('students.cols.student_name') }}</th>
-            <th class="px-6 py-4">{{ $t('common.lms_id') }}</th>
-            <th class="px-6 py-4">{{ $t('students.cols.accounting_id') }}</th>
+            <th class="px-6 py-4">{{ $t('students.cols.crm_id') }}</th>
             <th class="px-6 py-4">{{ $t('students.cols.dob') }}</th>
             <th class="px-6 py-4">{{ $t('students.cols.gender') }}</th>
             <th v-if="userRole === 'admin'" class="px-6 py-4 text-right">{{ $t('common.actions') }}</th>
@@ -33,8 +32,7 @@
           <tr v-for="(student, index) in students" :key="student.id" class="hover:bg-brand-card/40 transition duration-150">
             <td class="px-6 py-4 text-brand-desc">{{ (pagination.current_page - 1) * pagination.per_page + index + 1 }}</td>
             <td class="px-6 py-4 font-medium text-brand-text">{{ student.name }}</td>
-            <td class="px-6 py-4 font-mono text-indigo-400">{{ student.id_lms }}</td>
-            <td class="px-6 py-4 font-mono text-xs text-brand-desc">{{ student.accounting_id }}</td>
+            <td class="px-6 py-4 font-mono text-indigo-400">{{ student.crm_id }}</td>
             <td class="px-6 py-4">{{ student.date_of_birth }}</td>
             <td class="px-6 py-4">
               <span :class="(student.gender === 'M' || student.gender === 'Nam') ? 'bg-blue-500/15 text-blue-600 border border-blue-500/30' : 'bg-pink-500/15 text-pink-600 border border-pink-500/30'" class="px-2.5 py-1 rounded-full text-xs font-semibold uppercase inline-flex items-center gap-1">
@@ -73,13 +71,9 @@
             <input type="text" v-model="form.name" required class="w-full px-4 py-2.5 rounded-xl bg-brand-input border border-brand-border text-brand-text placeholder-gray-600 focus:outline-none focus:border-indigo-500 text-sm">
           </div>
           <div class="grid grid-cols-2 gap-4">
-            <div>
-              <label class="block text-xs font-semibold text-brand-desc uppercase mb-2">{{ $t('common.lms_id') }}</label>
-              <input type="text" v-model="form.id_lms" required class="w-full px-4 py-2.5 rounded-xl bg-brand-input border border-brand-border text-brand-text placeholder-gray-600 focus:outline-none focus:border-indigo-500 text-sm">
-            </div>
-            <div>
-              <label class="block text-xs font-semibold text-brand-desc uppercase mb-2">{{ $t('students.cols.accounting_id') }}</label>
-              <input type="text" v-model="form.accounting_id" required class="w-full px-4 py-2.5 rounded-xl bg-brand-input border border-brand-border text-brand-text placeholder-gray-600 focus:outline-none focus:border-indigo-500 text-sm">
+            <div class="col-span-2">
+              <label class="block text-xs font-semibold text-brand-desc uppercase mb-2">{{ $t('students.cols.crm_id') }}</label>
+              <input type="text" v-model="form.crm_id" required class="w-full px-4 py-2.5 rounded-xl bg-brand-input border border-brand-border text-brand-text placeholder-gray-600 focus:outline-none focus:border-indigo-500 text-sm">
             </div>
           </div>
           <div class="grid grid-cols-2 gap-4">
@@ -119,8 +113,7 @@ export default {
       editingId: null,
       form: {
         name: '',
-        id_lms: '',
-        accounting_id: '',
+        crm_id: '',
         date_of_birth: '',
         gender: 'M'
       },
@@ -140,7 +133,7 @@ export default {
   computed: {
     filteredStudents() {
       const q = this.search.toLowerCase();
-      return this.students.filter(s => s.name.toLowerCase().includes(q) || s.id_lms.toLowerCase().includes(q));
+      return this.students.filter(s => s.name.toLowerCase().includes(q) || (s.crm_id && s.crm_id.toLowerCase().includes(q)));
     }
   },
   methods: {
@@ -185,7 +178,7 @@ export default {
         this.form = { ...student };
       } else {
         this.editingId = null;
-        this.form = { name: '', id_lms: '', accounting_id: '', date_of_birth: '', gender: 'M' };
+        this.form = { name: '', crm_id: '', date_of_birth: '', gender: 'M' };
       }
       this.showModal = true;
     },
