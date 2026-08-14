@@ -21,30 +21,24 @@
         <thead>
           <tr class="border-b border-brand-border bg-brand-header text-xs font-semibold text-brand-desc uppercase">
             <th class="px-6 py-4 w-16">{{ $t('common.stt') }}</th>
+            <th class="px-6 py-4">{{ $t('students.cols.crm_id') }}</th>
             <th class="px-6 py-4">{{ $t('contracts.cols.student') }}</th>
             <th class="px-6 py-4">{{ $t('contracts.cols.class') }}</th>
             <th class="px-6 py-4">{{ $t('common.branch') }}</th>
             <th class="px-6 py-4">{{ $t('contracts.cols.start_date') }}</th>
             <th class="px-6 py-4">{{ $t('contracts.cols.end_date') }}</th>
-            <th class="px-6 py-4">{{ $t('contracts.cols.valid_cd') }}</th>
-            <th class="px-6 py-4">{{ $t('common.status') }}</th>
             <th v-if="userRole === 'admin'" class="px-6 py-4 text-right">{{ $t('common.actions') }}</th>
           </tr>
         </thead>
         <tbody class="divide-y divide-brand-border text-sm text-brand-text/90">
           <tr v-for="(contract, index) in contracts" :key="contract.id" class="hover:bg-brand-card/40 transition duration-150">
             <td class="px-6 py-4 text-brand-desc">{{ (pagination.current_page - 1) * pagination.per_page + index + 1 }}</td>
+            <td class="px-6 py-4 font-mono text-indigo-400">{{ contract.student_crm_id }}</td>
             <td class="px-6 py-4 font-medium text-brand-text">{{ contract.student_name }}</td>
             <td class="px-6 py-4 font-mono text-xs">{{ contract.class_name }}</td>
             <td class="px-6 py-4 text-sm">{{ contract.branch_name }}</td>
             <td class="px-6 py-4 font-mono text-xs">{{ contract.enrolment_start_date }}</td>
             <td class="px-6 py-4 font-mono text-xs">{{ contract.enrolment_last_date }}</td>
-            <td class="px-6 py-4 font-mono text-xs text-indigo-400">{{ contract.valid_cd }}</td>
-            <td class="px-6 py-4">
-              <span :class="contract.status === 'SS001' ? 'bg-green-500/10 text-green-400 border border-green-500/20' : 'bg-yellow-500/10 text-yellow-400 border border-yellow-500/20'" class="px-2.5 py-1 rounded-full text-xs font-medium uppercase">
-                {{ contract.status === 'SS001' ? 'Enrolled' : 'Pending' }}
-              </span>
-            </td>
             <td v-if="userRole === 'admin'" class="px-6 py-4 text-right space-x-2">
               <button @click="openModal(contract)" class="text-sm text-indigo-400 hover:text-indigo-300 font-medium">{{ $t('common.edit') }}</button>
               <button @click="deleteContract(contract.id)" class="text-sm text-red-400 hover:text-red-300 font-medium">{{ $t('common.delete') }}</button>
@@ -91,7 +85,7 @@
                 <input type="text" v-model="studentSearch" @input="searchStudents" :disabled="!form.class_id" :placeholder="$t('system.select_student')" class="w-full px-4 py-2.5 rounded-xl bg-brand-input border border-brand-border text-brand-text placeholder-gray-600 focus:outline-none focus:border-indigo-500 text-sm">
                 <div v-if="studentResults.length > 0" class="absolute z-10 w-full mt-1 bg-brand-card border border-brand-border rounded-xl shadow-xl max-h-48 overflow-y-auto">
                   <div v-for="s in studentResults" :key="s.id" @click="selectStudent(s)" class="px-4 py-2.5 hover:bg-brand-input cursor-pointer text-sm text-brand-text border-b border-brand-border/50 last:border-0">
-                    {{ s.name }} <span class="text-brand-desc">({{ s.id_lms }})</span>
+                    {{ s.name }} <span class="text-brand-desc">({{ s.crm_id }})</span>
                   </div>
                 </div>
               </div>
@@ -108,23 +102,7 @@
               <input type="date" v-model="form.enrolment_last_date" required class="w-full px-4 py-2.5 rounded-xl bg-brand-input border border-brand-border text-brand-text focus:outline-none focus:border-indigo-500 text-sm">
             </div>
           </div>
-          <div class="grid grid-cols-2 gap-4">
-            <div>
-              <label class="block text-xs font-semibold text-brand-desc uppercase mb-2">{{ $t('contracts.cols.valid_cd') }}</label>
-              <select v-model="form.valid_cd" class="w-full px-4 py-2.5 rounded-xl bg-brand-input border border-brand-border text-brand-text focus:outline-none focus:border-indigo-500 text-sm">
-                <option value="VC005">{{ $t('contracts.form.regular') }}</option>
-                <option value="VC001">{{ $t('contracts.form.trial') }}</option>
-              </select>
-            </div>
-            <div>
-              <label class="block text-xs font-semibold text-brand-desc uppercase mb-2">{{ $t('common.status') }}</label>
-              <select v-model="form.status" class="w-full px-4 py-2.5 rounded-xl bg-brand-input border border-brand-border text-brand-text focus:outline-none focus:border-indigo-500 text-sm">
-                <option value="SS001">{{ $t('contracts.form.enrolled') }}</option>
-                <option value="SS002">{{ $t('contracts.form.pending') }}</option>
-              </select>
-            </div>
-          </div>
-          <div>
+          <div class="mb-4">
             <label class="block text-xs font-semibold text-brand-desc uppercase mb-2">{{ $t('common.remark') }}</label>
             <textarea v-model="form.remark" rows="2" class="w-full px-4 py-2.5 rounded-xl bg-brand-input border border-brand-border text-brand-text placeholder-gray-600 focus:outline-none focus:border-indigo-500 text-sm"></textarea>
           </div>
@@ -161,8 +139,6 @@ export default {
         branch_id: '',
         enrolment_start_date: '',
         enrolment_last_date: '',
-        valid_cd: 'VC005',
-        status: 'SS001',
         remark: ''
       },
       pagination: {
@@ -279,14 +255,12 @@ export default {
           branch_id: contract.branch_id || '',
           enrolment_start_date: contract.enrolment_start_date || '',
           enrolment_last_date: contract.enrolment_last_date || '',
-          valid_cd: contract.valid_cd || 'VC005',
-          status: contract.status || 'SS001',
           remark: contract.remark || ''
         };
         this.studentSearch = contract.student_name || '';
       } else {
         this.editingId = null;
-        this.form = { student_id: '', student_name: '', class_id: '', branch_id: '', enrolment_start_date: '', enrolment_last_date: '', valid_cd: 'VC005', status: 'SS001', remark: '' };
+        this.form = { student_id: '', student_name: '', class_id: '', branch_id: '', enrolment_start_date: '', enrolment_last_date: '', remark: '' };
       }
       this.showModal = true;
     },

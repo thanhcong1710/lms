@@ -24,8 +24,13 @@ class ContractController extends Controller
         }
 
         if ($search = $request->query('search')) {
-            $query->whereHas('student', function ($q) use ($search) {
-                $q->where('name', 'LIKE', "%{$search}%");
+            $query->where(function ($q) use ($search) {
+                $q->whereHas('student', function ($sq) use ($search) {
+                    $sq->where('name', 'LIKE', "%{$search}%")
+                       ->orWhere('crm_id', 'LIKE', "%{$search}%");
+                })->orWhereHas('lmsClass', function ($cq) use ($search) {
+                    $cq->where('cls_name', 'LIKE', "%{$search}%");
+                });
             });
         }
 
@@ -35,6 +40,7 @@ class ContractController extends Controller
         $data = $contracts->toArray();
         $data['data'] = collect($data['data'])->map(function ($c) {
             $c['student_name'] = $c['student']['name'] ?? '';
+            $c['student_crm_id'] = $c['student']['crm_id'] ?? '';
             $c['class_name'] = $c['lms_class']['cls_name'] ?? '';
             $c['branch_name'] = $c['branch']['name'] ?? '';
             unset($c['student'], $c['lms_class'], $c['branch']);
