@@ -203,10 +203,11 @@ export default {
       let list = this.initData.classes || [];
       return list.filter(c => {
         const name = (c.class_nm || c.cls_name || '').toUpperCase();
-        if (name.includes('.U.') || c.cls_type === 'CT001') {
+        const isUC = c.cls_type === 'CT001' && !name.includes('IG') && !name.includes('BH');
+        if (name.includes('.U.') || isUC) {
           return false;
         }
-        return c.cls_type === 'CT004' || c.cls_type === 'CT002' || name.includes('.IG.') || name.includes('.BH.');
+        return ['CT004', 'CT003', 'CT002'].includes(c.cls_type) || name.includes('IG') || name.includes('BH');
       });
     },
     selectedClassObj() {
