@@ -250,14 +250,9 @@ export default {
       if (this.form.branch_id) {
         list = list.filter(c => c.branch_id == this.form.branch_id);
       }
-      // ONLY include IG, BH, and DEMO.IG.BH classes: EXCLUDE UC classes (e.g. .U. or CT001)
+      // ONLY include IG, BH, and DEMO classes
       return list.filter(c => {
-        const name = (c.cls_name || '').toUpperCase();
-        const isUC = c.cls_type === 'CT001' && !name.includes('IG') && !name.includes('BH');
-        if (name.includes('.U.') || isUC) {
-          return false;
-        }
-        return ['CT004', 'CT003', 'CT002'].includes(c.cls_type) || name.includes('IG') || name.includes('BH');
+        return c.product_id === 2 || c.product_id === 3 || c.product_id === 100;
       });
     },
     selectedClassObj() {

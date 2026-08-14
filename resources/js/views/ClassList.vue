@@ -45,8 +45,8 @@
             <td class="px-6 py-4 font-medium text-brand-text">{{ cls.cls_name }}</td>
             <td class="px-6 py-4">{{ cls.level_name }}</td>
             <td class="px-6 py-4">
-              <span :class="clsTypeColor(cls.cls_type)" class="text-xs px-2 py-1 rounded font-semibold">
-                {{ clsTypeLabel(cls.cls_type) }}
+              <span :class="clsTypeColor(cls.product_id)" class="text-xs px-2 py-1 rounded font-semibold">
+                {{ clsTypeLabel(cls.product_id) }}
               </span>
             </td>
             <td class="px-6 py-4 text-sm">{{ teacherName(cls.teacher_id_lms) }}</td>
@@ -98,11 +98,11 @@
           <div class="grid grid-cols-2 gap-4">
             <div>
               <label class="block text-xs font-semibold text-brand-desc uppercase mb-2">{{ $t('classes.cols.type') }}</label>
-              <select v-model="form.cls_type" @change="onClsTypeChange" required class="w-full px-4 py-2.5 rounded-xl bg-brand-input border border-brand-border text-brand-text focus:outline-none focus:border-indigo-500 text-sm">
-                <option value="CT001">CT001 (UCREA)</option>
-                <option value="CT003">CT003 (BRIGHT IG)</option>
-                <option value="CT004">CT004 (BLACK HOLE)</option>
-                <option value="CT002">CT002 (Demo / Khác)</option>
+              <select v-model="form.product_id" @change="onClsTypeChange" required class="w-full px-4 py-2.5 rounded-xl bg-brand-input border border-brand-border text-brand-text focus:outline-none focus:border-indigo-500 text-sm">
+                <option :value="1">UCREA (UC)</option>
+                <option :value="2">BRIGHT IG</option>
+                <option :value="3">BLACK HOLE (BH)</option>
+                <option :value="100">Demo / Khác</option>
               </select>
             </div>
             <div>
@@ -162,7 +162,7 @@ export default {
         cls_name: '',
         class_seq: '',
         level_name: 'L1',
-        cls_type: 'CT001',
+        product_id: 1,
         teacher_id_lms: '',
         branch_id_lms: '',
         cls_status: '1'
@@ -189,11 +189,11 @@ export default {
       return this.classes.filter(c => (c.cls_name || '').toLowerCase().includes(q) || (c.teacher_id_lms || '').toLowerCase().includes(q));
     },
     availableLevels() {
-      if (this.form.cls_type === 'CT003') {
+      if (this.form.product_id === 2) {
         // i-Garten (IG)
         return ['LW', 'LJ', 'LC', 'LQ', 'LT', 'LU'];
       }
-      if (this.form.cls_type === 'CT004') {
+      if (this.form.product_id === 3) {
         // Bright Heading (BH)
         return [
           'LB1', 'LB2', 'LB3', 'LB4',
@@ -202,11 +202,11 @@ export default {
           'LP1', 'LP2', 'LP3', 'LP4'
         ];
       }
-      if (this.form.cls_type === 'CT001') {
+      if (this.form.product_id === 1) {
         // U-Crea (UC)
         return ['L1', 'L2', 'L3', 'L4'];
       }
-      // CT002 (Demo / Khác)
+      // Demo / Khác
       return [
         'L1', 'L2', 'L3', 'L4',
         'LW', 'LJ', 'LC', 'LQ', 'LT', 'LU',
@@ -278,7 +278,7 @@ export default {
           cls_name: cls.cls_name || '',
           class_seq: cls.class_seq || '',
           level_name: cls.level_name || 'L1',
-          cls_type: cls.cls_type || 'CT001',
+          product_id: cls.product_id || 1,
           teacher_id_lms: cls.teacher_id_lms || '',
           branch_id_lms: cls.branch_id_lms || '',
           cls_status: cls.cls_status ? String(cls.cls_status) : '1'
@@ -289,7 +289,7 @@ export default {
           cls_name: '',
           class_seq: '',
           level_name: 'L1',
-          cls_type: 'CT001',
+          product_id: 1,
           teacher_id_lms: '',
           branch_id_lms: '',
           cls_status: '1'
@@ -331,15 +331,15 @@ export default {
       }
     },
     clsTypeLabel(type) {
-      const map = { CT001: 'UC', CT003: 'IG', CT004: 'BH', CT002: 'Demo' };
+      const map = { 1: 'UC', 2: 'IG', 3: 'BH', 100: 'Demo' };
       return map[type] || type || '—';
     },
     clsTypeColor(type) {
       const map = {
-        CT001: 'bg-violet-500/15 text-violet-300',
-        CT003: 'bg-emerald-500/15 text-emerald-300',
-        CT004: 'bg-amber-500/15 text-amber-300',
-        CT002: 'bg-slate-500/15 text-slate-400',
+        1: 'bg-violet-500/15 text-violet-300',
+        2: 'bg-emerald-500/15 text-emerald-300',
+        3: 'bg-amber-500/15 text-amber-300',
+        100: 'bg-slate-500/15 text-slate-400',
       };
       return map[type] || 'bg-blue-500/10 text-blue-400';
     },

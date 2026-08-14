@@ -272,11 +272,7 @@ export default {
       }
       // ONLY include UC (UCREA) classes: exclude BH and IG
       return list.filter(c => {
-        const name = (c.cls_name || '').toUpperCase();
-        if (name.includes('BH') || name.includes('IG') || ['CT004', 'CT003', 'CT002'].includes(c.cls_type)) {
-          return false;
-        }
-        return c.cls_type === 'CT001' || name.includes('.U.') || name.includes('.U');
+        return c.product_id === 1;
       });
     },
     selectedClassObj() {

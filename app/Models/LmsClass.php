@@ -21,7 +21,8 @@ class LmsClass extends Model
         'cls_type',
         'cls_status',
         'branch_id_lms',
-        'class_seq'
+        'class_seq',
+        'product_id',
     ];
 
     public function branch()

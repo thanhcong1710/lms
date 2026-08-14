@@ -233,7 +233,7 @@ class IgbhEvaluationController extends Controller
             $user->scopeClasses($classQuery);
         }
         $classes = $classQuery->with('teacher')
-            ->select('id', 'cls_name', 'class_seq', 'level_name', 'cls_type', 'branch_id', 'branch_id_lms', 'teacher_id', 'teacher_id_lms')
+            ->select('id', 'cls_name', 'class_seq', 'level_name', 'cls_type', 'product_id', 'branch_id', 'branch_id_lms', 'teacher_id', 'teacher_id_lms')
             ->orderBy('cls_name')
             ->get()
             ->map(function ($c) {
@@ -243,6 +243,7 @@ class IgbhEvaluationController extends Controller
                     'class_seq' => $c->class_seq,
                     'level_name' => $c->level_name,
                     'cls_type' => $c->cls_type,
+                    'product_id' => $c->product_id,
                     'branch_id' => $c->branch_id,
                     'branch_id_lms' => $c->branch_id_lms,
                     'teacher_id' => $c->teacher_id,

@@ -174,6 +174,7 @@ class IntegrationController extends Controller
             'level_name' => $request->input('clsLevel'),
             'cls_status' => $request->input('clsStat') == 'US001' ? 'US001' : 'US002',
             'cls_type' => $request->input('clsType'),
+            'product_id' => $request->input('product_id'),
             'branch_id_lms' => $request->input('cntrId'),
             'branch_id' => $branch ? $branch->id : null,
         ];
@@ -218,6 +219,7 @@ class IntegrationController extends Controller
             'level_name' => $request->input('clsLevel'),
             'cls_status' => $request->input('clsStat') == 'US001' ? 'US001' : 'US002',
             'cls_type' => $request->input('clsType'),
+            'product_id' => $request->input('product_id'),
             'branch_id_lms' => $request->input('cntrId'),
             'branch_id' => $branch ? $branch->id : null,
         ];
