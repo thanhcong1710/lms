@@ -180,6 +180,9 @@ export default {
     }
   },
   created() {
+    if (this.$route.query.cls_type_group) {
+      this.selectedTypeGroup = this.$route.query.cls_type_group;
+    }
     this.fetchClasses(1);
     this.fetchFormOptions();
   },

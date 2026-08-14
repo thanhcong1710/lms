@@ -190,6 +190,9 @@
             <p class="text-xs text-brand-desc truncate">{{ userRoleLabel }}</p>
           </div>
         </div>
+        <a href="https://account.logiclab.vn/#/switch" class="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl border border-indigo-500/20 text-indigo-500 hover:bg-indigo-500/10 transition text-sm font-medium mb-3">
+          🔄 Đổi hệ thống
+        </a>
         <button @click="logout" class="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl border border-red-500/20 text-red-500 hover:bg-red-500/10 transition text-sm font-medium">
           {{ $t('header.logout') }}
         </button>
@@ -238,7 +241,7 @@ export default {
       isMobileMenuOpen: false,
       theme: localStorage.getItem('theme') || 'light',
       currentLocale: localStorage.getItem('locale') || 'vi',
-      expandedGroup: 'center',
+      expandedGroup: null,
       userRole: localStorage.getItem('user_role') || 'admin',
       userName: localStorage.getItem('user_name') || 'Admin',
     }

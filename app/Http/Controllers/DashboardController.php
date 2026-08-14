@@ -46,8 +46,9 @@ class DashboardController extends Controller
         // 3. Classes Count
         $classQuery = $user->scopeClasses(LmsClass::query());
         $activeClasses = (clone $classQuery)->count();
-        $ucreaClasses = (clone $classQuery)->where('product_id', 1)->count();
-        $igbhClasses = (clone $classQuery)->whereIn('product_id', [2, 3, 100])->count();
+        $ucClasses = (clone $classQuery)->where('product_id', 1)->count();
+        $igClasses = (clone $classQuery)->where('product_id', 2)->count();
+        $bhClasses = (clone $classQuery)->where('product_id', 3)->count();
 
         // 4. Students Count
         $studentQuery = $user->scopeStudents(Student::query());
@@ -58,8 +59,9 @@ class DashboardController extends Controller
             'total_teachers' => $totalTeachers,
             'active_classes' => $activeClasses,
             'enrolled_students' => $enrolledStudents,
-            'ucrea_classes' => $ucreaClasses,
-            'igbh_classes' => $igbhClasses,
+            'uc_classes' => $ucClasses,
+            'ig_classes' => $igClasses,
+            'bh_classes' => $bhClasses,
             'user' => [
                 'name' => $user->name,
                 'role' => $user->role,
