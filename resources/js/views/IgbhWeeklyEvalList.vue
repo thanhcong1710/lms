@@ -202,7 +202,7 @@ export default {
     filteredClasses() {
       let list = this.initData.classes || [];
       return list.filter(c => {
-        return c.product_id === 2 || c.product_id === 3 || c.product_id === 100;
+        return c.product_id === 2 || c.product_id === 3;
       });
     },
     selectedClassObj() {

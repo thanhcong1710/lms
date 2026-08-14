@@ -250,12 +250,15 @@ export default {
       if (this.form.branch_id) {
         list = list.filter(c => c.branch_id == this.form.branch_id);
       }
-      // ONLY include DEMO IG/BH classes
+      // ONLY include IG, BH, and DEMO IG/BH classes
       return list.filter(c => {
-        if (c.product_id !== 100) return false;
-        const isUCLevel = ['L1', 'L2', 'L3', 'L4'].includes((c.level_name || '').trim());
-        const isUCName = (c.cls_name || '').toUpperCase().includes('.U.');
-        return !isUCLevel && !isUCName;
+        if (c.product_id === 2 || c.product_id === 3) return true;
+        if (c.product_id === 100) {
+            const isUCLevel = ['L1', 'L2', 'L3', 'L4'].includes((c.level_name || '').trim());
+            const isUCName = (c.cls_name || '').toUpperCase().includes('.U.');
+            return !isUCLevel && !isUCName;
+        }
+        return false;
       });
     },
     selectedClassObj() {
