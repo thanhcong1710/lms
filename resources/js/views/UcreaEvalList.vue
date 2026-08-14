@@ -155,7 +155,7 @@
         <form @submit.prevent="submitCreate" class="p-6 space-y-4">
           <!-- Step 1: Branch Selector -->
           <div class="space-y-1.5">
-            <label class="block text-xs font-semibold text-brand-desc uppercase">1. Trung tâm (Cơ sở)</label>
+            <label class="block text-xs font-semibold text-brand-desc uppercase">1. Trung tâm</label>
             <select v-model="form.branch_id" @change="onBranchChange" required class="w-full px-3 py-2.5 rounded-xl bg-brand-input border border-brand-border text-brand-text focus:outline-none focus:border-indigo-500 transition text-sm">
               <option :value="null" disabled>-- Chọn trung tâm --</option>
               <option v-for="b in initData.branches" :key="b.id" :value="b.id">{{ b.name }}</option>
@@ -164,7 +164,7 @@
 
           <!-- Step 2: Class Selector -->
           <div class="space-y-1.5">
-            <label class="block text-xs font-semibold text-brand-desc uppercase">2. Lớp học (Theo phân quyền)</label>
+            <label class="block text-xs font-semibold text-brand-desc uppercase">2. Lớp học</label>
             <select v-model="form.selected_class_id" @change="onClassChange" required :disabled="!form.branch_id && initData.branches.length > 1" class="w-full px-3 py-2.5 rounded-xl bg-brand-input border border-brand-border text-brand-text focus:outline-none focus:border-indigo-500 transition text-sm disabled:opacity-50">
               <option value="" disabled>-- Chọn lớp học --</option>
               <option v-for="c in filteredClasses" :key="c.id" :value="c.id">{{ c.cls_name }} (Level: {{ c.level_name || 'N/A' }})</option>
@@ -272,7 +272,13 @@ export default {
       }
       // ONLY include UC (UCREA) classes: exclude BH and IG
       return list.filter(c => {
-        return c.product_id === 1;
+        if (c.product_id === 1) return true;
+        if (c.product_id === 100) {
+           const isUCLevel = ['L1', 'L2', 'L3', 'L4'].includes((c.level_name || '').trim());
+           const isUCName = (c.cls_name || '').toUpperCase().includes('.U.');
+           return isUCLevel || isUCName;
+        }
+        return false;
       });
     },
     selectedClassObj() {

@@ -20,6 +20,7 @@
           <option value="ucrea">U-CREA</option>
           <option value="igaten">BRIGHT IG</option>
           <option value="black_hold">BLACK HOLD</option>
+          <option value="demo">DEMO / KHÁC</option>
         </select>
       </div>
     </div>

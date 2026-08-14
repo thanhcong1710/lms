@@ -139,7 +139,7 @@
         <form @submit.prevent="submitCreate" class="p-6 space-y-4">
           <!-- Step 1: Branch Selector -->
           <div class="space-y-1.5">
-            <label class="block text-xs font-semibold text-brand-desc uppercase">1. Trung tâm (Cơ sở)</label>
+            <label class="block text-xs font-semibold text-brand-desc uppercase">1. Trung tâm</label>
             <select v-model="form.branch_id" @change="onBranchChange" required class="w-full px-3 py-2.5 rounded-xl bg-brand-input border border-brand-border text-brand-text focus:outline-none focus:border-indigo-500 transition text-sm">
               <option :value="null" disabled>-- Chọn trung tâm --</option>
               <option v-for="b in initData.branches" :key="b.id" :value="b.id">{{ b.name }}</option>
@@ -148,7 +148,7 @@
 
           <!-- Step 2: Class Selector (Only DEMO, IG, BH) -->
           <div class="space-y-1.5">
-            <label class="block text-xs font-semibold text-brand-desc uppercase">2. Lớp học (Chỉ lớp Demo, IG, BH)</label>
+            <label class="block text-xs font-semibold text-brand-desc uppercase">2. Lớp học</label>
             <select v-model="form.class_id" @change="onClassChange" required :disabled="!form.branch_id && initData.branches.length > 1" class="w-full px-3 py-2.5 rounded-xl bg-brand-input border border-brand-border text-brand-text focus:outline-none focus:border-indigo-500 transition text-sm disabled:opacity-50">
               <option value="" disabled>-- Chọn lớp học --</option>
               <option v-for="c in filteredClasses" :key="c.id" :value="c.id">{{ c.cls_name }} (Level: {{ c.level_name || 'N/A' }})</option>
@@ -157,7 +157,7 @@
 
           <!-- Step 3: Diagnostic / Placement Test Selector -->
           <div class="space-y-1.5">
-            <label class="block text-xs font-semibold text-brand-desc uppercase">3. Bài kiểm tra đầu vào (PT / Diagnostic)</label>
+            <label class="block text-xs font-semibold text-brand-desc uppercase">3. Bài kiểm tra đầu vào</label>
             <select v-model="form.test_seq" @change="onTestChange" required :disabled="!form.class_id" class="w-full px-3 py-2.5 rounded-xl bg-brand-input border border-brand-border text-brand-text focus:outline-none focus:border-indigo-500 transition text-sm disabled:opacity-50">
               <option value="" disabled>{{ !form.class_id ? '-- Vui lòng chọn lớp học trước --' : '-- Chọn bài kiểm tra --' }}</option>
               <option v-for="t in filteredTests" :key="t.id" :value="t.test_seq">{{ t.test_nm }} ({{ t.level_cd || 'N/A' }})</option>
@@ -250,9 +250,12 @@ export default {
       if (this.form.branch_id) {
         list = list.filter(c => c.branch_id == this.form.branch_id);
       }
-      // ONLY include IG, BH, and DEMO classes
+      // ONLY include DEMO IG/BH classes
       return list.filter(c => {
-        return c.product_id === 2 || c.product_id === 3 || c.product_id === 100;
+        if (c.product_id !== 100) return false;
+        const isUCLevel = ['L1', 'L2', 'L3', 'L4'].includes((c.level_name || '').trim());
+        const isUCName = (c.cls_name || '').toUpperCase().includes('.U.');
+        return !isUCLevel && !isUCName;
       });
     },
     selectedClassObj() {

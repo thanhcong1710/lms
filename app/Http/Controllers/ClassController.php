@@ -29,6 +29,8 @@ class ClassController extends Controller
                 $query->where('product_id', 2);
             } elseif (in_array($clsTypeGroup, ['black_hold', 'bh', 'bright_heading'])) {
                 $query->where('product_id', 3);
+            } elseif ($clsTypeGroup === 'demo') {
+                $query->where('product_id', 100);
             }
         }
 
