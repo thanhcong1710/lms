@@ -59,7 +59,7 @@ class ContractController extends Controller
 
         $request->validate([
             'student_id' => 'required|exists:students,id',
-            'class_id' => 'required|exists:lms_classes,id',
+            'class_id' => 'required|exists:classes,id',
             'branch_id' => 'required|exists:branches,id',
         ]);
 
@@ -81,7 +81,7 @@ class ContractController extends Controller
 
         $request->validate([
             'student_id' => 'sometimes|required|exists:students,id',
-            'class_id' => 'sometimes|required|exists:lms_classes,id',
+            'class_id' => 'sometimes|required|exists:classes,id',
             'branch_id' => 'sometimes|required|exists:branches,id',
         ]);
 
