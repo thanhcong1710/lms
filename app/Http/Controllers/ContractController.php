@@ -57,6 +57,12 @@ class ContractController extends Controller
             return response()->json(['message' => 'Unauthorized action.'], 403);
         }
 
+        $request->validate([
+            'student_id' => 'required|exists:students,id',
+            'class_id' => 'required|exists:lms_classes,id',
+            'branch_id' => 'required|exists:branches,id',
+        ]);
+
         $contract = Contract::create($request->all());
         return response()->json($contract, 201);
     }
@@ -73,8 +79,20 @@ class ContractController extends Controller
             return response()->json(['message' => 'Unauthorized action.'], 403);
         }
 
+        $request->validate([
+            'student_id' => 'sometimes|required|exists:students,id',
+            'class_id' => 'sometimes|required|exists:lms_classes,id',
+            'branch_id' => 'sometimes|required|exists:branches,id',
+        ]);
+
         $contract = Contract::findOrFail($id);
-        $contract->update($request->all());
+        
+        // Filter out null values which might come from empty strings
+        $data = array_filter($request->all(), function($value) {
+            return $value !== null && $value !== '';
+        });
+        
+        $contract->update($data);
         return response()->json($contract);
     }
 
