@@ -141,17 +141,17 @@ class IgbhWeeklyEvaluationController extends Controller
             ->where('weekly_eval_id', $id)
             ->get();
 
+        $allStudents = DB::table('contracts as c')
+            ->join('students as s', 'c.student_id', '=', 's.id')
+            ->join('classes as cl', 'c.class_id', '=', 'cl.id')
+            ->where('cl.class_seq', $eval->class_seq)
+            ->where('c.status', '!=', 'SS004') // assuming SS004 is cancelled/dropped
+            ->select('s.id_lms as stu_seq', 's.name as stu_nm')
+            ->get();
+
         // If no details, load students from class
         if ($details->isEmpty()) {
-            $students = DB::table('contracts as c')
-                ->join('students as s', 'c.student_id', '=', 's.id')
-                ->join('classes as cl', 'c.class_id', '=', 'cl.id')
-                ->where('cl.class_seq', $eval->class_seq)
-                ->where('c.status', '!=', 'SS004') // assuming SS004 is cancelled/dropped
-                ->select('s.id_lms as stu_seq', 's.name as stu_nm')
-                ->get();
-
-            $details = $students->map(function ($s) {
+            $details = $allStudents->map(function ($s) {
                 return [
                     'stu_seq' => $s->stu_seq,
                     'stu_nm' => $s->stu_nm,
@@ -170,7 +170,8 @@ class IgbhWeeklyEvaluationController extends Controller
 
         return response()->json([
             'evaluation' => $eval,
-            'students' => $details
+            'students' => $details,
+            'all_students' => $allStudents
         ]);
     }
 

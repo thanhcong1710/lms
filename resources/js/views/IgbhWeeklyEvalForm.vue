@@ -30,6 +30,15 @@
         <input type="date" v-model="selectedDate" class="px-3 py-2 rounded-xl bg-brand-input border border-brand-border text-brand-text focus:outline-none focus:border-indigo-500 transition text-sm">
 
         <button 
+          v-if="missingStudents.length > 0"
+          @click="showAddStudentModal = true"
+          class="px-4 py-2 rounded-xl bg-gray-100 hover:bg-gray-200 text-gray-800 font-bold transition text-sm flex items-center gap-2 border border-gray-300"
+        >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+          Thêm học sinh ({{ missingStudents.length }})
+        </button>
+
+        <button 
           @click="saveGrades" 
           :disabled="saving"
           class="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold transition text-sm flex items-center gap-2 shadow-lg shadow-indigo-600/30 disabled:opacity-50"
@@ -37,6 +46,29 @@
           <span v-if="saving" class="animate-spin h-4 w-4 border-2 border-white border-t-transparent rounded-full"></span>
           {{ saving ? $t('igbh.form.saving') : $t('igbh.form.save_btn') }}
         </button>
+      </div>
+    </div>
+
+    <!-- Add Student Modal -->
+    <div v-if="showAddStudentModal" class="fixed inset-0 bg-gray-900 bg-opacity-50 z-50 flex items-center justify-center p-4">
+      <div class="bg-white rounded-xl shadow-xl w-full max-w-md overflow-hidden">
+        <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50">
+          <h3 class="text-lg font-bold text-gray-800">Thêm học sinh vào đánh giá</h3>
+          <button @click="showAddStudentModal = false" class="text-gray-400 hover:text-gray-600">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+          </button>
+        </div>
+        <div class="p-6 max-h-96 overflow-y-auto">
+          <p v-if="missingStudents.length === 0" class="text-center text-gray-500">Không có học sinh nào trống.</p>
+          <ul class="space-y-2" v-else>
+            <li v-for="student in missingStudents" :key="student.stu_seq" class="flex items-center justify-between p-3 bg-gray-50 rounded-lg border border-gray-100">
+              <span class="font-medium text-gray-800">{{ student.stu_nm }}</span>
+              <button @click="addMissingStudent(student)" class="px-3 py-1 bg-indigo-100 hover:bg-indigo-200 text-indigo-700 text-xs font-bold rounded-md transition">
+                + Thêm
+              </button>
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
 
@@ -123,7 +155,16 @@ export default {
       saving: false,
       weeks: [],
       selectedWeek: '',
-      selectedDate: ''
+      selectedDate: '',
+      allStudents: [],
+      showAddStudentModal: false
+    }
+  },
+  computed: {
+    missingStudents() {
+      if (!this.allStudents || this.allStudents.length === 0) return [];
+      const currentIds = this.students.map(s => s.stu_seq);
+      return this.allStudents.filter(s => !currentIds.includes(s.stu_seq));
     }
   },
   async created() {
@@ -158,6 +199,7 @@ export default {
         if (response.data) {
           this.evaluation = response.data.evaluation;
           this.students = response.data.students;
+          this.allStudents = response.data.all_students || [];
           this.selectedWeek = this.evaluation.each_cd;
           this.selectedDate = this.evaluation.eval_ymd ? this.evaluation.eval_ymd.substring(0, 10) : new Date().toISOString().substring(0, 10);
         }
@@ -167,6 +209,22 @@ export default {
       } finally {
         this.loading = false;
       }
+    },
+    addMissingStudent(student) {
+      this.students.push({
+        stu_seq: student.stu_seq,
+        stu_nm: student.stu_nm,
+        workbook: 0,
+        attd_listen: 5,
+        attd_join: 5,
+        attd_express: 5,
+        attd_coop: 5,
+        detect_normal: 5,
+        detect_leadersh: 5,
+        detect_math: 5,
+        detect_creative: 5,
+      });
+      this.showAddStudentModal = false;
     },
     async changeWeek() {
       if (!this.evaluation) return;
