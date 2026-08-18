@@ -190,7 +190,7 @@
                     <td class="border-r border-gray-200 p-2.5 text-left text-gray-600">Khả năng thể hiện số lượng bằng cách sử dụng số và so sánh các đồ vật với nhau.</td>
                     <td class="p-2.5 font-bold text-gray-800">{{ getGrade('Đo lường') }}</td>
                   </tr>
-                  <tr class="bg-[#f4f7fa]">
+                  <tr v-if="!isL1L2" class="bg-[#f4f7fa]">
                     <td class="border-r border-gray-200 p-2.5 text-left font-bold text-gray-700 pl-3">Kiểu mẫu</td>
                     <td class="border-r border-gray-200 p-2.5 text-left text-gray-600">Khả năng nhận diện và dự đoán mối quan hệ mang tính quy luật của đồ vật.</td>
                     <td class="p-2.5 font-bold text-gray-800">{{ getGrade('Kiểu mẫu') }}</td>
@@ -241,7 +241,7 @@
                     <td class="border-r border-gray-200 p-2.5 text-left text-gray-600">Năng lực so sánh các thuộc tính và khái quát hóa vấn đề.</td>
                     <td class="p-2.5 font-bold text-gray-800">{{ getGrade('Phân tích') }}</td>
                   </tr>
-                  <tr class="bg-[#f4f7fa]">
+                  <tr v-if="!isL1L2" class="bg-[#f4f7fa]">
                     <td class="border-r border-gray-200 p-2.5 text-left font-bold text-gray-700 pl-3">Tổng hợp</td>
                     <td class="border-r border-gray-200 p-2.5 text-left text-gray-600">Khả năng phân tích tình huống và giải quyết toàn diện vấn đề.</td>
                     <td class="p-2.5 font-bold text-gray-800">{{ getGrade('Tổng hợp') }}</td>
@@ -373,6 +373,9 @@ export default {
     }
   },
   computed: {
+    isL1L2() {
+      return this.result && ['L1', 'L2'].includes(this.result.general.level_cd);
+    },
     availableTests() {
       if (!this.result || !this.result.related_results) return [];
       return this.result.related_results.map(r => {
@@ -534,35 +537,55 @@ export default {
       }, true);
 
       // 2. Tư duy toán học
+      let mathData = ['Số và\ntính toán', 'Hình học\nkhông gian', 'Đo lường', 'Kiểu mẫu'];
+      if (this.isL1L2) {
+          mathData = ['Số và\ntính toán', 'Hình học\nkhông gian', 'Đo lường'];
+      }
       const c2 = echarts.getInstanceByDom(this.$refs.chart2) || echarts.init(this.$refs.chart2);
       c2.setOption({
         ...commonOpts,
         title: { text: 'Tư duy toán học', left: 'center', textStyle: { fontSize: 13, color: '#333', fontWeight: 'bold' } },
         legend: legendTopRight,
-        xAxis: { ...commonOpts.xAxis, data: ['Số và\ntính toán', 'Hình học\nkhông gian', 'Đo lường', 'Kiểu mẫu'] },
-        series: selectedData.map(t => ({
-          name: t.name,
-          type: 'bar',
-          data: [t.reportData.kn11, t.reportData.kn12, t.reportData.kn13, t.reportData.kn14],
-          barMaxWidth: 20,
-          itemStyle: { color: getColor(t.test_cd) }
-        }))
+        xAxis: { ...commonOpts.xAxis, data: mathData },
+        series: selectedData.map(t => {
+          let data = [t.reportData.kn11, t.reportData.kn12, t.reportData.kn13, t.reportData.kn14];
+          if (this.isL1L2) {
+             data = [t.reportData.kn11, t.reportData.kn12, t.reportData.kn13];
+          }
+          return {
+            name: t.name,
+            type: 'bar',
+            data: data,
+            barMaxWidth: 20,
+            itemStyle: { color: getColor(t.test_cd) }
+          };
+        })
       }, true);
 
       // 3. Tư duy logic
+      let logicData = ['Hiểu biết', 'Ứng dụng', 'Phân tích', 'Tổng hợp'];
+      if (this.isL1L2) {
+          logicData = ['Hiểu biết', 'Ứng dụng', 'Phân tích'];
+      }
       const c3 = echarts.getInstanceByDom(this.$refs.chart3) || echarts.init(this.$refs.chart3);
       c3.setOption({
         ...commonOpts,
         title: { text: 'Tư duy logic', left: 'center', textStyle: { fontSize: 13, color: '#333', fontWeight: 'bold' } },
         legend: legendTopRight,
-        xAxis: { ...commonOpts.xAxis, data: ['Hiểu biết', 'Ứng dụng', 'Phân tích', 'Tổng hợp'] },
-        series: selectedData.map(t => ({
-          name: t.name,
-          type: 'bar',
-          data: [t.reportData.sk21, t.reportData.sk22, t.reportData.sk23, t.reportData.sk24],
-          barMaxWidth: 20,
-          itemStyle: { color: getColor(t.test_cd) }
-        }))
+        xAxis: { ...commonOpts.xAxis, data: logicData },
+        series: selectedData.map(t => {
+          let data = [t.reportData.sk21, t.reportData.sk22, t.reportData.sk23, t.reportData.sk24];
+          if (this.isL1L2) {
+             data = [t.reportData.sk21, t.reportData.sk22, t.reportData.sk23];
+          }
+          return {
+            name: t.name,
+            type: 'bar',
+            data: data,
+            barMaxWidth: 20,
+            itemStyle: { color: getColor(t.test_cd) }
+          };
+        })
       }, true);
 
       // 4. Tư duy sáng tạo
@@ -587,8 +610,12 @@ export default {
       const overallSeries = selectedData.map(t => {
         const rd = t.reportData;
         const avg1 = Math.round((Number(rd.sk11 || 0) + Number(rd.sk12 || 0) + Number(rd.sk13 || 0)) / 3);
-        const avg2 = Math.round((Number(rd.kn11 || 0) + Number(rd.kn12 || 0) + Number(rd.kn13 || 0) + Number(rd.kn14 || 0)) / 4);
-        const avg3 = Math.round((Number(rd.sk21 || 0) + Number(rd.sk22 || 0) + Number(rd.sk23 || 0) + Number(rd.sk24 || 0)) / 4);
+        const avg2 = this.isL1L2 ? 
+            Math.round((Number(rd.kn11 || 0) + Number(rd.kn12 || 0) + Number(rd.kn13 || 0)) / 3) :
+            Math.round((Number(rd.kn11 || 0) + Number(rd.kn12 || 0) + Number(rd.kn13 || 0) + Number(rd.kn14 || 0)) / 4);
+        const avg3 = this.isL1L2 ?
+            Math.round((Number(rd.sk21 || 0) + Number(rd.sk22 || 0) + Number(rd.sk23 || 0)) / 3) :
+            Math.round((Number(rd.sk21 || 0) + Number(rd.sk22 || 0) + Number(rd.sk23 || 0) + Number(rd.sk24 || 0)) / 4);
         const avg4 = Math.round((Number(rd.sk31 || 0) + Number(rd.sk32 || 0) + Number(rd.sk33 || 0) + Number(rd.sk34 || 0)) / 4);
         return {
           name: t.name,

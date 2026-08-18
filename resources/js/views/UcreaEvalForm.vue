@@ -81,7 +81,7 @@
             </thead>
             <tbody class="divide-y divide-brand-border text-sm text-brand-text">
               <tr v-for="(item, index) in rubrics" :key="index" class="hover:bg-brand-card/40 transition">
-                <td class="px-4 py-4 text-center text-brand-desc font-bold">{{ index + 1 }}</td>
+                <td class="px-4 py-4 text-center text-brand-desc font-bold">{{ getQuestionNumber(index) }}</td>
                 <td class="px-4 py-4 font-semibold text-brand-text">{{ item.main }}</td>
                 <td class="px-4 py-4">
                    <p class="font-medium text-brand-text">{{ item.sub }}</p>
@@ -148,6 +148,17 @@ export default {
     this.fetchInfo();
   },
   methods: {
+    getQuestionNumber(index) {
+      if (!this.result) return index + 1;
+      const isL1L2 = ['L1', 'L2'].includes(this.result.level_cd);
+      if (isL1L2) {
+        if (index >= 10) return '11';
+        return index + 1;
+      } else {
+        if (index >= 12) return '13,14';
+        return index + 1;
+      }
+    },
     async fetchInfo() {
       this.loading = true;
       try {
@@ -157,6 +168,11 @@ export default {
         });
         if (response.data.status === 'success') {
           this.result = response.data.data.general;
+          
+          if (['L1', 'L2'].includes(this.result.level_cd)) {
+             this.rubrics = this.rubrics.filter((r, idx) => idx !== 6 && idx !== 10);
+          }
+          
           const savedRubrics = response.data.data.rubrics || [];
           if (savedRubrics.length > 0) {
             this.rubrics.forEach(rub => {

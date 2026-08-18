@@ -177,9 +177,18 @@ class UcreaEvaluationController extends Controller
             $nameMap = ['TT001' => 'Đầu kỳ', 'TT002' => 'Giữa kỳ', 'TT003' => 'Cuối kỳ'];
             $reportDataName = $nameMap[$result->test_cd] ?? 'Đầu kỳ';
 
+            $isL1L2 = in_array($result->level_cd, ['L1', 'L2']);
+            
             $avgCoBan = (($scoresByKey['sk11'] ?? 70) + ($scoresByKey['sk12'] ?? 70) + ($scoresByKey['sk13'] ?? 70)) / 3;
-            $avgToanHoc = (($scoresByKey['kn11'] ?? 70) + ($scoresByKey['kn12'] ?? 70) + ($scoresByKey['kn13'] ?? 70) + ($scoresByKey['kn14'] ?? 70) + ($scoresByKey['kn15'] ?? 70)) / 5;
-            $avgLogic = (($scoresByKey['sk21'] ?? 70) + ($scoresByKey['sk22'] ?? 70) + ($scoresByKey['sk23'] ?? 70) + ($scoresByKey['sk24'] ?? 70)) / 4;
+            
+            if ($isL1L2) {
+                $avgToanHoc = (($scoresByKey['kn11'] ?? 70) + ($scoresByKey['kn12'] ?? 70) + ($scoresByKey['kn13'] ?? 70) + ($scoresByKey['kn15'] ?? 70)) / 4;
+                $avgLogic = (($scoresByKey['sk21'] ?? 70) + ($scoresByKey['sk22'] ?? 70) + ($scoresByKey['sk23'] ?? 70)) / 3;
+            } else {
+                $avgToanHoc = (($scoresByKey['kn11'] ?? 70) + ($scoresByKey['kn12'] ?? 70) + ($scoresByKey['kn13'] ?? 70) + ($scoresByKey['kn14'] ?? 70) + ($scoresByKey['kn15'] ?? 70)) / 5;
+                $avgLogic = (($scoresByKey['sk21'] ?? 70) + ($scoresByKey['sk22'] ?? 70) + ($scoresByKey['sk23'] ?? 70) + ($scoresByKey['sk24'] ?? 70)) / 4;
+            }
+            
             $avgSangTao = (($scoresByKey['sk31'] ?? 70) + ($scoresByKey['sk32'] ?? 70) + ($scoresByKey['sk33'] ?? 70) + ($scoresByKey['sk34'] ?? 70)) / 4;
 
             $getGradeFromScore = function($avgScore) {
