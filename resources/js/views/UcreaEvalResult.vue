@@ -190,7 +190,7 @@
                     <td class="border-r border-gray-200 p-2.5 text-left text-gray-600">Khả năng thể hiện số lượng bằng cách sử dụng số và so sánh các đồ vật với nhau.</td>
                     <td class="p-2.5 font-bold text-gray-800">{{ getGrade('Đo lường') }}</td>
                   </tr>
-                  <tr v-if="!isL1L2" class="bg-[#f4f7fa]">
+                  <tr class="bg-[#f4f7fa]">
                     <td class="border-r border-gray-200 p-2.5 text-left font-bold text-gray-700 pl-3">Kiểu mẫu</td>
                     <td class="border-r border-gray-200 p-2.5 text-left text-gray-600">Khả năng nhận diện và dự đoán mối quan hệ mang tính quy luật của đồ vật.</td>
                     <td class="p-2.5 font-bold text-gray-800">{{ getGrade('Kiểu mẫu') }}</td>
@@ -538,9 +538,6 @@ export default {
 
       // 2. Tư duy toán học
       let mathData = ['Số và\ntính toán', 'Hình học\nkhông gian', 'Đo lường', 'Kiểu mẫu'];
-      if (this.isL1L2) {
-          mathData = ['Số và\ntính toán', 'Hình học\nkhông gian', 'Đo lường'];
-      }
       const c2 = echarts.getInstanceByDom(this.$refs.chart2) || echarts.init(this.$refs.chart2);
       c2.setOption({
         ...commonOpts,
@@ -549,9 +546,6 @@ export default {
         xAxis: { ...commonOpts.xAxis, data: mathData },
         series: selectedData.map(t => {
           let data = [t.reportData.kn11, t.reportData.kn12, t.reportData.kn13, t.reportData.kn14];
-          if (this.isL1L2) {
-             data = [t.reportData.kn11, t.reportData.kn12, t.reportData.kn13];
-          }
           return {
             name: t.name,
             type: 'bar',
@@ -610,9 +604,7 @@ export default {
       const overallSeries = selectedData.map(t => {
         const rd = t.reportData;
         const avg1 = Math.round((Number(rd.sk11 || 0) + Number(rd.sk12 || 0) + Number(rd.sk13 || 0)) / 3);
-        const avg2 = this.isL1L2 ? 
-            Math.round((Number(rd.kn11 || 0) + Number(rd.kn12 || 0) + Number(rd.kn13 || 0)) / 3) :
-            Math.round((Number(rd.kn11 || 0) + Number(rd.kn12 || 0) + Number(rd.kn13 || 0) + Number(rd.kn14 || 0)) / 4);
+        const avg2 = Math.round((Number(rd.kn11 || 0) + Number(rd.kn12 || 0) + Number(rd.kn13 || 0) + Number(rd.kn14 || 0)) / 4);
         const avg3 = this.isL1L2 ?
             Math.round((Number(rd.sk21 || 0) + Number(rd.sk22 || 0) + Number(rd.sk23 || 0)) / 3) :
             Math.round((Number(rd.sk21 || 0) + Number(rd.sk22 || 0) + Number(rd.sk23 || 0) + Number(rd.sk24 || 0)) / 4);

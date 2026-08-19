@@ -170,7 +170,7 @@ export default {
           this.result = response.data.data.general;
           
           if (['L1', 'L2'].includes(this.result.level_cd)) {
-             this.rubrics = this.rubrics.filter((r, idx) => idx !== 6 && idx !== 10);
+             this.rubrics = this.rubrics.filter((r, idx) => idx !== 6 && idx !== 11);
           }
           
           const savedRubrics = response.data.data.rubrics || [];
