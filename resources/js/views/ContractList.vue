@@ -5,9 +5,15 @@
         <h2 class="text-2xl font-bold text-brand-text">{{ $t('contracts.title') }}</h2>
         <p class="text-sm text-brand-desc">{{ $t('contracts.desc') }}</p>
       </div>
-      <button v-if="userRole === 'admin'" @click="openModal()" class="btn-primary">
-        {{ $t('contracts.add_btn') }}
-      </button>
+      <div class="flex gap-2">
+        <button @click="exportExcel" class="btn-primary bg-green-500 hover:bg-green-600 text-white flex items-center gap-2">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+          Xuất Excel
+        </button>
+        <button v-if="userRole === 'admin'" @click="openModal()" class="btn-primary">
+          {{ $t('contracts.add_btn') }}
+        </button>
+      </div>
     </div>
 
         <!-- Search / Filter -->
@@ -38,12 +44,7 @@
           <option value="0">Hủy đăng ký</option>
         </select>
       </div>
-      <div class="md:col-span-4 flex justify-end gap-2">
-        <button @click="exportExcel" class="btn-primary bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-xl text-sm font-medium transition-colors flex items-center gap-2">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
-          Xuất Excel
-        </button>
-      </div>
+
     </div>
 
         <!-- Table -->
@@ -242,7 +243,10 @@ export default {
       }
     },
     async fetchContracts(page = 1) {
+      if (page) this.pagination.current_page = page;
       try {
+        const token = localStorage.getItem('token');
+        const headers = token ? { Authorization: `Bearer ${token}` } : {};
         const response = await axios.get('/api/contracts', {
           headers,
           params: {

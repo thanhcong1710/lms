@@ -500,7 +500,7 @@ const messages = {
       }
     },
     contracts: {
-      title: 'Hợp đồng & Tuyển sinh',
+      title: 'Hợp đồng & Xếp lớp',
       desc: 'Quản lý hợp đồng học viên, ngày tháng và mã trạng thái',
       add_btn: '+ Thêm Hợp đồng',
       search: 'Tìm kiếm hợp đồng...',
