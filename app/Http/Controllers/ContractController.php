@@ -66,7 +66,6 @@ class ContractController extends Controller
         $data['data'] = collect($data['data'])->map(function ($c) {
             $c['student_name'] = $c['student']['name'] ?? '';
             $c['student_crm_id'] = $c['student']['crm_id'] ?? '';
-            $c['student_lms_id'] = $c['student']['id_lms'] ?? '';
             $gender = $c['student']['gender'] ?? '';
             $c['student_gender'] = ($gender == 'M') ? 'Nam' : (($gender == 'F') ? 'Nữ' : 'Khác');
             
@@ -148,22 +147,22 @@ class ContractController extends Controller
         
         // Define Headers
         $headers = [
-            'STT', 'Tên trung tâm', 'Tên lớp', 'Giáo viên', 'LEVEL', 'Mã LMS', 'Mã học sinh', 'Học sinh Tên', 'Giới tính', 'Thời gian đăng ký', 'Trạng thái', 'Ngày đăng ký'
+            'STT', 'Tên trung tâm', 'Tên lớp', 'Giáo viên', 'LEVEL', 'Mã học sinh', 'Học sinh Tên', 'Giới tính', 'Thời gian đăng ký', 'Trạng thái', 'Ngày đăng ký'
         ];
         
         $sheet->setCellValue('A1', 'DANH SÁCH HỢP ĐỒNG TUYỂN SINH');
         $sheet->getStyle('A1')->getFont()->setBold(true)->setSize(14);
-        $sheet->mergeCells('A1:L1');
+        $sheet->mergeCells('A1:K1');
         $sheet->getStyle('A1')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
 
-        foreach (range('A', 'L') as $idx => $col) {
+        foreach (range('A', 'K') as $idx => $col) {
             $sheet->setCellValue($col . '3', $headers[$idx]);
             $sheet->getStyle($col . '3')->getFont()->setBold(true);
             $sheet->getStyle($col . '3')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setRGB('E0E0E0');
         }
 
-        $widths = [8, 25, 20, 20, 15, 15, 15, 25, 10, 35, 15, 20];
-        foreach (range('A', 'L') as $idx => $col) {
+        $widths = [8, 25, 20, 20, 15, 15, 25, 10, 35, 15, 20];
+        foreach (range('A', 'K') as $idx => $col) {
             $sheet->getColumnDimension($col)->setWidth($widths[$idx]);
         }
 
@@ -199,18 +198,17 @@ class ContractController extends Controller
             $sheet->setCellValue('C' . $row, $class_name);
             $sheet->setCellValue('D' . $row, $teacher_name);
             $sheet->setCellValue('E' . $row, $level_name);
-            $sheet->setCellValueExplicit('F' . $row, $student_lms_id, \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING);
-            $sheet->setCellValueExplicit('G' . $row, $student_crm_id, \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING);
-            $sheet->setCellValue('H' . $row, $student_name);
-            $sheet->setCellValue('I' . $row, $gender_str);
-            $sheet->setCellValue('J' . $row, $time_range);
-            $sheet->setCellValue('K' . $row, $status_label);
-            $sheet->setCellValue('L' . $row, substr($item->created_at, 0, 10));
+            $sheet->setCellValueExplicit('F' . $row, $student_crm_id, \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING);
+            $sheet->setCellValue('G' . $row, $student_name);
+            $sheet->setCellValue('H' . $row, $gender_str);
+            $sheet->setCellValue('I' . $row, $time_range);
+            $sheet->setCellValue('J' . $row, $status_label);
+            $sheet->setCellValue('K' . $row, substr($item->created_at, 0, 10));
 
-            $sheet->getStyle("A$row:L$row")->applyFromArray($borderOnly);
+            $sheet->getStyle("A$row:K$row")->applyFromArray($borderOnly);
             $sheet->getStyle("A$row")->applyFromArray($centerAlign);
-            $sheet->getStyle("I$row")->applyFromArray($centerAlign);
-            $sheet->getStyle("K$row")->applyFromArray($centerAlign);
+            $sheet->getStyle("H$row")->applyFromArray($centerAlign);
+            $sheet->getStyle("J$row")->applyFromArray($centerAlign);
             
             $row++;
         }

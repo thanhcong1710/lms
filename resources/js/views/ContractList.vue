@@ -64,7 +64,6 @@
             <th class="px-6 py-4">Tên lớp</th>
             <th class="px-6 py-4">Giáo viên</th>
             <th class="px-6 py-4">LEVEL</th>
-            <th class="px-6 py-4">Mã LMS</th>
             <th class="px-6 py-4">Mã học sinh</th>
             <th class="px-6 py-4">Học sinh Tên</th>
             <th class="px-6 py-4">Giới tính</th>
@@ -81,7 +80,6 @@
             <td class="px-6 py-4 font-mono text-xs">{{ contract.class_name }}</td>
             <td class="px-6 py-4 text-sm">{{ contract.teacher_name }}</td>
             <td class="px-6 py-4 font-mono text-xs">{{ contract.level_name }}</td>
-            <td class="px-6 py-4 font-mono text-indigo-400">{{ contract.student_lms_id }}</td>
             <td class="px-6 py-4 font-mono text-indigo-400">{{ contract.student_crm_id }}</td>
             <td class="px-6 py-4 font-medium text-brand-text">{{ contract.student_name }}</td>
             <td class="px-6 py-4">{{ contract.student_gender }}</td>
