@@ -27,10 +27,17 @@
       </div>
       <div>
         <label class="block text-xs font-semibold text-brand-desc uppercase mb-2">Lớp học</label>
-        <select v-model="filter.class_id" @change="fetchContracts(1)" class="w-full px-4 py-2 rounded-xl bg-brand-input border border-brand-border text-brand-text focus:outline-none focus:border-indigo-500 text-sm">
-          <option value="">Tất cả lớp học</option>
-          <option v-for="c in classOptions" :key="c.id" :value="c.id">{{ c.cls_name }}</option>
-        </select>
+        <div class="relative">
+          <input type="text" v-model="classSearchText" @input="onClassFilterInput" @focus="showClassDropdown = true" placeholder="Tìm tên lớp học..." class="w-full px-4 py-2 rounded-xl bg-brand-input border border-brand-border text-brand-text placeholder-gray-600 focus:outline-none focus:border-indigo-500 text-sm">
+          <button v-if="filter.class_id" @click="clearClassFilter" class="absolute right-3 top-2.5 text-gray-400 hover:text-white">
+             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+          </button>
+          <div v-if="showClassDropdown && filteredClassOptionsList.length > 0" class="absolute z-10 w-full mt-1 bg-brand-card border border-brand-border rounded-xl shadow-xl max-h-48 overflow-y-auto">
+            <div v-for="c in filteredClassOptionsList" :key="c.id" @click="selectFilterClass(c)" class="px-4 py-2 hover:bg-brand-input cursor-pointer text-sm text-brand-text border-b border-brand-border/50 last:border-0 truncate">
+              {{ c.cls_name }}
+            </div>
+          </div>
+        </div>
       </div>
       <div>
         <label class="block text-xs font-semibold text-brand-desc uppercase mb-2">Từ khóa</label>
@@ -183,6 +190,8 @@ export default {
       studentResults: [],
       branchOptions: [],
       classOptions: [],
+      classSearchText: '',
+      showClassDropdown: false,
       form: {
         student_id: '',
         student_name: '',
@@ -202,11 +211,22 @@ export default {
       }
     }
   },
+  mounted() {
+    document.addEventListener('click', this.handleClickOutsideClassDropdown);
+  },
+  beforeDestroy() {
+    document.removeEventListener('click', this.handleClickOutsideClassDropdown);
+  },
   created() {
     this.fetchContracts(1);
     this.fetchFormOptions();
   },
   computed: {
+    filteredClassOptionsList() {
+      if (!this.classSearchText) return this.classOptions;
+      const lower = this.classSearchText.toLowerCase();
+      return this.classOptions.filter(c => c.cls_name && c.cls_name.toLowerCase().includes(lower));
+    },
     filteredContracts() {
       return this.contracts;
     },
@@ -241,6 +261,30 @@ export default {
       } catch (error) {
         console.error('Error exporting excel', error);
       }
+    },
+    onClassFilterInput() {
+      this.showClassDropdown = true;
+      if (!this.classSearchText) {
+        this.filter.class_id = '';
+        this.fetchContracts(1);
+      }
+    },
+    selectFilterClass(c) {
+      this.filter.class_id = c.id;
+      this.classSearchText = c.cls_name;
+      this.showClassDropdown = false;
+      this.fetchContracts(1);
+    },
+    handleClickOutsideClassDropdown(e) {
+      if (!this.$el.contains(e.target)) {
+        this.showClassDropdown = false;
+      }
+    },
+    clearClassFilter() {
+      this.filter.class_id = '';
+      this.classSearchText = '';
+      this.showClassDropdown = false;
+      this.fetchContracts(1);
     },
     async fetchContracts(page = 1) {
       if (page) this.pagination.current_page = page;
