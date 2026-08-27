@@ -27,6 +27,7 @@ Route::apiResource('branches', BranchController::class);
 Route::apiResource('teachers', TeacherController::class);
 Route::apiResource('classes', ClassController::class);
 Route::apiResource('students', StudentController::class);
+Route::get('/contracts/export/excel', [ContractController::class, 'export']);
 Route::apiResource('contracts', ContractController::class);
 Route::apiResource('users', UserController::class);
 Route::get('/tests', [LmsTestController::class, 'index']);

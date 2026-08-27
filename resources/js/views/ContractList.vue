@@ -10,38 +10,83 @@
       </button>
     </div>
 
-    <!-- Search / Filter -->
-    <div class="bg-brand-card/40 border border-brand-border p-4 rounded-xl flex items-center justify-between">
-      <input type="text" v-model="search" @input="fetchContracts(1)" :placeholder="$t('contracts.search')" class="px-4 py-2 rounded-xl bg-brand-input border border-brand-border text-brand-text placeholder-gray-600 focus:outline-none focus:border-indigo-500 transition duration-150 text-sm w-72">
+        <!-- Search / Filter -->
+    <div class="bg-brand-card/40 border border-brand-border p-4 rounded-xl grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
+      <div>
+        <label class="block text-xs font-semibold text-brand-desc uppercase mb-2">Trung tâm</label>
+        <select v-model="filter.branch_id" @change="fetchContracts(1)" class="w-full px-4 py-2 rounded-xl bg-brand-input border border-brand-border text-brand-text focus:outline-none focus:border-indigo-500 text-sm">
+          <option value="">Tất cả trung tâm</option>
+          <option v-for="b in branchOptions" :key="b.id" :value="b.id">{{ b.name }}</option>
+        </select>
+      </div>
+      <div>
+        <label class="block text-xs font-semibold text-brand-desc uppercase mb-2">Lớp học</label>
+        <select v-model="filter.class_id" @change="fetchContracts(1)" class="w-full px-4 py-2 rounded-xl bg-brand-input border border-brand-border text-brand-text focus:outline-none focus:border-indigo-500 text-sm">
+          <option value="">Tất cả lớp học</option>
+          <option v-for="c in classOptions" :key="c.id" :value="c.id">{{ c.cls_name }}</option>
+        </select>
+      </div>
+      <div>
+        <label class="block text-xs font-semibold text-brand-desc uppercase mb-2">Từ khóa</label>
+        <input type="text" v-model="search" @input="fetchContracts(1)" placeholder="Tên học viên, mã học viên" class="w-full px-4 py-2 rounded-xl bg-brand-input border border-brand-border text-brand-text placeholder-gray-600 focus:outline-none focus:border-indigo-500 transition duration-150 text-sm">
+      </div>
+      <div>
+        <label class="block text-xs font-semibold text-brand-desc uppercase mb-2">Trạng thái</label>
+        <select v-model="filter.status" @change="fetchContracts(1)" class="w-full px-4 py-2 rounded-xl bg-brand-input border border-brand-border text-brand-text focus:outline-none focus:border-indigo-500 text-sm">
+          <option value="all">Tất cả</option>
+          <option value="1">Đăng ký</option>
+          <option value="0">Hủy đăng ký</option>
+        </select>
+      </div>
+      <div class="md:col-span-4 flex justify-end gap-2">
+        <button @click="exportExcel" class="btn-primary bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-xl text-sm font-medium transition-colors flex items-center gap-2">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+          Xuất Excel
+        </button>
+      </div>
     </div>
 
-    <!-- Table -->
+        <!-- Table -->
     <div class="overflow-x-auto bg-brand-card/20 border border-brand-border rounded-xl">
-      <table class="w-full text-left border-collapse">
+      <table class="w-full text-left border-collapse whitespace-nowrap">
         <thead>
           <tr class="border-b border-brand-border bg-brand-header text-xs font-semibold text-brand-desc uppercase">
-            <th class="px-6 py-4 w-16">{{ $t('common.stt') }}</th>
-            <th class="px-6 py-4">{{ $t('students.cols.crm_id') }}</th>
-            <th class="px-6 py-4">{{ $t('contracts.cols.student') }}</th>
-            <th class="px-6 py-4">{{ $t('contracts.cols.class') }}</th>
-            <th class="px-6 py-4">{{ $t('common.branch') }}</th>
-            <th class="px-6 py-4">{{ $t('contracts.cols.start_date') }}</th>
-            <th class="px-6 py-4">{{ $t('contracts.cols.end_date') }}</th>
-            <th v-if="userRole === 'admin'" class="px-6 py-4 text-right">{{ $t('common.actions') }}</th>
+            <th class="px-6 py-4 w-16">STT</th>
+            <th class="px-6 py-4">Tên trung tâm</th>
+            <th class="px-6 py-4">Tên lớp</th>
+            <th class="px-6 py-4">Giáo viên</th>
+            <th class="px-6 py-4">LEVEL</th>
+            <th class="px-6 py-4">Mã LMS</th>
+            <th class="px-6 py-4">Mã học sinh</th>
+            <th class="px-6 py-4">Học sinh Tên</th>
+            <th class="px-6 py-4">Giới tính</th>
+            <th class="px-6 py-4">Thời gian đăng ký</th>
+            <th class="px-6 py-4 text-center">Trạng thái</th>
+            <th class="px-6 py-4">Ngày đăng ký</th>
+            <th v-if="userRole === 'admin'" class="px-6 py-4 text-right">Thao tác</th>
           </tr>
         </thead>
         <tbody class="divide-y divide-brand-border text-sm text-brand-text/90">
           <tr v-for="(contract, index) in contracts" :key="contract.id" class="hover:bg-brand-card/40 transition duration-150">
             <td class="px-6 py-4 text-brand-desc">{{ (pagination.current_page - 1) * pagination.per_page + index + 1 }}</td>
+            <td class="px-6 py-4 font-medium">{{ contract.branch_name }}</td>
+            <td class="px-6 py-4 font-mono text-xs">{{ contract.class_name }}</td>
+            <td class="px-6 py-4 text-sm">{{ contract.teacher_name }}</td>
+            <td class="px-6 py-4 font-mono text-xs">{{ contract.level_name }}</td>
+            <td class="px-6 py-4 font-mono text-indigo-400">{{ contract.student_lms_id }}</td>
             <td class="px-6 py-4 font-mono text-indigo-400">{{ contract.student_crm_id }}</td>
             <td class="px-6 py-4 font-medium text-brand-text">{{ contract.student_name }}</td>
-            <td class="px-6 py-4 font-mono text-xs">{{ contract.class_name }}</td>
-            <td class="px-6 py-4 text-sm">{{ contract.branch_name }}</td>
-            <td class="px-6 py-4 font-mono text-xs">{{ contract.enrolment_start_date }}</td>
-            <td class="px-6 py-4 font-mono text-xs">{{ contract.enrolment_last_date }}</td>
+            <td class="px-6 py-4">{{ contract.student_gender }}</td>
+            <td class="px-6 py-4 text-xs font-mono">{{ contract.time_range }}</td>
+            <td class="px-6 py-4 text-center">
+              <span :class="{'px-2 py-1 text-xs rounded-full': true, 'bg-green-500/20 text-green-400': contract.status_label === 'Đã đăng ký', 'bg-red-500/20 text-red-400': contract.status_label === 'Hủy đăng ký'}">
+                {{ contract.status_label }}
+              </span>
+            </td>
+            <td class="px-6 py-4 font-mono text-xs">{{ contract.created_at ? contract.created_at.substring(0, 10) : '' }}</td>
             <td v-if="userRole === 'admin'" class="px-6 py-4 text-right space-x-2">
-              <button @click="openModal(contract)" class="text-sm text-indigo-400 hover:text-indigo-300 font-medium">{{ $t('common.edit') }}</button>
-              <button @click="deleteContract(contract.id)" class="text-sm text-red-400 hover:text-red-300 font-medium">{{ $t('common.delete') }}</button>
+              <button @click="openModal(contract)" class="text-sm text-indigo-400 hover:text-indigo-300 font-medium">Sửa</button>
+              <button @click="deleteContract(contract.id)" class="text-sm text-red-400 hover:text-red-300 font-medium">Xóa</button>
             </td>
           </tr>
         </tbody>
@@ -123,6 +168,11 @@ import axios from 'axios';
 export default {
   data() {
     return {
+      filter: {
+        branch_id: '',
+        class_id: '',
+        status: 1
+      },
       userRole: localStorage.getItem('user_role') || 'admin',
       contracts: [],
       search: '',
@@ -167,16 +217,41 @@ export default {
     }
   },
   methods: {
+        async exportExcel() {
+      try {
+        const token = localStorage.getItem('token');
+        const headers = token ? { Authorization: `Bearer ${token}` } : {};
+        const response = await axios.get('/api/contracts/export/excel', {
+          headers,
+          responseType: 'blob',
+          params: {
+            search: this.search,
+            branch_id: this.filter.branch_id,
+            class_id: this.filter.class_id,
+            status: this.filter.status
+          }
+        });
+        const url = window.URL.createObjectURL(new Blob([response.data]));
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', 'Danh_sach_hop_dong.xlsx');
+        document.body.appendChild(link);
+        link.click();
+      } catch (error) {
+        console.error('Error exporting excel', error);
+      }
+    },
     async fetchContracts(page = 1) {
       try {
         const response = await axios.get('/api/contracts', {
+          headers,
           params: {
+            page: this.pagination.current_page,
+            per_page: this.pagination.per_page,
             search: this.search,
-            page: page,
-            per_page: this.pagination.per_page
-          },
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`
+            branch_id: this.filter.branch_id,
+            class_id: this.filter.class_id,
+            status: this.filter.status
           }
         });
         if (response.data.data) {
