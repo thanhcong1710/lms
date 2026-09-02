@@ -53,9 +53,9 @@ class ContractController extends Controller
         $status = $request->query('status', 1);
         if ($status !== 'all') {
             if ($status == 1) {
-                $query->where('status', '!=', 'SS004'); // Đăng ký
+                $query->whereNotIn('status', ['SS003', 'SS004']); // Đăng ký
             } elseif ($status == 0) {
-                $query->where('status', 'SS004'); // Hủy đăng ký
+                $query->whereIn('status', ['SS003', 'SS004']); // Hủy đăng ký
             }
         }
 
@@ -75,7 +75,7 @@ class ContractController extends Controller
             
             $c['branch_name'] = $c['branch']['name'] ?? '';
             
-            $status_label = ($c['status'] == 'SS004') ? 'Hủy đăng ký' : 'Đã đăng ký';
+            $status_label = in_array($c['status'], ['SS003', 'SS004']) ? 'Hủy đăng ký' : 'Đã đăng ký';
             $c['status_label'] = $status_label;
             
             $days = 0;
@@ -134,9 +134,9 @@ class ContractController extends Controller
         $status = $request->query('status', 1);
         if ($status !== 'all') {
             if ($status == 1) {
-                $query->where('status', '!=', 'SS004');
+                $query->whereNotIn('status', ['SS003', 'SS004']);
             } elseif ($status == 0) {
-                $query->where('status', 'SS004');
+                $query->whereIn('status', ['SS003', 'SS004']);
             }
         }
 
@@ -182,7 +182,7 @@ class ContractController extends Controller
             $teacher_name = $item->lmsClass->teacher->ins_name ?? '';
             $branch_name = $item->branch->name ?? '';
             
-            $status_label = ($item->status == 'SS004') ? 'Hủy đăng ký' : 'Đã đăng ký';
+            $status_label = in_array($item->status, ['SS003', 'SS004']) ? 'Hủy đăng ký' : 'Đã đăng ký';
             
             $days = 0;
             if (!empty($item->enrolment_start_date) && !empty($item->enrolment_last_date)) {

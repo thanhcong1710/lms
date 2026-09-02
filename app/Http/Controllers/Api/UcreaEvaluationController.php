@@ -325,7 +325,7 @@ class UcreaEvaluationController extends Controller
 
         // 6. Contracts with students
         $contracts = \App\Models\Contract::with('student')
-            ->where('status', '!=', 'SS004')
+            ->whereNotIn('status', ['SS003', 'SS004'])
             ->get()
             ->map(function ($cnt) {
                 return [

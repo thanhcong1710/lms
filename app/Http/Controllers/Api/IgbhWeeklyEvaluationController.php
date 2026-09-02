@@ -25,7 +25,7 @@ class IgbhWeeklyEvaluationController extends Controller
                 'e.created_at'
             )
             ->selectRaw('(SELECT COUNT(*) FROM igbh_weekly_eval_details WHERE weekly_eval_id = e.id) as graded_cnt')
-            ->selectRaw('(SELECT COUNT(*) FROM contracts c JOIN classes cl ON c.class_id = cl.id WHERE cl.class_seq = e.class_seq AND c.status != "SS004") as total_cnt');
+            ->selectRaw('(SELECT COUNT(*) FROM contracts c JOIN classes cl ON c.class_id = cl.id WHERE cl.class_seq = e.class_seq AND c.status NOT IN ("SS003", "SS004")) as total_cnt');
 
         // Role-based filtering
         $user = \App\Http\Controllers\AuthController::resolveUser($request);
@@ -145,7 +145,7 @@ class IgbhWeeklyEvaluationController extends Controller
             ->join('students as s', 'c.student_id', '=', 's.id')
             ->join('classes as cl', 'c.class_id', '=', 'cl.id')
             ->where('cl.class_seq', $eval->class_seq)
-            ->where('c.status', '!=', 'SS004') // assuming SS004 is cancelled/dropped
+            ->whereNotIn('c.status', ['SS003', 'SS004']) // assuming SS003/SS004 is cancelled/dropped
             ->select('s.id_lms as stu_seq', 's.name as stu_nm')
             ->get();
 
