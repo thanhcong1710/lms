@@ -460,17 +460,20 @@ export default {
     },
     getGrade(skillName) {
        const found = this.parsedSkillsGrade.find(s => s.skill === skillName);
-       return found ? found.grade : 'B';
+       if (found) {
+           return found.grade === 'L' ? 'C' : found.grade;
+       }
+       return 'B';
     },
     getGradeLabel(grade) {
       const mapping = {
         'S': 'Vượt trội',
         'A': 'Rất tốt',
-        'B': 'Tốt',
-        'C': 'Trung bình',
+        'B': 'Trung bình',
+        'C': 'Yếu',
         'L': 'Yếu'
       };
-      return mapping[grade] || grade || 'Tốt';
+      return mapping[grade] || grade || 'Trung bình';
     },
     exportPdf() {
       // Add print class to body to force 750px layout

@@ -135,19 +135,20 @@ class UcreaEvaluationController extends Controller
             $scoresByKey = [];
             $skillsGradeList = [];
 
-            $letterGrades = ['S', 'A', 'B', 'C', 'L'];
-            $scoreMap = ['S' => 100, 'A' => 85, 'B' => 70, 'C' => 55, 'L' => 30];
+            $scoresByOption = [100, 85, 55, 30, 10];
+            $gradesByOption = ['S', 'A', 'B', 'C', 'C'];
 
             foreach ($rubrics as $index => $r) {
                 // Find index of selected score option
                 $scoreIndex = array_search($r['score'], $r['options']);
                 if ($scoreIndex === false) {
                     $grade = 'B';
+                    $points = 70;
                 } else {
-                    $grade = $letterGrades[$scoreIndex] ?? 'B';
+                    $grade = $gradesByOption[$scoreIndex] ?? 'B';
+                    $points = $scoresByOption[$scoreIndex] ?? 70;
                 }
 
-                $points = $scoreMap[$grade] ?? 70;
                 $scoresByKey[$r['key']] = $points;
 
                 // Add to details
@@ -196,11 +197,10 @@ class UcreaEvaluationController extends Controller
             $avgSangTao = (($scoresByKey['sk31'] ?? 70) + ($scoresByKey['sk32'] ?? 70) + ($scoresByKey['sk33'] ?? 70) + ($scoresByKey['sk34'] ?? 70)) / 4;
 
             $getGradeFromScore = function($avgScore) {
-                if ($avgScore >= 90) return 'S';
-                if ($avgScore >= 80) return 'A';
-                if ($avgScore >= 65) return 'B';
-                if ($avgScore >= 50) return 'C';
-                return 'L';
+                if ($avgScore >= 91) return 'S';
+                if ($avgScore >= 71) return 'A';
+                if ($avgScore >= 41) return 'B';
+                return 'C';
             };
 
             $gradeCoBan = $getGradeFromScore($avgCoBan);
