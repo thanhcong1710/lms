@@ -721,8 +721,8 @@ export default {
 
       // Datasets
       const datasets = [
-        { label: 'Các thí sinh', color: '#1e3a8a', bg: 'rgba(30,58,138,0.1)', data: values.map(v => Math.min(100, Math.max(30, v - 15))) },
-        { label: 'HS Logiclab', color: '#65a30d', bg: 'rgba(101,163,13,0.1)', data: values.map(v => Math.min(100, Math.max(40, v - 5))) },
+        { label: 'Các thí sinh', color: '#1e3a8a', bg: 'rgba(30,58,138,0.1)', data: values.map(v => Math.floor(Math.random() * 4) + 85) },
+        { label: 'HS Logiclab', color: '#65a30d', bg: 'rgba(101,163,13,0.1)', data: values.map(v => Math.floor(Math.random() * 6) + 87) },
         { label: 'Thí sinh', color: '#ef4444', bg: 'rgba(239,68,68,0.4)', data: values }
       ];
 
@@ -825,8 +825,8 @@ export default {
           const startX = groupCenterX - totalBarsWidth / 2;
           
           const val1 = stat.pct;
-          const val2 = Math.min(100, Math.max(30, val1 - 15));
-          const val3 = Math.min(100, Math.max(40, val1 - 5));
+          const val2 = Math.floor(Math.random() * 4) + 85;
+          const val3 = Math.floor(Math.random() * 6) + 87;
           
           const bars = [
              { val: val1, color: '#ef4444' }, // Thí sinh
@@ -877,8 +877,8 @@ export default {
        ctx.clearRect(0, 0, w, h);
        
        const studentPct = maxScore > 0 ? Math.round((score / maxScore) * 100) : 0;
-       const allPct = Math.min(100, Math.max(30, studentPct - 15));
-       const cmsPct = Math.min(100, Math.max(40, studentPct - 5));
+       const allPct = Math.floor(Math.random() * 4) + 85;
+       const cmsPct = Math.floor(Math.random() * 6) + 87;
 
        const data = [
          { label: 'Thí sinh', color: '#ef4444', pct: studentPct },
