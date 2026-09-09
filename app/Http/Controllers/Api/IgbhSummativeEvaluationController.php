@@ -94,6 +94,22 @@ class IgbhSummativeEvaluationController extends Controller
             $maxWorkbook += $theme->theme_point;
             
             if ($detail) {
+                $isAllZero = $detail->workbook == 0 &&
+                             $detail->attd_listen == 0 &&
+                             $detail->attd_join == 0 &&
+                             $detail->attd_express == 0 &&
+                             $detail->attd_coop == 0 &&
+                             $detail->detect_normal == 0 &&
+                             $detail->detect_leadersh == 0 &&
+                             $detail->detect_math == 0 &&
+                             $detail->detect_creative == 0;
+
+                if ($isAllZero) {
+                    $detail = null;
+                }
+            }
+
+            if ($detail) {
                 $totalWorkbook += $detail->workbook;
                 $sumAttitude['listen'] += $detail->attd_listen;
                 $sumAttitude['join'] += $detail->attd_join;
@@ -223,6 +239,22 @@ class IgbhSummativeEvaluationController extends Controller
             $detail = $details->get($eachCd);
             $theme = $themes->firstWhere('sort_no', $i);
             
+            if ($detail) {
+                $isAllZero = $detail->workbook == 0 &&
+                             $detail->attd_listen == 0 &&
+                             $detail->attd_join == 0 &&
+                             $detail->attd_express == 0 &&
+                             $detail->attd_coop == 0 &&
+                             $detail->detect_normal == 0 &&
+                             $detail->detect_leadersh == 0 &&
+                             $detail->detect_math == 0 &&
+                             $detail->detect_creative == 0;
+
+                if ($isAllZero) {
+                    $detail = null;
+                }
+            }
+
             $weeklyData[] = [
                 'sort_no' => $i,
                 'each_cd' => $eachCd,
@@ -422,14 +454,28 @@ class IgbhSummativeEvaluationController extends Controller
             $totalWorkbook = 0;
             $sumAttitude = 0;
             $sumDetection = 0;
-            $weekCount = $allWeeks->count();
+            $weekCount = 0;
 
-            if ($weekCount > 0) {
-                foreach ($allWeeks as $w) {
+            foreach ($allWeeks as $w) {
+                $isAllZero = $w->workbook == 0 &&
+                             $w->attd_listen == 0 &&
+                             $w->attd_join == 0 &&
+                             $w->attd_express == 0 &&
+                             $w->attd_coop == 0 &&
+                             $w->detect_normal == 0 &&
+                             $w->detect_leadersh == 0 &&
+                             $w->detect_math == 0 &&
+                             $w->detect_creative == 0;
+
+                if (!$isAllZero) {
                     $totalWorkbook += $w->workbook;
                     $sumAttitude += ($w->attd_listen + $w->attd_join + $w->attd_express + $w->attd_coop);
                     $sumDetection += ($w->detect_normal + $w->detect_leadersh + $w->detect_math + $w->detect_creative);
+                    $weekCount++;
                 }
+            }
+
+            if ($weekCount > 0) {
                 $avgAttitude = ($sumAttitude / $weekCount) / 4 * 2;
                 $avgDetection = ($sumDetection / $weekCount) / 4 * 2;
             } else {
