@@ -89,14 +89,14 @@
               <th colspan="4" class="px-2 py-2 text-center border-b border-brand-border">Đánh giá theo lĩnh vực</th>
             </tr>
             <tr class="bg-brand-header border-b border-brand-border text-xs font-semibold text-brand-desc">
-              <th class="px-1 py-2 text-center border-r border-brand-border leading-tight">Khả năng lắng nghe<br>(1~5 Điểm)</th>
-              <th class="px-1 py-2 text-center border-r border-brand-border leading-tight">Tham gia bài học<br>(1~5 Điểm)</th>
-              <th class="px-1 py-2 text-center border-r border-brand-border leading-tight">Khả năng thể hiện<br>(1~5 Điểm)</th>
-              <th class="px-1 py-2 text-center border-r border-brand-border leading-tight">Sự hợp tác<br>(1~5 Điểm)</th>
-              <th class="px-1 py-2 text-center border-r border-brand-border leading-tight">Kỹ năng cơ bản<br>(1~5 Điểm)</th>
-              <th class="px-1 py-2 text-center border-r border-brand-border leading-tight">Khả năng lãnh đạo<br>(1~5 Điểm)</th>
-              <th class="px-1 py-2 text-center border-r border-brand-border leading-tight">Khả năng toán học<br>(1~5 Điểm)</th>
-              <th class="px-1 py-2 text-center leading-tight">Tính sáng tạo<br>(1~5 Điểm)</th>
+              <th class="px-1 py-2 text-center border-r border-brand-border leading-tight">Khả năng lắng nghe<br>(0~5 Điểm)</th>
+              <th class="px-1 py-2 text-center border-r border-brand-border leading-tight">Tham gia bài học<br>(0~5 Điểm)</th>
+              <th class="px-1 py-2 text-center border-r border-brand-border leading-tight">Khả năng thể hiện<br>(0~5 Điểm)</th>
+              <th class="px-1 py-2 text-center border-r border-brand-border leading-tight">Sự hợp tác<br>(0~5 Điểm)</th>
+              <th class="px-1 py-2 text-center border-r border-brand-border leading-tight">Kỹ năng cơ bản<br>(0~5 Điểm)</th>
+              <th class="px-1 py-2 text-center border-r border-brand-border leading-tight">Khả năng lãnh đạo<br>(0~5 Điểm)</th>
+              <th class="px-1 py-2 text-center border-r border-brand-border leading-tight">Khả năng toán học<br>(0~5 Điểm)</th>
+              <th class="px-1 py-2 text-center leading-tight">Tính sáng tạo<br>(0~5 Điểm)</th>
             </tr>
           </thead>
           <tbody class="divide-y divide-brand-border">
@@ -108,28 +108,28 @@
                 <input type="number" min="0" max="20" v-model.number="std.workbook" class="w-full px-1 py-1.5 text-center bg-white border border-gray-200 text-gray-800 focus:border-indigo-500 focus:outline-none transition">
               </td>
               <td class="px-1 py-2 border-r border-brand-border">
-                <input type="number" min="1" max="5" v-model.number="std.attd_listen" class="w-full px-1 py-1.5 text-center bg-white border border-gray-200 text-gray-800 focus:border-indigo-500 focus:outline-none transition">
+                <input type="number" min="0" max="5" v-model.number="std.attd_listen" class="w-full px-1 py-1.5 text-center bg-white border border-gray-200 text-gray-800 focus:border-indigo-500 focus:outline-none transition">
               </td>
               <td class="px-1 py-2 border-r border-brand-border">
-                <input type="number" min="1" max="5" v-model.number="std.attd_join" class="w-full px-1 py-1.5 text-center bg-white border border-gray-200 text-gray-800 focus:border-indigo-500 focus:outline-none transition">
+                <input type="number" min="0" max="5" v-model.number="std.attd_join" class="w-full px-1 py-1.5 text-center bg-white border border-gray-200 text-gray-800 focus:border-indigo-500 focus:outline-none transition">
               </td>
               <td class="px-1 py-2 border-r border-brand-border">
-                <input type="number" min="1" max="5" v-model.number="std.attd_express" class="w-full px-1 py-1.5 text-center bg-white border border-gray-200 text-gray-800 focus:border-indigo-500 focus:outline-none transition">
+                <input type="number" min="0" max="5" v-model.number="std.attd_express" class="w-full px-1 py-1.5 text-center bg-white border border-gray-200 text-gray-800 focus:border-indigo-500 focus:outline-none transition">
               </td>
               <td class="px-1 py-2 border-r border-brand-border">
-                <input type="number" min="1" max="5" v-model.number="std.attd_coop" class="w-full px-1 py-1.5 text-center bg-white border border-gray-200 text-gray-800 focus:border-indigo-500 focus:outline-none transition">
+                <input type="number" min="0" max="5" v-model.number="std.attd_coop" class="w-full px-1 py-1.5 text-center bg-white border border-gray-200 text-gray-800 focus:border-indigo-500 focus:outline-none transition">
               </td>
               <td class="px-1 py-2 border-r border-brand-border">
-                <input type="number" min="1" max="5" v-model.number="std.detect_normal" class="w-full px-1 py-1.5 text-center bg-white border border-gray-200 text-gray-800 focus:border-indigo-500 focus:outline-none transition">
+                <input type="number" min="0" max="5" v-model.number="std.detect_normal" class="w-full px-1 py-1.5 text-center bg-white border border-gray-200 text-gray-800 focus:border-indigo-500 focus:outline-none transition">
               </td>
               <td class="px-1 py-2 border-r border-brand-border">
-                <input type="number" min="1" max="5" v-model.number="std.detect_leadersh" class="w-full px-1 py-1.5 text-center bg-white border border-gray-200 text-gray-800 focus:border-indigo-500 focus:outline-none transition">
+                <input type="number" min="0" max="5" v-model.number="std.detect_leadersh" class="w-full px-1 py-1.5 text-center bg-white border border-gray-200 text-gray-800 focus:border-indigo-500 focus:outline-none transition">
               </td>
               <td class="px-1 py-2 border-r border-brand-border">
-                <input type="number" min="1" max="5" v-model.number="std.detect_math" class="w-full px-1 py-1.5 text-center bg-white border border-gray-200 text-gray-800 focus:border-indigo-500 focus:outline-none transition">
+                <input type="number" min="0" max="5" v-model.number="std.detect_math" class="w-full px-1 py-1.5 text-center bg-white border border-gray-200 text-gray-800 focus:border-indigo-500 focus:outline-none transition">
               </td>
               <td class="px-1 py-2">
-                <input type="number" min="1" max="5" v-model.number="std.detect_creative" class="w-full px-1 py-1.5 text-center bg-white border border-gray-200 text-gray-800 focus:border-indigo-500 focus:outline-none transition">
+                <input type="number" min="0" max="5" v-model.number="std.detect_creative" class="w-full px-1 py-1.5 text-center bg-white border border-gray-200 text-gray-800 focus:border-indigo-500 focus:outline-none transition">
               </td>
             </tr>
             <tr v-if="students.length === 0">
@@ -271,18 +271,18 @@ export default {
         let isValid = true;
         for (let s of this.students) {
           if (s.workbook < 0 || s.workbook > 20) isValid = false;
-          if (s.attd_listen < 1 || s.attd_listen > 5) isValid = false;
-          if (s.attd_join < 1 || s.attd_join > 5) isValid = false;
-          if (s.attd_express < 1 || s.attd_express > 5) isValid = false;
-          if (s.attd_coop < 1 || s.attd_coop > 5) isValid = false;
-          if (s.detect_normal < 1 || s.detect_normal > 5) isValid = false;
-          if (s.detect_leadersh < 1 || s.detect_leadersh > 5) isValid = false;
-          if (s.detect_math < 1 || s.detect_math > 5) isValid = false;
-          if (s.detect_creative < 1 || s.detect_creative > 5) isValid = false;
+          if (s.attd_listen < 0 || s.attd_listen > 5) isValid = false;
+          if (s.attd_join < 0 || s.attd_join > 5) isValid = false;
+          if (s.attd_express < 0 || s.attd_express > 5) isValid = false;
+          if (s.attd_coop < 0 || s.attd_coop > 5) isValid = false;
+          if (s.detect_normal < 0 || s.detect_normal > 5) isValid = false;
+          if (s.detect_leadersh < 0 || s.detect_leadersh > 5) isValid = false;
+          if (s.detect_math < 0 || s.detect_math > 5) isValid = false;
+          if (s.detect_creative < 0 || s.detect_creative > 5) isValid = false;
         }
 
         if (!isValid) {
-          alert("Vui lòng nhập điểm hợp lệ. Sách BT (0-20), Các tiêu chí khác (1-5).");
+          alert("Vui lòng nhập điểm hợp lệ. Sách BT (0-20), Các tiêu chí khác (0-5).");
           this.saving = false;
           return;
         }
