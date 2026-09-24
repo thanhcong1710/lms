@@ -74,11 +74,20 @@
             <td class="px-6 py-4">{{ item.eachCdNm }}</td>
             <td class="px-6 py-4 text-brand-desc">{{ item.evalYmd ? item.evalYmd.substring(0,10) : '-' }}</td>
             <td class="px-6 py-4 text-center">
-              <button @click="toggleStatus(item)" 
-                :class="item.status === 'Completed' ? 'bg-emerald-100 text-emerald-700 border-emerald-300' : 'bg-amber-100 text-amber-700 border-amber-300'"
-                class="px-3 py-1 rounded-full text-xs font-semibold border transition hover:opacity-80">
-                {{ item.status === 'Completed' ? 'Đã hoàn thành' : 'Đang nhập' }}
-              </button>
+              <div class="flex items-center justify-center gap-2">
+                <button type="button" @click="toggleStatus(item)"
+                  :class="item.status === 'Completed' ? 'bg-emerald-500' : 'bg-amber-500'"
+                  class="relative inline-flex h-5 w-9 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none" role="switch">
+                  <span 
+                    :class="item.status === 'Completed' ? 'translate-x-4' : 'translate-x-0'"
+                    class="pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out"></span>
+                </button>
+                <span 
+                  :class="item.status === 'Completed' ? 'text-emerald-600' : 'text-amber-600'"
+                  class="text-xs font-semibold w-24 text-left">
+                  {{ item.status === 'Completed' ? 'Đã hoàn thành' : 'Đang nhập' }}
+                </span>
+              </div>
             </td>
             <td class="px-6 py-4 text-xs text-brand-desc">{{ item.created_at ? item.created_at.substring(0,10) : '-' }}</td>
             <td class="px-6 py-4 text-right sticky right-0 bg-brand-bg z-10 border-l border-brand-border shadow-[-4px_0_10px_rgba(0,0,0,0.1)] group-hover:bg-brand-card transition-colors">

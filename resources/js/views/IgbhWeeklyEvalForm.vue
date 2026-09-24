@@ -21,13 +21,18 @@
 
       <!-- Actions -->
       <div class="flex items-center gap-3">
-        <!-- Week Selector -->
         <select v-model="selectedWeek" @change="changeWeek" class="px-3 py-2 rounded-xl bg-brand-input border border-brand-border text-brand-text focus:outline-none focus:border-indigo-500 transition text-sm">
           <option value="" disabled>Chọn tuần</option>
-          <option v-for="w in weeks" :key="w.each_cd" :value="w.each_cd">{{ w.each_cd_nm }}</option>
+          <option v-for="w in weeksWithStatus" :key="w.each_cd" :value="w.each_cd">{{ w.each_cd_nm }} {{ w.statusText }}</option>
         </select>
         <!-- Date Selector -->
         <input type="date" v-model="selectedDate" class="px-3 py-2 rounded-xl bg-brand-input border border-brand-border text-brand-text focus:outline-none focus:border-indigo-500 transition text-sm">
+
+        <!-- Status Selector -->
+        <select v-model="selectedStatus" :class="selectedStatus === 'Completed' ? 'bg-emerald-50 text-emerald-700 border-emerald-300' : 'bg-amber-50 text-amber-700 border-amber-300'" class="px-3 py-2 rounded-xl border focus:outline-none focus:border-indigo-500 transition text-sm font-semibold">
+          <option value="Draft" class="text-amber-700 font-semibold">Đang nhập</option>
+          <option value="Completed" class="text-emerald-700 font-semibold">Đã hoàn thành</option>
+        </select>
 
         <button 
           v-if="missingStudents.length > 0"
@@ -156,6 +161,8 @@ export default {
       weeks: [],
       selectedWeek: '',
       selectedDate: '',
+      selectedStatus: 'Draft',
+      existingWeeks: [],
       allStudents: [],
       showAddStudentModal: false
     }
@@ -165,6 +172,23 @@ export default {
       if (!this.allStudents || this.allStudents.length === 0) return [];
       const currentIds = this.students.map(s => s.stu_seq);
       return this.allStudents.filter(s => !currentIds.includes(s.stu_seq));
+    },
+    weeksWithStatus() {
+      return this.weeks.map(w => {
+        const existing = this.existingWeeks.find(ex => ex.each_cd === w.each_cd);
+        let statusText = '';
+        if (existing) {
+          if (existing.status === 'Completed') {
+            statusText = '- (Đã hoàn thành)';
+          } else {
+            statusText = '- (Đang nhập)';
+          }
+        }
+        return {
+          ...w,
+          statusText
+        };
+      });
     }
   },
   async created() {
@@ -202,12 +226,26 @@ export default {
           this.allStudents = response.data.all_students || [];
           this.selectedWeek = this.evaluation.each_cd;
           this.selectedDate = this.evaluation.eval_ymd ? this.evaluation.eval_ymd.substring(0, 10) : new Date().toISOString().substring(0, 10);
+          this.selectedStatus = this.evaluation.status || 'Draft';
+          await this.fetchExistingWeeks();
         }
       } catch (error) {
         console.error("Error fetching weekly details", error);
         alert("Lỗi khi tải thông tin. Vui lòng quay lại.");
       } finally {
         this.loading = false;
+      }
+    },
+    async fetchExistingWeeks() {
+      if (!this.evaluation) return;
+      try {
+        const response = await axios.get('/api/igbh/weekly/existing-weeks', {
+          params: { test_seq: this.evaluation.test_seq, class_seq: this.evaluation.class_seq },
+          headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+        });
+        this.existingWeeks = response.data || [];
+      } catch (error) {
+        console.error("Error fetching existing weeks", error);
       }
     },
     addMissingStudent(student) {
@@ -289,7 +327,8 @@ export default {
 
         const response = await axios.post(`/api/igbh/weekly/results/${id}/grade`, {
           students: this.students,
-          eval_ymd: this.selectedDate
+          eval_ymd: this.selectedDate,
+          status: this.selectedStatus
         }, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`

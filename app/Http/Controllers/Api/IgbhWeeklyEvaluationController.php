@@ -219,12 +219,21 @@ class IgbhWeeklyEvaluationController extends Controller
 
         $request->validate([
             'students' => 'required|array',
-            'eval_ymd' => 'nullable|date'
+            'eval_ymd' => 'nullable|date',
+            'status' => 'nullable|in:Draft,Completed'
         ]);
 
+        $updateData = [];
         if ($request->has('eval_ymd') && $request->eval_ymd) {
-            DB::table('igbh_weekly_evals')->where('id', $id)->update(['eval_ymd' => $request->eval_ymd]);
+            $updateData['eval_ymd'] = $request->eval_ymd;
             $eval->eval_ymd = $request->eval_ymd;
+        }
+        if ($request->has('status') && $request->status) {
+            $updateData['status'] = $request->status;
+            $eval->status = $request->status;
+        }
+        if (!empty($updateData)) {
+            DB::table('igbh_weekly_evals')->where('id', $id)->update($updateData);
         }
 
         DB::beginTransaction();
