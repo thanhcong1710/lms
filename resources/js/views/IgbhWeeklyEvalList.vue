@@ -54,6 +54,7 @@
             <th class="px-6 py-4 text-center">{{ $t('igbh.cols.completed_entry') }}</th>
             <th class="px-6 py-4">{{ $t('igbh.cols.week') }}</th>
             <th class="px-6 py-4">{{ $t('igbh.cols.test_date') }}</th>
+            <th class="px-6 py-4 text-center">Trạng thái</th>
             <th class="px-6 py-4">{{ $t('igbh.cols.reg_date') }}</th>
             <th class="px-6 py-4 text-right sticky right-0 bg-brand-header z-10 border-l border-brand-border shadow-[-4px_0_10px_rgba(0,0,0,0.1)]">{{ $t('common.actions') }}</th>
           </tr>
@@ -72,6 +73,13 @@
             </td>
             <td class="px-6 py-4">{{ item.eachCdNm }}</td>
             <td class="px-6 py-4 text-brand-desc">{{ item.evalYmd ? item.evalYmd.substring(0,10) : '-' }}</td>
+            <td class="px-6 py-4 text-center">
+              <button @click="toggleStatus(item)" 
+                :class="item.status === 'Completed' ? 'bg-emerald-100 text-emerald-700 border-emerald-300' : 'bg-amber-100 text-amber-700 border-amber-300'"
+                class="px-3 py-1 rounded-full text-xs font-semibold border transition hover:opacity-80">
+                {{ item.status === 'Completed' ? 'Đã hoàn thành' : 'Đang nhập' }}
+              </button>
+            </td>
             <td class="px-6 py-4 text-xs text-brand-desc">{{ item.created_at ? item.created_at.substring(0,10) : '-' }}</td>
             <td class="px-6 py-4 text-right sticky right-0 bg-brand-bg z-10 border-l border-brand-border shadow-[-4px_0_10px_rgba(0,0,0,0.1)] group-hover:bg-brand-card transition-colors">
               <div class="flex justify-end items-center gap-2">
@@ -125,7 +133,7 @@
           <!-- Test Selector -->
           <div class="space-y-1.5">
             <label class="block text-xs font-semibold text-brand-desc uppercase">{{ $t('igbh.modal.test_igbh') }} (Level)</label>
-            <select v-model="form.test_seq" required :disabled="!form.class_seq" class="w-full px-3 py-2 rounded-xl bg-brand-input border border-brand-border text-brand-text focus:outline-none focus:border-indigo-500 transition text-sm disabled:opacity-50">
+            <select v-model="form.test_seq" @change="fetchExistingWeeks" required :disabled="!form.class_seq" class="w-full px-3 py-2 rounded-xl bg-brand-input border border-brand-border text-brand-text focus:outline-none focus:border-indigo-500 transition text-sm disabled:opacity-50">
               <option value="" disabled>{{ !form.class_seq ? '-- Vui lòng chọn lớp học trước --' : $t('igbh.modal.select_test') }}</option>
               <option v-for="t in filteredTests" :key="t.test_seq" :value="t.test_seq">{{ t.test_nm }} ({{ t.level_cd || 'N/A' }})</option>
             </select>
@@ -136,7 +144,7 @@
             <label class="block text-xs font-semibold text-brand-desc uppercase">{{ $t('igbh.modal.eval_week') }}</label>
             <select v-model="form.each_cd" required class="w-full px-3 py-2 rounded-xl bg-brand-input border border-brand-border text-brand-text focus:outline-none focus:border-indigo-500 transition text-sm">
               <option value="" disabled>{{ $t('igbh.modal.select_week') }}</option>
-              <option v-for="w in initData.weeks" :key="w.each_cd" :value="w.each_cd">{{ w.each_cd_nm }}</option>
+              <option v-for="w in weeksWithStatus" :key="w.each_cd" :value="w.each_cd">{{ w.each_cd_nm }} {{ w.statusText }}</option>
             </select>
           </div>
 
@@ -195,7 +203,8 @@ export default {
         test_seq: '',
         each_cd: '',
         eval_ymd: new Date().toISOString().substr(0, 10)
-      }
+      },
+      existingWeeks: []
     }
   },
   computed: {
@@ -233,6 +242,23 @@ export default {
       }
 
       return allTests;
+    },
+    weeksWithStatus() {
+      return (this.initData.weeks || []).map(w => {
+        const existing = this.existingWeeks.find(ex => ex.each_cd === w.each_cd);
+        let statusText = '';
+        if (existing) {
+          if (existing.status === 'Completed') {
+            statusText = '- (Đã hoàn thành)';
+          } else {
+            statusText = '- (Đang nhập)';
+          }
+        }
+        return {
+          ...w,
+          statusText
+        };
+      });
     }
   },
   created() {
@@ -289,7 +315,36 @@ export default {
         } else {
           this.form.test_seq = '';
         }
+        this.fetchExistingWeeks();
       });
+    },
+    async fetchExistingWeeks() {
+      if (!this.form.class_seq || !this.form.test_seq) {
+        this.existingWeeks = [];
+        return;
+      }
+      try {
+        const response = await axios.get('/api/igbh/weekly/existing-weeks', {
+          params: { test_seq: this.form.test_seq, class_seq: this.form.class_seq },
+          headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+        });
+        this.existingWeeks = response.data || [];
+      } catch (error) {
+        console.error("Error fetching existing weeks", error);
+      }
+    },
+    async toggleStatus(item) {
+      if (!confirm(`Xác nhận chuyển trạng thái thành ${item.status === 'Completed' ? 'Đang nhập' : 'Đã hoàn thành'}?`)) return;
+      const newStatus = item.status === 'Completed' ? 'Draft' : 'Completed';
+      try {
+        await axios.put(`/api/igbh/weekly/results/${item.id}/status`, { status: newStatus }, {
+          headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+        });
+        item.status = newStatus;
+      } catch (error) {
+        console.error("Error updating status", error);
+        alert("Lỗi khi cập nhật trạng thái");
+      }
     },
     async openCreateModal() {
       this.showModal = true;
@@ -315,6 +370,7 @@ export default {
         each_cd: '',
         eval_ymd: new Date().toISOString().substr(0, 10)
       };
+      this.existingWeeks = [];
     },
     async submitCreate() {
       this.creating = true;

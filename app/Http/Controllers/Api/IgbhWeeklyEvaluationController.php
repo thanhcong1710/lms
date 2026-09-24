@@ -22,6 +22,7 @@ class IgbhWeeklyEvaluationController extends Controller
                 'e.teacher_nm as teacherNm',
                 'e.each_cd_nm as eachCdNm',
                 'e.eval_ymd as evalYmd',
+                'e.status as status',
                 'e.created_at'
             )
             ->selectRaw('(SELECT COUNT(*) FROM igbh_weekly_eval_details WHERE weekly_eval_id = e.id) as graded_cnt')
@@ -125,6 +126,40 @@ class IgbhWeeklyEvaluationController extends Controller
         ]);
 
         return response()->json(['id' => $id], 201);
+    }
+
+    public function getExistingWeeks(Request $request)
+    {
+        $testSeq = $request->input('test_seq');
+        $classSeq = $request->input('class_seq');
+
+        if (!$testSeq || !$classSeq) {
+            return response()->json([]);
+        }
+
+        $existing = DB::table('igbh_weekly_evals')
+            ->where('test_seq', $testSeq)
+            ->where('class_seq', $classSeq)
+            ->select('each_cd', 'status')
+            ->get();
+
+        return response()->json($existing);
+    }
+
+    public function updateStatus(Request $request, $id)
+    {
+        $request->validate([
+            'status' => 'required|string|in:Draft,Completed'
+        ]);
+
+        $eval = DB::table('igbh_weekly_evals')->where('id', $id)->first();
+        if (!$eval) {
+            return response()->json(['message' => 'Not found'], 404);
+        }
+
+        DB::table('igbh_weekly_evals')->where('id', $id)->update(['status' => $request->status, 'updated_at' => now()]);
+
+        return response()->json(['message' => 'Success']);
     }
 
     public function getResultDetail($id)
