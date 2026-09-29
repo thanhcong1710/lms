@@ -153,9 +153,18 @@
               <input type="date" v-model="form.enrolment_last_date" required class="w-full px-4 py-2.5 rounded-xl bg-brand-input border border-brand-border text-brand-text focus:outline-none focus:border-indigo-500 text-sm">
             </div>
           </div>
-          <div class="mb-4">
-            <label class="block text-xs font-semibold text-brand-desc uppercase mb-2">{{ $t('common.remark') }}</label>
-            <textarea v-model="form.remark" rows="2" class="w-full px-4 py-2.5 rounded-xl bg-brand-input border border-brand-border text-brand-text placeholder-gray-600 focus:outline-none focus:border-indigo-500 text-sm"></textarea>
+          <div class="grid grid-cols-2 gap-4 mb-4">
+            <div>
+              <label class="block text-xs font-semibold text-brand-desc uppercase mb-2">Trạng thái</label>
+              <select v-model="form.status" required class="w-full px-4 py-2.5 rounded-xl bg-brand-input border border-brand-border text-brand-text focus:outline-none focus:border-indigo-500 text-sm">
+                <option value="SS002">Đã đăng ký</option>
+                <option value="SS003">Hủy đăng ký</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-brand-desc uppercase mb-2">{{ $t('common.remark') }}</label>
+              <textarea v-model="form.remark" rows="2" class="w-full px-4 py-2.5 rounded-xl bg-brand-input border border-brand-border text-brand-text placeholder-gray-600 focus:outline-none focus:border-indigo-500 text-sm"></textarea>
+            </div>
           </div>
 
           <div class="flex justify-end gap-3 pt-4 border-t border-brand-border">
@@ -197,7 +206,8 @@ export default {
         branch_id: '',
         enrolment_start_date: '',
         enrolment_last_date: '',
-        remark: ''
+        remark: '',
+        status: 'SS002'
       },
       pagination: {
         current_page: 1,
@@ -376,12 +386,13 @@ export default {
           branch_id: contract.branch_id || '',
           enrolment_start_date: contract.enrolment_start_date || '',
           enrolment_last_date: contract.enrolment_last_date || '',
-          remark: contract.remark || ''
+          remark: contract.remark || '',
+          status: contract.status || 'SS002'
         };
         this.studentSearch = contract.student_name || '';
       } else {
         this.editingId = null;
-        this.form = { student_id: '', student_name: '', class_id: '', branch_id: '', enrolment_start_date: '', enrolment_last_date: '', remark: '' };
+        this.form = { student_id: '', student_name: '', class_id: '', branch_id: '', enrolment_start_date: '', enrolment_last_date: '', remark: '', status: 'SS002' };
       }
       this.showModal = true;
     },

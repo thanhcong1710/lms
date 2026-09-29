@@ -237,6 +237,7 @@ class ContractController extends Controller
             'student_id' => 'required|exists:students,id',
             'class_id' => 'required|exists:classes,id',
             'branch_id' => 'required|exists:branches,id',
+            'status' => 'sometimes|required|string',
         ]);
 
         $contract = Contract::create($request->all());
@@ -259,6 +260,7 @@ class ContractController extends Controller
             'student_id' => 'sometimes|required|exists:students,id',
             'class_id' => 'sometimes|required|exists:classes,id',
             'branch_id' => 'sometimes|required|exists:branches,id',
+            'status' => 'sometimes|required|string',
         ]);
 
         $contract = Contract::findOrFail($id);
