@@ -2,8 +2,8 @@
   <div class="h-full flex flex-col gap-6">
     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
       <div>
-        <h1 class="text-2xl font-bold text-brand-text">{{ $t('sidebar.summative_class_title') }}</h1>
-        <p class="text-brand-desc mt-1">{{ $t('sidebar.summative_class_desc') }}</p>
+        <h1 class="text-2xl font-bold text-brand-text">{{ $t('igbh.summative_class_title') }}</h1>
+        <p class="text-brand-desc mt-1">{{ $t('igbh.summative_class_desc') }}</p>
       </div>
 
       <div class="flex items-center gap-3">
@@ -28,14 +28,14 @@
         <table class="w-full text-left border-collapse">
           <thead>
             <tr class="bg-brand-input/50 text-brand-desc border-b border-brand-border/50">
-              <th class="py-4 px-5 font-medium w-16 text-center">STT</th>
-              <th class="py-4 px-5 font-medium">{{ $t('igbh.test_name') }}</th>
-              <th class="py-4 px-5 font-medium">{{ $t('igbh.level') }}</th>
-              <th class="py-4 px-5 font-medium">{{ $t('igbh.class') }}</th>
-              <th class="py-4 px-5 font-medium">{{ $t('igbh.teacher') }}</th>
-              <th class="py-4 px-5 font-medium">Trạng thái</th>
-              <th class="py-4 px-5 font-medium">{{ $t('igbh.eval_date') }}</th>
-              <th class="py-4 px-5 font-medium text-center w-24">{{ $t('igbh.actions') }}</th>
+              <th class="py-4 px-5 font-medium w-16 text-center">{{ $t('common.stt') }}</th>
+              <th class="py-4 px-5 font-medium">{{ $t('igbh.cols.test_name') }}</th>
+              <th class="py-4 px-5 font-medium">{{ $t('igbh.cols.level') }}</th>
+              <th class="py-4 px-5 font-medium">{{ $t('igbh.cols.class') }}</th>
+              <th class="py-4 px-5 font-medium">{{ $t('igbh.cols.teacher') }}</th>
+              <th class="py-4 px-5 font-medium text-center">Trạng thái</th>
+              <th class="py-4 px-5 font-medium">{{ $t('igbh.cols.test_date') }}</th>
+              <th class="py-4 px-5 font-medium text-center w-24">{{ $t('common.actions') }}</th>
             </tr>
           </thead>
           <tbody class="text-brand-text divide-y divide-brand-border/30">
@@ -51,7 +51,7 @@
               </td>
               <td class="py-3 px-5 font-medium text-indigo-400">{{ item.class_nm }}</td>
               <td class="py-3 px-5 text-brand-desc">{{ item.teacher_nm }}</td>
-              <td class="py-3 px-5">
+              <td class="py-3 px-5 text-center">
                 <span :class="item.status === 'completed' ? 'text-emerald-400 bg-emerald-400/10' : 'text-amber-400 bg-amber-400/10'" class="px-2.5 py-1 rounded-lg text-xs font-medium">
                   {{ item.status === 'completed' ? 'Đã hoàn thành' : 'Đang nhập' }}
                 </span>
@@ -117,21 +117,20 @@
 
     <!-- Add Modal -->
     <div v-if="showAddModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-      <div class="bg-brand-surface border border-brand-border/50 rounded-2xl w-full max-w-md shadow-2xl overflow-hidden animate-fade-in-up">
-        <div class="flex items-center justify-between p-5 border-b border-brand-border/50">
+      <div class="bg-brand-card border border-brand-border w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-200">
+        <!-- Modal Header -->
+        <div class="px-6 py-4 border-b border-brand-border bg-brand-header flex justify-between items-center">
           <h3 class="text-lg font-bold text-brand-text">Tạo mới Đánh giá cuối kỳ lớp</h3>
-          <button @click="showAddModal = false" class="text-brand-desc hover:text-brand-text transition-colors">
-            <i class="fas fa-times"></i>
-          </button>
+          <button @click="showAddModal = false" class="text-brand-desc hover:text-brand-text text-xl font-bold">&times;</button>
         </div>
 
-        <div class="p-5 space-y-4">
+        <form @submit.prevent="submitAdd" class="p-6 space-y-4">
           <div>
-            <label class="block text-sm font-medium text-brand-desc mb-1.5">{{ $t('igbh.test_name') }} <span class="text-red-400">*</span></label>
+            <label class="block text-xs font-semibold text-brand-desc uppercase mb-1.5">{{ $t('igbh.modal.test_igbh') }} <span class="text-red-400">*</span></label>
             <div class="relative">
-              <select v-model="addForm.test_seq" 
-                class="w-full bg-brand-input border border-brand-border/50 rounded-xl px-4 py-2.5 text-brand-text focus:outline-none focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/50 appearance-none">
-                <option value="">-- Chọn bài kiểm tra --</option>
+              <select v-model="addForm.test_seq" required
+                class="w-full px-3 py-2 rounded-xl bg-brand-input border border-brand-border text-brand-text focus:outline-none focus:border-indigo-500 transition text-sm appearance-none">
+                <option value="" disabled>-- Chọn bài kiểm tra --</option>
                 <option v-for="t in tests" :key="t.test_seq" :value="t.test_seq">{{ t.test_nm }} ({{ t.level_cd }})</option>
               </select>
               <i class="fas fa-chevron-down absolute right-4 top-1/2 -translate-y-1/2 text-brand-desc pointer-events-none text-xs"></i>
@@ -139,11 +138,11 @@
           </div>
 
           <div>
-            <label class="block text-sm font-medium text-brand-desc mb-1.5">{{ $t('igbh.class') }} <span class="text-red-400">*</span></label>
+            <label class="block text-xs font-semibold text-brand-desc uppercase mb-1.5">{{ $t('igbh.modal.class') }} <span class="text-red-400">*</span></label>
             <div class="relative">
-              <select v-model="addForm.class_seq" 
-                class="w-full bg-brand-input border border-brand-border/50 rounded-xl px-4 py-2.5 text-brand-text focus:outline-none focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/50 appearance-none">
-                <option value="">-- Chọn lớp --</option>
+              <select v-model="addForm.class_seq" required
+                class="w-full px-3 py-2 rounded-xl bg-brand-input border border-brand-border text-brand-text focus:outline-none focus:border-indigo-500 transition text-sm appearance-none">
+                <option value="" disabled>-- Chọn lớp --</option>
                 <option v-for="c in classes" :key="c.class_seq" :value="c.class_seq">{{ c.class_nm }}</option>
               </select>
               <i class="fas fa-chevron-down absolute right-4 top-1/2 -translate-y-1/2 text-brand-desc pointer-events-none text-xs"></i>
@@ -151,23 +150,23 @@
           </div>
 
           <div>
-            <label class="block text-sm font-medium text-brand-desc mb-1.5">Ngày đánh giá <span class="text-red-400">*</span></label>
-            <input type="date" v-model="addForm.eval_ymd" 
-              class="w-full bg-brand-input border border-brand-border/50 rounded-xl px-4 py-2.5 text-brand-text focus:outline-none focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/50">
+            <label class="block text-xs font-semibold text-brand-desc uppercase mb-1.5">{{ $t('igbh.modal.eval_date') }} <span class="text-red-400">*</span></label>
+            <input type="date" v-model="addForm.eval_ymd" required
+              class="w-full px-3 py-2 rounded-xl bg-brand-input border border-brand-border text-brand-text focus:outline-none focus:border-indigo-500 transition text-sm">
           </div>
-        </div>
 
-        <div class="flex items-center justify-end gap-3 p-5 border-t border-brand-border/50 bg-brand-input/30">
-          <button @click="showAddModal = false" 
-            class="px-4 py-2 text-brand-desc hover:text-brand-text font-medium transition-colors">
-            {{ $t('common.cancel') }}
-          </button>
-          <button @click="submitAdd" :disabled="isSubmitting"
-            class="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-xl font-medium shadow-lg shadow-indigo-500/20 transition-all flex items-center gap-2">
-            <i class="fas fa-spinner fa-spin" v-if="isSubmitting"></i>
-            <span>{{ $t('common.save') }}</span>
-          </button>
-        </div>
+          <div class="pt-4 border-t border-brand-border flex justify-end gap-3">
+            <button type="button" @click="showAddModal = false" 
+              class="px-4 py-2 rounded-xl border border-brand-border text-brand-desc hover:bg-brand-input hover:text-brand-text transition text-sm font-semibold">
+              {{ $t('common.cancel') }}
+            </button>
+            <button type="submit" :disabled="isSubmitting"
+              class="px-5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold transition text-sm shadow-lg shadow-indigo-600/30 disabled:opacity-50">
+              <span v-if="isSubmitting">{{ $t('igbh.modal.creating') || 'Đang tạo...' }}</span>
+              <span v-else>{{ $t('igbh.modal.create_btn') || 'Tạo mới' }}</span>
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   </div>
