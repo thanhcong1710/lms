@@ -67,7 +67,7 @@
             <tr>
               <td class="border border-gray-400 py-2 bg-[#fbe5a2] font-semibold text-gray-800">Sách bài tập</td>
               <td v-for="w in reportData.report_data" :key="'wb'+w.week" class="border border-gray-400 py-2">
-                {{ w.score }}
+                {{ (w.weekly_workbook !== null && w.weekly_workbook !== undefined) ? w.weekly_workbook : '' }}
               </td>
               <td class="border-2 border-red-600 py-2 font-bold text-red-600 bg-red-50 text-base">
                 {{ workbookAverageScore }}
@@ -545,7 +545,7 @@ export default {
       let sum = 0;
       let count = 0;
       this.reportData.report_data.forEach(w => {
-        let score = parseFloat(w.score);
+        let score = parseFloat(w.weekly_workbook);
         if (!isNaN(score) && score > 0) {
           sum += score;
           count++;

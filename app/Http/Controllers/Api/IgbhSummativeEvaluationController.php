@@ -144,6 +144,7 @@ class IgbhSummativeEvaluationController extends Controller
                 'theme_desc' => $theme ? $theme->theme_desc : '',
                 'max_score' => $theme ? $theme->theme_point : 3,
                 'score' => $workbookScore,
+                'weekly_workbook' => $detail ? $detail->workbook : null,
                 'attitude' => $detail ? [
                     'listen' => $detail->attd_listen,
                     'join' => $detail->attd_join,
