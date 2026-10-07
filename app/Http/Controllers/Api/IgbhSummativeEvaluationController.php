@@ -87,12 +87,12 @@ class IgbhSummativeEvaluationController extends Controller
         $sumDetection = ['normal' => 0, 'leadersh' => 0, 'math' => 0, 'creative' => 0];
         $weeksWithData = 0;
 
-        foreach ($themes as $theme) {
-            $weekNum = $theme->sort_no;
+        for ($weekNum = 1; $weekNum <= 12; $weekNum++) {
+            $theme = $themes->firstWhere('sort_no', $weekNum);
             $eachCd = 'SE' . str_pad($weekNum, 3, '0', STR_PAD_LEFT);
             $detail = $details->get($eachCd);
 
-            $maxWorkbook += $theme->theme_point;
+            $maxWorkbook += $theme ? $theme->theme_point : 3;
             
             if ($detail) {
                 $isAllZero = $detail->workbook == 0 &&
@@ -115,10 +115,15 @@ class IgbhSummativeEvaluationController extends Controller
                 ->where('summative_result_id', $result->id)
                 ->where('sort_no', $weekNum + 5)
                 ->first();
-            if ($foundDetail) {
+            if ($foundDetail && $foundDetail->score !== null && $foundDetail->score !== '') {
                 $workbookScore = $foundDetail->score;
+            } else {
+                $workbookScore = null;
             }
-            $totalWorkbook += $workbookScore;
+            
+            if ($workbookScore !== null) {
+                $totalWorkbook += $workbookScore;
+            }
 
             if ($detail) {
                 $sumAttitude['listen'] += $detail->attd_listen;
@@ -136,8 +141,8 @@ class IgbhSummativeEvaluationController extends Controller
 
             $reportData[] = [
                 'week' => $weekNum,
-                'theme_desc' => $theme->theme_desc,
-                'max_score' => $theme->theme_point,
+                'theme_desc' => $theme ? $theme->theme_desc : '',
+                'max_score' => $theme ? $theme->theme_point : 3,
                 'score' => $workbookScore,
                 'attitude' => $detail ? [
                     'listen' => $detail->attd_listen,
