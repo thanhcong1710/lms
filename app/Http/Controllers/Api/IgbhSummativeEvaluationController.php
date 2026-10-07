@@ -307,8 +307,6 @@ class IgbhSummativeEvaluationController extends Controller
                 ];
             }
 
-            }
-
             // Save Weekly Data as independent No 6-17 items
             if ($request->has('weekly_data')) {
                 foreach ($request->weekly_data as $wd) {
