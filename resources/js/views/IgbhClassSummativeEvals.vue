@@ -175,7 +175,6 @@
 
 <script>
 import axios from 'axios';
-import moment from 'moment';
 
 export default {
   data() {
@@ -195,7 +194,7 @@ export default {
       addForm: {
         test_seq: '',
         class_seq: '',
-        eval_ymd: moment().format('YYYY-MM-DD')
+        eval_ymd: new Date().toISOString().split('T')[0]
       }
     };
   },
@@ -218,7 +217,11 @@ export default {
   methods: {
     formatDate(date) {
       if (!date) return '';
-      return moment(date).format('DD/MM/YYYY');
+      const d = new Date(date);
+      const day = String(d.getDate()).padStart(2, '0');
+      const month = String(d.getMonth() + 1).padStart(2, '0');
+      const year = d.getFullYear();
+      return `${day}/${month}/${year}`;
     },
     async loadResults() {
       try {
