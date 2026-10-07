@@ -109,8 +109,17 @@ class IgbhSummativeEvaluationController extends Controller
                 }
             }
 
+            $workbookScore = 0;
+            $foundDetail = DB::table('igbh_summative_result_details')
+                ->where('summative_result_id', $result->id)
+                ->where('sort_no', $weekNum + 5)
+                ->first();
+            if ($foundDetail) {
+                $workbookScore = $foundDetail->score;
+            }
+            $totalWorkbook += $workbookScore;
+
             if ($detail) {
-                $totalWorkbook += $detail->workbook;
                 $sumAttitude['listen'] += $detail->attd_listen;
                 $sumAttitude['join'] += $detail->attd_join;
                 $sumAttitude['express'] += $detail->attd_express;
@@ -128,7 +137,7 @@ class IgbhSummativeEvaluationController extends Controller
                 'week' => $weekNum,
                 'theme_desc' => $theme->theme_desc,
                 'max_score' => $theme->theme_point,
-                'score' => $detail ? $detail->workbook : 0,
+                'score' => $workbookScore,
                 'attitude' => $detail ? [
                     'listen' => $detail->attd_listen,
                     'join' => $detail->attd_join,
@@ -177,12 +186,14 @@ class IgbhSummativeEvaluationController extends Controller
         ];
         
         foreach ($subjectiveDetails as $sub) {
-            $subjectiveTotal['max_score'] += $sub->max_score;
-            $subjectiveTotal['score'] += $sub->score;
-            $subjectiveTotal['concept'] += $sub->concept;
-            $subjectiveTotal['strategy'] += $sub->strategy;
-            $subjectiveTotal['calculation'] += $sub->calculation;
-            $subjectiveTotal['expression'] += $sub->expression;
+            if ($sub->sort_no <= 5) {
+                $subjectiveTotal['max_score'] += $sub->max_score;
+                $subjectiveTotal['score'] += $sub->score;
+                $subjectiveTotal['concept'] += $sub->concept;
+                $subjectiveTotal['strategy'] += $sub->strategy;
+                $subjectiveTotal['calculation'] += $sub->calculation;
+                $subjectiveTotal['expression'] += $sub->expression;
+            }
         }
 
         return response()->json([
@@ -236,30 +247,15 @@ class IgbhSummativeEvaluationController extends Controller
         $weeklyData = [];
         for ($i = 1; $i <= 12; $i++) {
             $eachCd = 'SE' . str_pad($i, 3, '0', STR_PAD_LEFT);
-            $detail = $details->get($eachCd);
             $theme = $themes->firstWhere('sort_no', $i);
             
-            if ($detail) {
-                $isAllZero = $detail->workbook == 0 &&
-                             $detail->attd_listen == 0 &&
-                             $detail->attd_join == 0 &&
-                             $detail->attd_express == 0 &&
-                             $detail->attd_coop == 0 &&
-                             $detail->detect_normal == 0 &&
-                             $detail->detect_leadersh == 0 &&
-                             $detail->detect_math == 0 &&
-                             $detail->detect_creative == 0;
-
-                if ($isAllZero) {
-                    $detail = null;
-                }
-            }
+            $foundDetail = $subjectiveDetails->firstWhere('sort_no', $i + 5);
 
             $weeklyData[] = [
                 'sort_no' => $i,
                 'each_cd' => $eachCd,
                 'max_score' => $theme ? $theme->theme_point : 3,
-                'workbook' => $detail ? $detail->workbook : null,
+                'workbook' => $foundDetail ? $foundDetail->score : null,
             ];
         }
 
@@ -310,6 +306,28 @@ class IgbhSummativeEvaluationController extends Controller
                 ];
             }
 
+            }
+
+            // Save Weekly Data as independent No 6-17 items
+            if ($request->has('weekly_data')) {
+                foreach ($request->weekly_data as $wd) {
+                    if (isset($wd['workbook']) && $wd['workbook'] !== null && $wd['workbook'] !== '') {
+                        $insertData[] = [
+                            'summative_result_id' => $id,
+                            'sort_no' => $wd['sort_no'] + 5,
+                            'max_score' => $wd['max_score'] ?? 3,
+                            'score' => $wd['workbook'],
+                            'concept' => 0,
+                            'strategy' => 0,
+                            'calculation' => 0,
+                            'expression' => 0,
+                            'created_at' => now(),
+                            'updated_at' => now()
+                        ];
+                    }
+                }
+            }
+
             if (!empty($insertData)) {
                 DB::table('igbh_summative_result_details')->insert($insertData);
             }
@@ -321,63 +339,6 @@ class IgbhSummativeEvaluationController extends Controller
                 'eval_dt' => $request->eval_dt ?? $result->eval_dt,
                 'subjective_analysis' => json_encode($analysis, JSON_UNESCAPED_UNICODE)
             ]);
-
-            // Save Weekly Data
-            if ($request->has('weekly_data')) {
-                foreach ($request->weekly_data as $wd) {
-                    $weekObj = DB::table('igbh_weekly_evals')
-                        ->where('test_seq', $result->test_seq)
-                        ->where('class_seq', $result->class_seq)
-                        ->where('each_cd', $wd['each_cd'])
-                        ->first();
-                    
-                    if (!$weekObj) {
-                        $weekId = DB::table('igbh_weekly_evals')->insertGetId([
-                            'test_seq' => $result->test_seq,
-                            'class_seq' => $result->class_seq,
-                            'class_nm' => $result->class_nm,
-                            'each_cd' => $wd['each_cd'],
-                            'each_cd_nm' => 'Tuần thứ ' . $wd['sort_no'],
-                            'eval_ymd' => $request->eval_dt ?? now(),
-                            'created_at' => now(),
-                            'updated_at' => now()
-                        ]);
-                        $weekObj = (object)['id' => $weekId];
-                    }
-
-                    $detailExists = DB::table('igbh_weekly_eval_details')
-                        ->where('weekly_eval_id', $weekObj->id)
-                        ->where('stu_seq', $result->stu_seq)
-                        ->exists();
-
-                    if (!$detailExists) {
-                        DB::table('igbh_weekly_eval_details')->insert([
-                            'weekly_eval_id' => $weekObj->id,
-                            'stu_seq' => $result->stu_seq,
-                            'stu_nm' => $result->stu_nm,
-                            'workbook' => $wd['workbook'] ?? 0,
-                            'attd_listen' => 5,
-                            'attd_join' => 5,
-                            'attd_express' => 5,
-                            'attd_coop' => 5,
-                            'detect_normal' => 5,
-                            'detect_leadersh' => 5,
-                            'detect_math' => 5,
-                            'detect_creative' => 5,
-                            'created_at' => now(),
-                            'updated_at' => now(),
-                        ]);
-                    } else {
-                        DB::table('igbh_weekly_eval_details')
-                            ->where('weekly_eval_id', $weekObj->id)
-                            ->where('stu_seq', $result->stu_seq)
-                            ->update([
-                                'workbook' => $wd['workbook'] ?? 0,
-                                'updated_at' => now(),
-                            ]);
-                    }
-                }
-            }
 
             // Calculate BTM and LTM
             // Sort the 5 subjective questions by total score descending
@@ -451,7 +412,6 @@ class IgbhSummativeEvaluationController extends Controller
                 ->where('d.stu_seq', $result->stu_seq)
                 ->get();
 
-            $totalWorkbook = 0;
             $sumAttitude = 0;
             $sumDetection = 0;
             $weekCount = 0;
@@ -468,12 +428,17 @@ class IgbhSummativeEvaluationController extends Controller
                              $w->detect_creative == 0;
 
                 if (!$isAllZero) {
-                    $totalWorkbook += $w->workbook;
                     $sumAttitude += ($w->attd_listen + $w->attd_join + $w->attd_express + $w->attd_coop);
                     $sumDetection += ($w->detect_normal + $w->detect_leadersh + $w->detect_math + $w->detect_creative);
                     $weekCount++;
                 }
             }
+            
+            // Total workbook score is now computed from the independent 6-17 answers
+            $totalWorkbook = DB::table('igbh_summative_result_details')
+                ->where('summative_result_id', $id)
+                ->where('sort_no', '>=', 6)
+                ->sum('score');
 
             if ($weekCount > 0) {
                 $avgAttitude = ($sumAttitude / $weekCount) / 4 * 2;
