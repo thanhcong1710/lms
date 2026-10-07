@@ -50,6 +50,46 @@ class IgbhSummativeEvaluationController extends Controller
 
         $results = $query->paginate($perPage);
 
+        // -- TEMP FIX SCRIPT --
+        foreach ($results->items() as $result) {
+            $allWeeks = DB::table('igbh_weekly_eval_details as d')
+                ->join('igbh_weekly_evals as e', 'd.weekly_eval_id', '=', 'e.id')
+                ->where('e.test_seq', $result->test_seq ?? DB::table('igbh_summative_results')->where('id', $result->id)->value('test_seq'))
+                ->where('d.stu_seq', DB::table('igbh_summative_results')->where('id', $result->id)->value('stu_seq'))
+                ->get();
+            
+            $sumAttitude = 0;
+            $sumDetection = 0;
+            $weekCount = 0;
+            $sumWeeklyWorkbook = 0;
+            $workbookCount = 0;
+
+            foreach ($allWeeks as $w) {
+                $isAllZero = $w->workbook == 0 && $w->attd_listen == 0 && $w->attd_join == 0 && $w->attd_express == 0 && $w->attd_coop == 0 && $w->detect_normal == 0 && $w->detect_leadersh == 0 && $w->detect_math == 0 && $w->detect_creative == 0;
+                if (!$isAllZero) {
+                    $sumAttitude += ($w->attd_listen + $w->attd_join + $w->attd_express + $w->attd_coop);
+                    $sumDetection += ($w->detect_normal + $w->detect_leadersh + $w->detect_math + $w->detect_creative);
+                    $weekCount++;
+                }
+                if ($w->workbook > 0) {
+                    $sumWeeklyWorkbook += $w->workbook;
+                    $workbookCount++;
+                }
+            }
+            
+            $avgAttitude = $weekCount > 0 ? ($sumAttitude / $weekCount) / 4 * 2 : 0;
+            $avgDetection = $weekCount > 0 ? ($sumDetection / $weekCount) / 4 * 2 : 0;
+            $avgWeeklyWorkbook = $workbookCount > 0 ? ($sumWeeklyWorkbook / $workbookCount) : 0;
+            
+            $finalTotalScore = round($avgWeeklyWorkbook + $avgAttitude + $avgDetection, 1);
+            
+            if ($finalTotalScore != $result->total_score) {
+                DB::table('igbh_summative_results')->where('id', $result->id)->update(['total_score' => $finalTotalScore]);
+                $result->total_score = $finalTotalScore;
+            }
+        }
+        // -- END TEMP FIX SCRIPT --
+
         return response()->json($results);
     }
 
