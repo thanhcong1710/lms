@@ -73,6 +73,33 @@ class ConvertSummativeClassData extends Command
         }
 
         $this->info("Converted $count class summative records.");
+        
+        $this->info('Fixing missing teacher names...');
+        // Cập nhật teacher_nm bị trống
+        $evals = DB::table('igbh_class_summative_evals')
+            ->whereNull('teacher_nm')
+            ->orWhere('teacher_nm', '')
+            ->get();
+            
+        $fixCount = 0;
+        foreach ($evals as $e) {
+            $teacher = DB::table('classes as c')
+                ->join('teachers as t', 'c.teacher_id', '=', 't.id')
+                ->where('c.class_seq', $e->class_seq)
+                ->select('t.ins_name')
+                ->first();
+
+            if ($teacher && $teacher->ins_name) {
+                DB::table('igbh_class_summative_evals')->where('id', $e->id)->update(['teacher_nm' => $teacher->ins_name]);
+                DB::table('igbh_summative_results')
+                    ->where('test_seq', $e->test_seq)
+                    ->where('class_seq', $e->class_seq)
+                    ->update(['teacher_nm' => $teacher->ins_name]);
+                $fixCount++;
+            }
+        }
+        $this->info("Fixed teacher_nm for $fixCount records.");
+        
         return 0;
     }
 }

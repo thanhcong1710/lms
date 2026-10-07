@@ -113,11 +113,21 @@ class IgbhWeeklyEvaluationController extends Controller
         }
 
         $weekNum = (int) str_replace('SE', '', $request->each_cd);
+        
+        $user = \App\Http\Controllers\AuthController::resolveUser($request);
+        $teacher = DB::table('classes as c')
+            ->leftJoin('teachers as t', 'c.teacher_id', '=', 't.id')
+            ->where('c.class_seq', $request->class_seq)
+            ->select('t.ins_name')
+            ->first();
+            
+        $teacherNm = ($teacher && $teacher->ins_name) ? $teacher->ins_name : ($user ? $user->name : '');
 
         $id = DB::table('igbh_weekly_evals')->insertGetId([
             'test_seq' => $request->test_seq,
             'class_seq' => $request->class_seq,
             'class_nm' => $classObj ? $classObj->cls_name : null,
+            'teacher_nm' => $teacherNm,
             'each_cd' => $request->each_cd,
             'each_cd_nm' => 'Tuần thứ ' . $weekNum,
             'eval_ymd' => $request->eval_ymd,

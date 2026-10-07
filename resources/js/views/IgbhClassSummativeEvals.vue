@@ -9,7 +9,7 @@
       <div class="flex items-center gap-3">
         <div class="relative">
           <input type="text" v-model="search" @keyup.enter="loadResults"
-            :placeholder="$t('igbh.search_student')"
+            placeholder="Tìm kiếm theo tên lớp..."
             class="pl-10 pr-4 py-2.5 bg-brand-input border border-brand-border/50 rounded-xl text-brand-text placeholder-brand-desc/60 focus:outline-none focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/50 transition-all w-64">
           <i class="fas fa-search absolute left-3.5 top-1/2 -translate-y-1/2 text-brand-desc/60"></i>
         </div>
@@ -35,7 +35,7 @@
               <th class="py-4 px-5 font-medium">{{ $t('igbh.cols.teacher') }}</th>
               <th class="py-4 px-5 font-medium text-center">Trạng thái</th>
               <th class="py-4 px-5 font-medium">{{ $t('igbh.cols.test_date') }}</th>
-              <th class="py-4 px-5 font-medium text-center w-24">{{ $t('common.actions') }}</th>
+              <th class="py-4 px-5 font-medium text-center w-32">{{ $t('common.actions') }}</th>
             </tr>
           </thead>
           <tbody class="text-brand-text divide-y divide-brand-border/30">
@@ -60,12 +60,13 @@
               <td class="py-3 px-5">
                 <div class="flex items-center justify-center gap-2">
                   <router-link :to="{ name: 'igbh-class-summative-eval-form', params: { id: item.id } }"
-                    class="w-8 h-8 rounded-lg flex items-center justify-center text-brand-desc hover:bg-brand-input hover:text-indigo-400 transition-colors"
+                    class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-indigo-50 text-indigo-600 hover:bg-indigo-100 transition text-sm font-medium"
                     title="Nhập điểm">
-                    <i class="fas fa-edit"></i>
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                    Sửa
                   </router-link>
                   <button @click="deleteResult(item.id)"
-                    class="w-8 h-8 rounded-lg flex items-center justify-center text-brand-desc hover:bg-red-500/10 hover:text-red-400 transition-colors"
+                    class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-red-50 text-red-600 hover:bg-red-100 transition text-sm font-medium"
                     title="Xóa">
                     <i class="fas fa-trash-alt"></i>
                   </button>
