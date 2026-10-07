@@ -78,16 +78,16 @@
             <tr class="bg-white">
               <template v-for="n in 4" :key="'in_'+n">
                 <td class="border border-gray-300 p-2">
-                  <input type="number" v-model="formData.subjective_data[n-1].concept" class="w-full min-w-[30px] text-center border border-gray-300 rounded-sm p-1.5 focus:border-indigo-500 focus:outline-none transition-colors">
+                  <input type="number" v-model="formData.subjective_data[n-1].concept" @input="limitInput(formData.subjective_data[n-1], 'concept', 1, 6)" min="1" max="6" class="w-[50px] text-center border border-gray-300 rounded-sm p-1.5 focus:border-indigo-500 focus:outline-none transition-colors">
                 </td>
                 <td class="border border-gray-300 p-2">
-                  <input type="number" v-model="formData.subjective_data[n-1].strategy" class="w-full min-w-[30px] text-center border border-gray-300 rounded-sm p-1.5 focus:border-indigo-500 focus:outline-none transition-colors">
+                  <input type="number" v-model="formData.subjective_data[n-1].strategy" @input="limitInput(formData.subjective_data[n-1], 'strategy', 1, 6)" min="1" max="6" class="w-[50px] text-center border border-gray-300 rounded-sm p-1.5 focus:border-indigo-500 focus:outline-none transition-colors">
                 </td>
                 <td class="border border-gray-300 p-2">
-                  <input type="number" v-model="formData.subjective_data[n-1].calculation" class="w-full min-w-[30px] text-center border border-gray-300 rounded-sm p-1.5 focus:border-indigo-500 focus:outline-none transition-colors">
+                  <input type="number" v-model="formData.subjective_data[n-1].calculation" @input="limitInput(formData.subjective_data[n-1], 'calculation', 1, 6)" min="1" max="6" class="w-[50px] text-center border border-gray-300 rounded-sm p-1.5 focus:border-indigo-500 focus:outline-none transition-colors">
                 </td>
                 <td class="border border-gray-300 p-2">
-                  <input type="number" v-model="formData.subjective_data[n-1].expression" class="w-full min-w-[30px] text-center border border-gray-300 rounded-sm p-1.5 focus:border-indigo-500 focus:outline-none transition-colors">
+                  <input type="number" v-model="formData.subjective_data[n-1].expression" @input="limitInput(formData.subjective_data[n-1], 'expression', 1, 6)" min="1" max="6" class="w-[50px] text-center border border-gray-300 rounded-sm p-1.5 focus:border-indigo-500 focus:outline-none transition-colors">
                 </td>
               </template>
             </tr>
@@ -117,21 +117,21 @@
             <tr class="bg-white">
               <!-- Input 5 -->
               <td class="border border-gray-300 p-2">
-                <input type="number" v-model="formData.subjective_data[4].concept" class="w-full min-w-[30px] text-center border border-gray-300 rounded-sm p-1.5 focus:border-indigo-500 focus:outline-none transition-colors">
+                <input type="number" v-model="formData.subjective_data[4].concept" @input="limitInput(formData.subjective_data[4], 'concept', 1, 6)" min="1" max="6" class="w-[50px] text-center border border-gray-300 rounded-sm p-1.5 focus:border-indigo-500 focus:outline-none transition-colors">
               </td>
               <td class="border border-gray-300 p-2">
-                <input type="number" v-model="formData.subjective_data[4].strategy" class="w-full min-w-[30px] text-center border border-gray-300 rounded-sm p-1.5 focus:border-indigo-500 focus:outline-none transition-colors">
+                <input type="number" v-model="formData.subjective_data[4].strategy" @input="limitInput(formData.subjective_data[4], 'strategy', 1, 6)" min="1" max="6" class="w-[50px] text-center border border-gray-300 rounded-sm p-1.5 focus:border-indigo-500 focus:outline-none transition-colors">
               </td>
               <td class="border border-gray-300 p-2">
-                <input type="number" v-model="formData.subjective_data[4].calculation" class="w-full min-w-[30px] text-center border border-gray-300 rounded-sm p-1.5 focus:border-indigo-500 focus:outline-none transition-colors">
+                <input type="number" v-model="formData.subjective_data[4].calculation" @input="limitInput(formData.subjective_data[4], 'calculation', 1, 6)" min="1" max="6" class="w-[50px] text-center border border-gray-300 rounded-sm p-1.5 focus:border-indigo-500 focus:outline-none transition-colors">
               </td>
               <td class="border border-gray-300 p-2">
-                <input type="number" v-model="formData.subjective_data[4].expression" class="w-full min-w-[30px] text-center border border-gray-300 rounded-sm p-1.5 focus:border-indigo-500 focus:outline-none transition-colors">
+                <input type="number" v-model="formData.subjective_data[4].expression" @input="limitInput(formData.subjective_data[4], 'expression', 1, 6)" min="1" max="6" class="w-[50px] text-center border border-gray-300 rounded-sm p-1.5 focus:border-indigo-500 focus:outline-none transition-colors">
               </td>
               <!-- Inputs 6-17 -->
               <template v-for="(wd, index) in formData.weekly_data" :key="'inw_'+index">
                 <td class="border border-gray-300 p-2">
-                  <input type="number" v-model="wd.workbook" class="w-full min-w-[30px] text-center border border-gray-300 rounded-sm p-1.5 focus:border-indigo-500 focus:outline-none transition-colors">
+                  <input type="number" v-model="wd.workbook" @input="limitInput(wd, 'workbook', 1, wd.max_score)" :min="1" :max="wd.max_score" class="w-[50px] text-center border border-gray-300 rounded-sm p-1.5 focus:border-indigo-500 focus:outline-none transition-colors">
                 </td>
               </template>
             </tr>
@@ -245,6 +245,16 @@ export default {
     },
     cancel() {
       this.$router.push({ name: 'igbh-summative-evaluations' });
+    },
+    limitInput(obj, key, min, max) {
+      if (obj[key] === '' || obj[key] === null) return;
+      let val = parseInt(obj[key]);
+      if (isNaN(val)) {
+        obj[key] = null;
+        return;
+      }
+      if (val > max) obj[key] = max;
+      else if (val < min) obj[key] = min;
     }
   }
 }
