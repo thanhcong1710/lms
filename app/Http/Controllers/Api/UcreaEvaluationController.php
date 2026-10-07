@@ -79,7 +79,7 @@ class UcreaEvaluationController extends Controller
                      ->on('ucrea_student_results.level_cd', '=', 'ucrea_tests.level_cd')
                      ->on('ucrea_student_results.test_seq', '=', 'ucrea_tests.test_seq');
             })
-            ->leftJoin('students', 'ucrea_student_results.stu_seq', '=', 'students.id_lms')
+            ->leftJoin('students', 'ucrea_student_results.stu_nm', '=', 'students.name')
             ->where('ucrea_student_results.id', $id)
             ->select('ucrea_student_results.*', 'ucrea_tests.test_nm', 'ucrea_tests.level_cd_nm', 'students.date_of_birth', 'students.gender as stu_gender')
             ->first();
