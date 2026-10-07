@@ -70,6 +70,14 @@ Route::get('/igbh/summative/results/{id}', [\App\Http\Controllers\Api\IgbhSummat
 Route::get('/igbh/summative/form-data/{id}', [\App\Http\Controllers\Api\IgbhSummativeEvaluationController::class, 'getFormData']);
 Route::post('/igbh/summative/save/{id}', [\App\Http\Controllers\Api\IgbhSummativeEvaluationController::class, 'saveFormData']);
 
+// IGBH Class Summative Evaluations
+Route::get('/igbh/summative-class/results', [\App\Http\Controllers\Api\IgbhClassSummativeEvaluationController::class, 'getResults']);
+Route::get('/igbh/summative-class/init-data', [\App\Http\Controllers\Api\IgbhClassSummativeEvaluationController::class, 'getInitData']);
+Route::post('/igbh/summative-class/create', [\App\Http\Controllers\Api\IgbhClassSummativeEvaluationController::class, 'createResult']);
+Route::get('/igbh/summative-class/class-data/{id}', [\App\Http\Controllers\Api\IgbhClassSummativeEvaluationController::class, 'getClassData']);
+Route::post('/igbh/summative-class/update-status/{id}', [\App\Http\Controllers\Api\IgbhClassSummativeEvaluationController::class, 'updateStatus']);
+Route::delete('/igbh/summative-class/{id}', [\App\Http\Controllers\Api\IgbhClassSummativeEvaluationController::class, 'deleteResult']);
+
 Route::prefix('v1')->group(function () {
     Route::post('auth/sys/token.do', [IntegrationController::class, 'getToken']);
     Route::post('user/centerRegAction.do', [IntegrationController::class, 'centerRegAction']);

@@ -44,6 +44,8 @@ const routes = [
     { path: '/igbh/summative/evaluations', name: 'igbh-summative-evaluations', component: IgbhSummativeEvalList, meta: { requiresAuth: true } },
     { path: '/igbh/summative/report/:id', name: 'igbh-summative-eval-report', component: IgbhSummativeEvalReport, meta: { requiresAuth: true } },
     { path: '/igbh/summative/grade/:id', name: 'igbh-summative-eval-form', component: IgbhSummativeEvalForm, meta: { requiresAuth: true } },
+    { path: '/igbh/summative-class/evaluations', name: 'igbh-class-summative-evaluations', component: () => import('./views/IgbhClassSummativeEvals.vue'), meta: { requiresAuth: true } },
+    { path: '/igbh/summative-class/grade/:id', name: 'igbh-class-summative-eval-form', component: () => import('./views/IgbhClassSummativeEvalForm.vue'), meta: { requiresAuth: true } },
     { path: '/igbh/test-config/:id', name: 'igbh-test-config', component: IgbhTestConfig, meta: { requiresAuth: true, role: 'admin' } },
     { path: '/system/users', name: 'users', component: UserList, meta: { requiresAuth: true, role: 'admin' } },
 ];

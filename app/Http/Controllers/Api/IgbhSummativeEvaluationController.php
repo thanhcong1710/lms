@@ -25,7 +25,8 @@ class IgbhSummativeEvaluationController extends Controller
                 'r.eval_dt',
                 'r.created_at',
                 'r.updated_at'
-            );
+            )
+            ->where('r.status', 'completed');
 
         // Role-based filtering
         $user = \App\Http\Controllers\AuthController::resolveUser($request);

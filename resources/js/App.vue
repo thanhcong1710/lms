@@ -153,6 +153,10 @@
                 <span class="w-2 h-2 rounded-full bg-current opacity-40"></span>
                 <span>{{ $t('sidebar.igbh_weekly') }}</span>
               </router-link>
+              <router-link to="/igbh/summative-class/evaluations" @click="isMobileMenuOpen = false" class="flex items-center gap-3 px-4 py-2.5 rounded-xl transition hover:bg-brand-input hover:text-brand-text text-brand-desc text-sm" active-class="bg-indigo-600/10 text-indigo-500 font-medium">
+                <span class="w-2 h-2 rounded-full bg-current opacity-40"></span>
+                <span>{{ $t('sidebar.igbh_summative_class') }}</span>
+              </router-link>
               <router-link to="/igbh/summative/evaluations" @click="isMobileMenuOpen = false" class="flex items-center gap-3 px-4 py-2.5 rounded-xl transition hover:bg-brand-input hover:text-brand-text text-brand-desc text-sm" active-class="bg-indigo-600/10 text-indigo-500 font-medium">
                 <span class="w-2 h-2 rounded-full bg-current opacity-40"></span>
                 <span>{{ $t('sidebar.igbh_summative') }}</span>
