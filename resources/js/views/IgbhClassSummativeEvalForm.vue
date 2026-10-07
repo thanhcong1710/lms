@@ -60,8 +60,8 @@
             </div>
 
             <!-- Main Input Table -->
-            <div class="border border-gray-300 rounded-sm w-full overflow-hidden">
-              <table class="w-full text-center border-collapse text-[11px] sm:text-xs md:text-sm table-fixed">
+            <div class="border border-gray-300 rounded-sm w-full overflow-x-auto">
+              <table class="w-full text-center border-collapse text-[11px] sm:text-xs md:text-sm min-w-[1400px]">
                 <tbody>
                   <!-- Row 1 -->
                   <tr class="bg-gray-50">
