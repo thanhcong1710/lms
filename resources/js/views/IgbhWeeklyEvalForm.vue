@@ -110,31 +110,31 @@
                 {{ std.stu_nm }}
               </td>
               <td class="px-1 py-2 border-r border-brand-border">
-                <input type="number" min="0" max="20" v-model.number="std.workbook" class="w-full px-1 py-1.5 text-center bg-white border border-gray-200 text-gray-800 focus:border-indigo-500 focus:outline-none transition">
+                <input type="number" min="0" max="20" v-model.number="std.workbook" @input="limitInput(std, 'workbook', 0, 20)" class="w-full px-1 py-1.5 text-center bg-white border border-gray-200 text-gray-800 focus:border-indigo-500 focus:outline-none transition">
               </td>
               <td class="px-1 py-2 border-r border-brand-border">
-                <input type="number" min="0" max="5" v-model.number="std.attd_listen" class="w-full px-1 py-1.5 text-center bg-white border border-gray-200 text-gray-800 focus:border-indigo-500 focus:outline-none transition">
+                <input type="number" min="0" max="5" v-model.number="std.attd_listen" @input="limitInput(std, 'attd_listen', 0, 5)" class="w-full px-1 py-1.5 text-center bg-white border border-gray-200 text-gray-800 focus:border-indigo-500 focus:outline-none transition">
               </td>
               <td class="px-1 py-2 border-r border-brand-border">
-                <input type="number" min="0" max="5" v-model.number="std.attd_join" class="w-full px-1 py-1.5 text-center bg-white border border-gray-200 text-gray-800 focus:border-indigo-500 focus:outline-none transition">
+                <input type="number" min="0" max="5" v-model.number="std.attd_join" @input="limitInput(std, 'attd_join', 0, 5)" class="w-full px-1 py-1.5 text-center bg-white border border-gray-200 text-gray-800 focus:border-indigo-500 focus:outline-none transition">
               </td>
               <td class="px-1 py-2 border-r border-brand-border">
-                <input type="number" min="0" max="5" v-model.number="std.attd_express" class="w-full px-1 py-1.5 text-center bg-white border border-gray-200 text-gray-800 focus:border-indigo-500 focus:outline-none transition">
+                <input type="number" min="0" max="5" v-model.number="std.attd_express" @input="limitInput(std, 'attd_express', 0, 5)" class="w-full px-1 py-1.5 text-center bg-white border border-gray-200 text-gray-800 focus:border-indigo-500 focus:outline-none transition">
               </td>
               <td class="px-1 py-2 border-r border-brand-border">
-                <input type="number" min="0" max="5" v-model.number="std.attd_coop" class="w-full px-1 py-1.5 text-center bg-white border border-gray-200 text-gray-800 focus:border-indigo-500 focus:outline-none transition">
+                <input type="number" min="0" max="5" v-model.number="std.attd_coop" @input="limitInput(std, 'attd_coop', 0, 5)" class="w-full px-1 py-1.5 text-center bg-white border border-gray-200 text-gray-800 focus:border-indigo-500 focus:outline-none transition">
               </td>
               <td class="px-1 py-2 border-r border-brand-border">
-                <input type="number" min="0" max="5" v-model.number="std.detect_normal" class="w-full px-1 py-1.5 text-center bg-white border border-gray-200 text-gray-800 focus:border-indigo-500 focus:outline-none transition">
+                <input type="number" min="0" max="5" v-model.number="std.detect_normal" @input="limitInput(std, 'detect_normal', 0, 5)" class="w-full px-1 py-1.5 text-center bg-white border border-gray-200 text-gray-800 focus:border-indigo-500 focus:outline-none transition">
               </td>
               <td class="px-1 py-2 border-r border-brand-border">
-                <input type="number" min="0" max="5" v-model.number="std.detect_leadersh" class="w-full px-1 py-1.5 text-center bg-white border border-gray-200 text-gray-800 focus:border-indigo-500 focus:outline-none transition">
+                <input type="number" min="0" max="5" v-model.number="std.detect_leadersh" @input="limitInput(std, 'detect_leadersh', 0, 5)" class="w-full px-1 py-1.5 text-center bg-white border border-gray-200 text-gray-800 focus:border-indigo-500 focus:outline-none transition">
               </td>
               <td class="px-1 py-2 border-r border-brand-border">
-                <input type="number" min="0" max="5" v-model.number="std.detect_math" class="w-full px-1 py-1.5 text-center bg-white border border-gray-200 text-gray-800 focus:border-indigo-500 focus:outline-none transition">
+                <input type="number" min="0" max="5" v-model.number="std.detect_math" @input="limitInput(std, 'detect_math', 0, 5)" class="w-full px-1 py-1.5 text-center bg-white border border-gray-200 text-gray-800 focus:border-indigo-500 focus:outline-none transition">
               </td>
               <td class="px-1 py-2">
-                <input type="number" min="0" max="5" v-model.number="std.detect_creative" class="w-full px-1 py-1.5 text-center bg-white border border-gray-200 text-gray-800 focus:border-indigo-500 focus:outline-none transition">
+                <input type="number" min="0" max="5" v-model.number="std.detect_creative" @input="limitInput(std, 'detect_creative', 0, 5)" class="w-full px-1 py-1.5 text-center bg-white border border-gray-200 text-gray-800 focus:border-indigo-500 focus:outline-none transition">
               </td>
             </tr>
             <tr v-if="students.length === 0">
@@ -196,6 +196,18 @@ export default {
     await this.fetchDetails();
   },
   methods: {
+    limitInput(obj, field, min, max) {
+      if (obj[field] !== null && obj[field] !== '') {
+        let val = parseInt(obj[field], 10);
+        if (isNaN(val)) {
+          obj[field] = null;
+          return;
+        }
+        if (val < min) val = min;
+        if (val > max) val = max;
+        obj[field] = val;
+      }
+    },
     async fetchInitData() {
       try {
         const response = await axios.get('/api/igbh/weekly/init-data', {
