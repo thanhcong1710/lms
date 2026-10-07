@@ -98,29 +98,17 @@
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td class="border border-gray-400 py-2 bg-[#fbe5a2] font-semibold">1 ~ 4</td>
-                <td class="border border-gray-400 py-2">-</td>
-                <td class="border border-gray-400 py-2">-</td>
-                <td class="border border-gray-400 py-2">-</td>
-                <td class="border border-gray-400 py-2">-</td>
-                <td class="border border-gray-400 py-2">-</td>
-              </tr>
-              <tr>
-                <td class="border border-gray-400 py-2 bg-[#fbe5a2] font-semibold">5 ~ 8</td>
-                <td class="border border-gray-400 py-2">-</td>
-                <td class="border border-gray-400 py-2">-</td>
-                <td class="border border-gray-400 py-2">-</td>
-                <td class="border border-gray-400 py-2">-</td>
-                <td class="border border-gray-400 py-2">-</td>
-              </tr>
-              <tr>
-                <td class="border border-gray-400 py-2 bg-[#fbe5a2] font-semibold">9 ~ 12</td>
-                <td class="border border-gray-400 py-2">-</td>
-                <td class="border border-gray-400 py-2">-</td>
-                <td class="border border-gray-400 py-2">-</td>
-                <td class="border border-gray-400 py-2">-</td>
-                <td class="border border-gray-400 py-2">-</td>
+              <tr v-for="(chunk, idx) in attitudeChunks" :key="'chunk'+idx">
+                <td class="border border-gray-400 py-2 bg-[#fbe5a2] font-semibold">
+                  <template v-if="idx === 0">1 ~ 4</template>
+                  <template v-else-if="idx === 1">5 ~ 8</template>
+                  <template v-else>9 ~ 12</template>
+                </td>
+                <td class="border border-gray-400 py-2">{{ chunk ? chunk.listen : '-' }}</td>
+                <td class="border border-gray-400 py-2">{{ chunk ? chunk.join : '-' }}</td>
+                <td class="border border-gray-400 py-2">{{ chunk ? chunk.express : '-' }}</td>
+                <td class="border border-gray-400 py-2">{{ chunk ? chunk.coop : '-' }}</td>
+                <td class="border border-gray-400 py-2">{{ chunk ? chunk.avg : '-' }}</td>
               </tr>
               <tr class="bg-[#fbe5a2]">
                 <td class="border border-gray-400 py-2 font-semibold">Điểm quy đổi</td>
@@ -539,6 +527,43 @@ export default {
         btm: Object.assign({}, emptyMatrix, data && data.btm ? data.btm : {}),
         ltm: Object.assign({}, emptyMatrix, data && data.ltm ? data.ltm : {})
       };
+    },
+    attitudeChunks() {
+      if (!this.reportData || !this.reportData.report_data) return [null, null, null];
+      
+      const chunks = [
+        this.reportData.report_data.filter(w => w.week >= 1 && w.week <= 4 && w.attitude),
+        this.reportData.report_data.filter(w => w.week >= 5 && w.week <= 8 && w.attitude),
+        this.reportData.report_data.filter(w => w.week >= 9 && w.week <= 12 && w.attitude)
+      ];
+
+      return chunks.map(chunk => {
+        if (chunk.length === 0) return { listen: '-', join: '-', express: '-', coop: '-', avg: '-' };
+        
+        let sums = { listen: 0, join: 0, express: 0, coop: 0 };
+        chunk.forEach(w => {
+          sums.listen += parseFloat(w.attitude.listen) || 0;
+          sums.join += parseFloat(w.attitude.join) || 0;
+          sums.express += parseFloat(w.attitude.express) || 0;
+          sums.coop += parseFloat(w.attitude.coop) || 0;
+        });
+        
+        const count = chunk.length;
+        const listenAvg = sums.listen / count;
+        const joinAvg = sums.join / count;
+        const expressAvg = sums.express / count;
+        const coopAvg = sums.coop / count;
+        
+        const overallAvg = (listenAvg + joinAvg + expressAvg + coopAvg) / 4;
+        
+        return {
+          listen: Number.isInteger(listenAvg) ? listenAvg : listenAvg.toFixed(1),
+          join: Number.isInteger(joinAvg) ? joinAvg : joinAvg.toFixed(1),
+          express: Number.isInteger(expressAvg) ? expressAvg : expressAvg.toFixed(1),
+          coop: Number.isInteger(coopAvg) ? coopAvg : coopAvg.toFixed(1),
+          avg: Number.isInteger(overallAvg) ? overallAvg : overallAvg.toFixed(1)
+        };
+      });
     },
     workbookAverageScore() {
       if (!this.reportData || !this.reportData.report_data) return 0;
