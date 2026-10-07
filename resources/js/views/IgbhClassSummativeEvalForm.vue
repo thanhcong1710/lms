@@ -184,7 +184,6 @@
               </button>
             </div>
           </div>
-    </div>
   </div>
   <div v-else class="h-full flex items-center justify-center">
     <i class="fas fa-spinner fa-spin text-indigo-500 text-4xl"></i>
