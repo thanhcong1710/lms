@@ -420,6 +420,8 @@ class IgbhSummativeEvaluationController extends Controller
             $sumAttitude = 0;
             $sumDetection = 0;
             $weekCount = 0;
+            $sumWeeklyWorkbook = 0;
+            $workbookCount = 0;
 
             foreach ($allWeeks as $w) {
                 $isAllZero = $w->workbook == 0 &&
@@ -437,13 +439,12 @@ class IgbhSummativeEvaluationController extends Controller
                     $sumDetection += ($w->detect_normal + $w->detect_leadersh + $w->detect_math + $w->detect_creative);
                     $weekCount++;
                 }
+                
+                if ($w->workbook > 0) {
+                    $sumWeeklyWorkbook += $w->workbook;
+                    $workbookCount++;
+                }
             }
-            
-            // Total workbook score is now computed from the independent 6-17 answers
-            $totalWorkbook = DB::table('igbh_summative_result_details')
-                ->where('summative_result_id', $id)
-                ->where('sort_no', '>=', 6)
-                ->sum('score');
 
             if ($weekCount > 0) {
                 $avgAttitude = ($sumAttitude / $weekCount) / 4 * 2;
@@ -452,8 +453,10 @@ class IgbhSummativeEvaluationController extends Controller
                 $avgAttitude = 0;
                 $avgDetection = 0;
             }
+            
+            $avgWeeklyWorkbook = $workbookCount > 0 ? ($sumWeeklyWorkbook / $workbookCount) : 0;
 
-            $finalTotalScore = round($totalWorkbook + $avgAttitude + $avgDetection + $totalSubjectiveScore, 1);
+            $finalTotalScore = round($avgWeeklyWorkbook + $avgAttitude + $avgDetection, 1);
 
             DB::table('igbh_summative_results')->where('id', $id)->update([
                 'total_score' => $finalTotalScore

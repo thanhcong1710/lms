@@ -37,7 +37,7 @@
         
         <div class="bg-white text-black rounded-full py-1.5 px-6 flex flex-wrap gap-4 md:gap-8 justify-center text-sm shadow-md mt-4 font-medium max-w-3xl mx-auto border-2 border-[#fdb913]">
           <div><span class="text-blue-600">{{ $t('igbh.cols.class') }} :</span> {{ reportData.student_info.class_nm }}</div>
-          <div><span class="text-blue-600">{{ $t('igbh.form.dob') }} :</span> 2018-02-19</div>
+          <div><span class="text-blue-600">Ngày sinh :</span> 2018-02-19</div>
           <div><span class="text-blue-600">{{ $t('igbh.form.student') }} :</span> {{ reportData.student_info.stu_nm }}</div>
         </div>
       </div>
@@ -282,7 +282,7 @@
           
           <div class="bg-white text-black rounded-full py-1.5 px-6 flex flex-wrap gap-4 md:gap-8 justify-center text-sm shadow-md mt-4 font-medium max-w-3xl mx-auto border-2 border-[#fdb913]">
             <div><span class="text-blue-600">{{ $t('igbh.cols.class') }} :</span> {{ reportData.student_info.class_nm }}</div>
-            <div><span class="text-blue-600">{{ $t('igbh.form.dob') }} :</span> 2018-02-19</div>
+            <div><span class="text-blue-600">Ngày sinh :</span> 2018-02-19</div>
             <div><span class="text-blue-600">{{ $t('igbh.form.student') }} :</span> {{ reportData.student_info.stu_nm }}</div>
           </div>
         </div>

@@ -79,9 +79,25 @@ class UcreaEvaluationController extends Controller
                      ->on('ucrea_student_results.level_cd', '=', 'ucrea_tests.level_cd')
                      ->on('ucrea_student_results.test_seq', '=', 'ucrea_tests.test_seq');
             })
+            ->leftJoin('students', 'ucrea_student_results.stu_seq', '=', 'students.id_lms')
             ->where('ucrea_student_results.id', $id)
-            ->select('ucrea_student_results.*', 'ucrea_tests.test_nm', 'ucrea_tests.level_cd_nm')
+            ->select('ucrea_student_results.*', 'ucrea_tests.test_nm', 'ucrea_tests.level_cd_nm', 'students.date_of_birth', 'students.gender as stu_gender')
             ->first();
+
+        if ($result && !empty($result->date_of_birth)) {
+            try {
+                $evalDate = $result->eval_dt ? \Carbon\Carbon::parse($result->eval_dt) : now();
+                $birthDate = \Carbon\Carbon::parse($result->date_of_birth);
+                $ageInYears = $birthDate->diffInYears($evalDate);
+                $result->age_nm = $ageInYears . ' Tuổi';
+                
+                if ($result->stu_gender === 'M') {
+                    $result->gender_nm = 'Nam';
+                } elseif ($result->stu_gender === 'F') {
+                    $result->gender_nm = 'Nữ';
+                }
+            } catch (\Exception $e) {}
+        }
 
         if (!$result) {
             return response()->json(['status' => 'error', 'message' => 'Result not found'], 404);

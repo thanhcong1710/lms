@@ -44,7 +44,7 @@
               Trình độ: <span class="text-indigo-600">{{ general.assigned_level || '—' }}</span>
             </span>
             <span class="text-blue-900 font-semibold">
-              Sinh: <span>{{ general.stu_birth_dt || '—' }}</span>
+              Ngày sinh: <span>{{ general.stu_birth_dt || '—' }}</span>
             </span>
             <span class="text-blue-900 font-bold">
               {{ general.stu_nm }}
