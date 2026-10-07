@@ -212,7 +212,6 @@
 
 <script>
 import axios from 'axios';
-import Swal from 'sweetalert2';
 
 export default {
   data() {
@@ -242,7 +241,7 @@ export default {
         this.students = response.data.students;
       } catch (error) {
         console.error(error);
-        Swal.fire('Lỗi', 'Không thể tải dữ liệu lớp', 'error');
+        alert('Không thể tải dữ liệu lớp');
       } finally {
         this.loadingInit = false;
       }
@@ -283,7 +282,7 @@ export default {
         this.formData = data;
       } catch (error) {
         console.error("Error fetching form data", error);
-        Swal.fire('Lỗi', 'Không thể tải dữ liệu học sinh.', 'error');
+        alert('Không thể tải dữ liệu học sinh.');
       } finally {
         this.loadingForm = false;
       }
@@ -307,12 +306,7 @@ export default {
         // Find next student to auto-select
         const currentIndex = this.students.findIndex(s => s.id === this.selectedStudent.id);
         
-        Swal.fire({
-          icon: 'success',
-          title: 'Lưu thành công!',
-          timer: 1000,
-          showConfirmButton: false
-        });
+        alert('Lưu thành công!');
         
         if (currentIndex !== -1 && currentIndex < this.students.length - 1) {
           // Go to next student
@@ -323,7 +317,7 @@ export default {
         
       } catch (error) {
         console.error("Error saving form", error);
-        Swal.fire('Lỗi', 'Có lỗi xảy ra khi lưu.', 'error');
+        alert('Có lỗi xảy ra khi lưu.');
       } finally {
         this.saving = false;
       }
@@ -335,29 +329,13 @@ export default {
         ? 'Khi hoàn thành, điểm của tất cả học sinh trong lớp sẽ được hiển thị ở màn Kết quả. Bạn chắc chắn chứ?'
         : 'Mở lại trạng thái sẽ cho phép bạn tiếp tục chỉnh sửa. Bạn chắc chắn chứ?';
         
-      const result = await Swal.fire({
-        title: 'Cập nhật trạng thái?',
-        text: confirmText,
-        icon: 'question',
-        showCancelButton: true,
-        confirmButtonColor: '#4f46e5',
-        cancelButtonColor: '#4b5563',
-        confirmButtonText: 'Đồng ý',
-        cancelButtonText: 'Hủy'
-      });
-
-      if (result.isConfirmed) {
+      if (confirm(confirmText)) {
         try {
           await axios.post(`/api/igbh/summative-class/update-status/${id}`, { status: newStatus });
           this.sessionInfo.status = newStatus;
-          Swal.fire({
-            icon: 'success',
-            title: 'Thành công',
-            timer: 1500,
-            showConfirmButton: false
-          });
+          alert('Cập nhật trạng thái thành công');
         } catch (error) {
-          Swal.fire('Lỗi', 'Không thể cập nhật trạng thái', 'error');
+          alert('Không thể cập nhật trạng thái');
         }
       }
     },

@@ -175,7 +175,6 @@
 
 <script>
 import axios from 'axios';
-import Swal from 'sweetalert2';
 import moment from 'moment';
 
 export default {
@@ -254,7 +253,7 @@ export default {
     },
     async submitAdd() {
       if (!this.addForm.test_seq || !this.addForm.class_seq || !this.addForm.eval_ymd) {
-        Swal.fire('Lỗi', 'Vui lòng điền đầy đủ thông tin bắt buộc!', 'error');
+        alert('Vui lòng điền đầy đủ thông tin bắt buộc!');
         return;
       }
       
@@ -263,46 +262,24 @@ export default {
         const response = await axios.post('/api/igbh/summative-class/create', this.addForm);
         this.showAddModal = false;
         
-        Swal.fire({
-          icon: 'success',
-          title: 'Thành công',
-          text: 'Đã tạo lớp đánh giá thành công',
-          timer: 1500,
-          showConfirmButton: false
-        });
+        alert('Đã tạo lớp đánh giá thành công');
         
         // redirect to grade page
         this.$router.push({ name: 'igbh-class-summative-eval-form', params: { id: response.data.id } });
       } catch (error) {
-        Swal.fire('Lỗi', error.response?.data?.message || 'Có lỗi xảy ra', 'error');
+        alert(error.response?.data?.message || 'Có lỗi xảy ra');
       } finally {
         this.isSubmitting = false;
       }
     },
     async deleteResult(id) {
-      const result = await Swal.fire({
-        title: 'Xóa kết quả?',
-        text: 'Bạn có chắc chắn muốn xóa đánh giá này? Toàn bộ điểm của lớp sẽ bị xóa!',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#ef4444',
-        cancelButtonColor: '#4b5563',
-        confirmButtonText: 'Có, xóa!',
-        cancelButtonText: 'Hủy'
-      });
-
-      if (result.isConfirmed) {
+      if (confirm('Bạn có chắc chắn muốn xóa đánh giá này? Toàn bộ điểm của lớp sẽ bị xóa!')) {
         try {
           await axios.delete(`/api/igbh/summative-class/${id}`);
-          Swal.fire({
-            icon: 'success',
-            title: 'Đã xóa',
-            timer: 1500,
-            showConfirmButton: false
-          });
+          alert('Đã xóa thành công');
           this.loadResults();
         } catch (error) {
-          Swal.fire('Lỗi', 'Không thể xóa', 'error');
+          alert('Không thể xóa. Vui lòng thử lại.');
         }
       }
     }
