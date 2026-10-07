@@ -70,7 +70,7 @@
                 {{ w.score }}
               </td>
               <td class="border-2 border-red-600 py-2 font-bold text-red-600 bg-red-50 text-base">
-                {{ reportData.summary.workbook_score }}
+                {{ workbookAverageScore }}
               </td>
             </tr>
           </tbody>
@@ -260,11 +260,11 @@
             </tr>
             <tr class="bg-[#fbe5a2]">
               <td class="border border-gray-400 py-2 font-semibold text-gray-800">Điểm thực tế</td>
-              <td class="border border-gray-400 py-2 bg-white">{{ reportData.summary.workbook_score }}</td>
+              <td class="border border-gray-400 py-2 bg-white">{{ workbookAverageScore }}</td>
               <td class="border border-gray-400 py-2 bg-white">{{ ( (reportData.summary.avg_attitude.listen + reportData.summary.avg_attitude.join + reportData.summary.avg_attitude.express + reportData.summary.avg_attitude.coop)/4 * 2 ).toFixed(1) }}</td>
               <td class="border border-gray-400 py-2 bg-white">{{ ( (reportData.summary.avg_detection.normal + reportData.summary.avg_detection.leadersh + reportData.summary.avg_detection.math + reportData.summary.avg_detection.creative)/4 * 2 ).toFixed(1) }}</td>
               <td class="border-2 border-red-600 bg-white font-bold text-red-600 text-lg">
-                {{ (reportData.summary.workbook_score + ((reportData.summary.avg_attitude.listen + reportData.summary.avg_attitude.join + reportData.summary.avg_attitude.express + reportData.summary.avg_attitude.coop)/4 * 2) + ((reportData.summary.avg_detection.normal + reportData.summary.avg_detection.leadersh + reportData.summary.avg_detection.math + reportData.summary.avg_detection.creative)/4 * 2)).toFixed(1) }}
+                {{ (Number(workbookAverageScore) + ((reportData.summary.avg_attitude.listen + reportData.summary.avg_attitude.join + reportData.summary.avg_attitude.express + reportData.summary.avg_attitude.coop)/4 * 2) + ((reportData.summary.avg_detection.normal + reportData.summary.avg_detection.leadersh + reportData.summary.avg_detection.math + reportData.summary.avg_detection.creative)/4 * 2)).toFixed(1) }}
               </td>
             </tr>
           </tbody>
@@ -539,6 +539,21 @@ export default {
         btm: Object.assign({}, emptyMatrix, data && data.btm ? data.btm : {}),
         ltm: Object.assign({}, emptyMatrix, data && data.ltm ? data.ltm : {})
       };
+    },
+    workbookAverageScore() {
+      if (!this.reportData || !this.reportData.report_data) return 0;
+      let sum = 0;
+      let count = 0;
+      this.reportData.report_data.forEach(w => {
+        let score = parseFloat(w.score);
+        if (!isNaN(score) && score > 0) {
+          sum += score;
+          count++;
+        }
+      });
+      if (count === 0) return 0;
+      let avg = sum / count;
+      return Number.isInteger(avg) ? avg : avg.toFixed(1);
     }
   },
   async created() {
