@@ -27,42 +27,25 @@
       </div>
     </div>
 
-    <!-- Main Content Grid -->
-    <div class="flex flex-col md:flex-row gap-4 flex-1 overflow-hidden">
-      <!-- Left Sidebar: Student List -->
-      <div class="w-full md:w-64 flex flex-col bg-brand-surface border border-brand-border/50 rounded-2xl overflow-hidden shrink-0">
-        <div class="p-3 bg-brand-input/30 border-b border-brand-border/50">
-          <h3 class="font-bold text-brand-text">Danh sách học sinh</h3>
-          <p class="text-xs text-brand-desc mt-1">{{ students.length }} học sinh</p>
-        </div>
-        <div class="flex-1 overflow-y-auto p-2 space-y-1">
-          <button v-for="stu in students" :key="stu.id" 
-            @click="selectStudent(stu)"
-            :class="['w-full text-left px-3 py-2.5 rounded-xl transition-all flex items-center justify-between', 
-              selectedStudent && selectedStudent.id === stu.id 
-                ? 'bg-indigo-600/10 text-indigo-400 font-medium' 
-                : 'text-brand-desc hover:bg-brand-input hover:text-brand-text'
-            ]">
-            <span class="truncate">{{ stu.stu_nm }}</span>
-            <i class="fas fa-chevron-right text-[10px] opacity-50" v-if="selectedStudent && selectedStudent.id === stu.id"></i>
-          </button>
+    <div v-if="loadingForm" class="flex justify-center py-10">
+      <i class="fas fa-spinner fa-spin text-indigo-500 text-3xl"></i>
+    </div>
+    
+    <div v-else-if="formData" class="bg-white text-black p-4 md:p-6 font-sans shadow-xl border border-gray-200 rounded-xl max-w-[1200px] mx-auto w-full">
+      <!-- Student Selector Dropdown -->
+      <div class="mb-6 flex items-center bg-gray-50 border border-gray-300 p-3 rounded-sm shadow-sm gap-4">
+        <label class="font-bold text-gray-700 whitespace-nowrap">Chọn học sinh:</label>
+        <select class="w-full max-w-md border border-gray-300 rounded px-3 py-2 bg-white focus:outline-none focus:border-indigo-500"
+          :value="selectedStudent?.id"
+          @change="e => selectStudent(students.find(s => s.id == e.target.value))">
+          <option v-for="(stu, index) in students" :key="stu.id" :value="stu.id">
+            {{ index + 1 }}. {{ stu.stu_nm }}
+          </option>
+        </select>
+        <div class="text-sm text-gray-500 font-medium">
+          (Học sinh {{ students.findIndex(s => s.id === selectedStudent?.id) + 1 }} / {{ students.length }})
         </div>
       </div>
-
-      <!-- Right Content: Form -->
-      <div class="flex-1 bg-brand-surface border border-brand-border/50 rounded-2xl overflow-y-auto relative">
-        <div v-if="!selectedStudent" class="absolute inset-0 flex flex-col items-center justify-center text-brand-desc/60">
-          <i class="fas fa-user-graduate text-5xl mb-3"></i>
-          <p>Chọn một học sinh từ danh sách để bắt đầu nhập điểm</p>
-        </div>
-
-        <div v-else class="p-4 md:p-6 w-full max-w-full overflow-x-auto">
-          <!-- Form Component embedded -->
-          <div v-if="loadingForm" class="flex justify-center py-10">
-            <i class="fas fa-spinner fa-spin text-indigo-500 text-3xl"></i>
-          </div>
-          
-          <div v-else-if="formData" class="bg-white text-black p-4 md:p-6 font-sans shadow-xl border border-gray-200 rounded-xl min-w-[800px]">
             <!-- Top Header Area -->
             <div class="flex flex-wrap border border-gray-300 rounded-sm mb-6 bg-gray-50 text-sm">
               <div class="flex-1 flex border-r border-gray-300 min-w-[200px]">
@@ -194,15 +177,13 @@
               </div>
             </div>
 
-            <div class="flex justify-center gap-3 mt-8">
+            <div class="flex justify-center gap-4 mt-8">
               <button @click="saveForm" :disabled="saving" class="px-8 py-2 bg-[#1ba494] hover:bg-[#158779] text-white font-medium rounded shadow-sm transition disabled:opacity-50">
                 <i class="fas fa-spinner fa-spin mr-2" v-if="saving"></i>
-                Lưu điểm học sinh này
+                Lưu điểm & Chuyển HS tiếp theo
               </button>
             </div>
           </div>
-        </div>
-      </div>
     </div>
   </div>
   <div v-else class="h-full flex items-center justify-center">
@@ -239,6 +220,11 @@ export default {
         this.sessionInfo = response.data.session_info;
         this.testInfo = response.data.test_info;
         this.students = response.data.students;
+        
+        // Auto select first student if available
+        if (this.students.length > 0) {
+          this.selectStudent(this.students[0]);
+        }
       } catch (error) {
         console.error(error);
         alert('Không thể tải dữ liệu lớp');
