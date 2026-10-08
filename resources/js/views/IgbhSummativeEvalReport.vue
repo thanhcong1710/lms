@@ -235,6 +235,8 @@
               <th class="border border-gray-400 py-2 font-semibold">Sách bài tập</th>
               <th class="border border-gray-400 py-2 font-semibold">Thái độ học tập</th>
               <th class="border border-gray-400 py-2 font-semibold">Quan sát lớp học</th>
+              <th class="border border-gray-400 py-2 font-semibold">Thành tích theo từng bài học</th>
+              <th class="border border-gray-400 py-2 font-semibold">Đánh giá nội dung câu hỏi tự luận</th>
               <th class="border border-gray-400 py-2 font-semibold">Tổng</th>
             </tr>
           </thead>
@@ -244,15 +246,19 @@
               <td class="border border-gray-400 py-2">20</td>
               <td class="border border-gray-400 py-2">10</td>
               <td class="border border-gray-400 py-2">10</td>
-              <td class="border border-gray-400 py-2 font-bold bg-white text-red-600 border-2 border-red-600">40</td>
+              <td class="border border-gray-400 py-2">30</td>
+              <td class="border border-gray-400 py-2">30</td>
+              <td class="border border-gray-400 py-2 font-bold bg-white text-red-600 border-2 border-red-600">100</td>
             </tr>
             <tr class="bg-[#fbe5a2]">
               <td class="border border-gray-400 py-2 font-semibold text-gray-800">Điểm thực tế</td>
               <td class="border border-gray-400 py-2 bg-white">{{ workbookAverageScore }}</td>
               <td class="border border-gray-400 py-2 bg-white">{{ ( (reportData.summary.avg_attitude.listen + reportData.summary.avg_attitude.join + reportData.summary.avg_attitude.express + reportData.summary.avg_attitude.coop)/4 * 2 ).toFixed(1) }}</td>
               <td class="border border-gray-400 py-2 bg-white">{{ ( (reportData.summary.avg_detection.normal + reportData.summary.avg_detection.leadersh + reportData.summary.avg_detection.math + reportData.summary.avg_detection.creative)/4 * 2 ).toFixed(1) }}</td>
+              <td class="border border-gray-400 py-2 bg-white">{{ reportData.summary.workbook_score ?? 0 }}</td>
+              <td class="border border-gray-400 py-2 bg-white">{{ (reportData.summary.subjective_total.score ?? 0).toFixed(1) }}</td>
               <td class="border-2 border-red-600 bg-white font-bold text-red-600 text-lg">
-                {{ (Number(workbookAverageScore) + ((reportData.summary.avg_attitude.listen + reportData.summary.avg_attitude.join + reportData.summary.avg_attitude.express + reportData.summary.avg_attitude.coop)/4 * 2) + ((reportData.summary.avg_detection.normal + reportData.summary.avg_detection.leadersh + reportData.summary.avg_detection.math + reportData.summary.avg_detection.creative)/4 * 2)).toFixed(1) }}
+                {{ (Number(workbookAverageScore) + ((reportData.summary.avg_attitude.listen + reportData.summary.avg_attitude.join + reportData.summary.avg_attitude.express + reportData.summary.avg_attitude.coop)/4 * 2) + ((reportData.summary.avg_detection.normal + reportData.summary.avg_detection.leadersh + reportData.summary.avg_detection.math + reportData.summary.avg_detection.creative)/4 * 2) + Number(reportData.summary.workbook_score ?? 0) + Number(reportData.summary.subjective_total.score ?? 0)).toFixed(1) }}
               </td>
             </tr>
           </tbody>

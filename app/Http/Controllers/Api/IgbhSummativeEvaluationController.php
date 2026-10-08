@@ -80,10 +80,30 @@ class IgbhSummativeEvaluationController extends Controller
             $avgAttitude = $weekCount > 0 ? ($sumAttitude / $weekCount) / 4 * 2 : 0;
             $avgDetection = $weekCount > 0 ? ($sumDetection / $weekCount) / 4 * 2 : 0;
             $avgWeeklyWorkbook = $workbookCount > 0 ? ($sumWeeklyWorkbook / $workbookCount) : 0;
+
+            // Fix subjective details score and calculate summative sums
+            $details = DB::table('igbh_summative_result_details')->where('summative_result_id', $result->id)->get();
+            $sumSubjective = 0;
+            $sumSummativeWeekly = 0;
             
-            $finalTotalScore = round($avgWeeklyWorkbook + $avgAttitude + $avgDetection, 1);
+            foreach ($details as $d) {
+                if ($d->sort_no <= 5) {
+                    $correctScore = (($d->concept ?? 0) + ($d->strategy ?? 0) + ($d->calculation ?? 0) + ($d->expression ?? 0)) / 4;
+                    if (abs($correctScore - $d->score) > 0.01 || $d->max_score != 6) {
+                        DB::table('igbh_summative_result_details')->where('id', $d->id)->update([
+                            'score' => $correctScore,
+                            'max_score' => 6
+                        ]);
+                    }
+                    $sumSubjective += $correctScore;
+                } else {
+                    $sumSummativeWeekly += ($d->score ?? 0);
+                }
+            }
             
-            if ($finalTotalScore != $result->total_score) {
+            $finalTotalScore = round($avgWeeklyWorkbook + $avgAttitude + $avgDetection + $sumSubjective + $sumSummativeWeekly, 1);
+            
+            if (abs($finalTotalScore - $result->total_score) > 0.01) {
                 DB::table('igbh_summative_results')->where('id', $result->id)->update(['total_score' => $finalTotalScore]);
                 $result->total_score = $finalTotalScore;
             }
@@ -336,13 +356,13 @@ class IgbhSummativeEvaluationController extends Controller
             $totalSubjectiveScore = 0;
 
             foreach ($request->subjective_data as $sub) {
-                $score = ($sub['concept'] ?? 0) + ($sub['strategy'] ?? 0) + ($sub['calculation'] ?? 0) + ($sub['expression'] ?? 0);
+                $score = (($sub['concept'] ?? 0) + ($sub['strategy'] ?? 0) + ($sub['calculation'] ?? 0) + ($sub['expression'] ?? 0)) / 4;
                 $totalSubjectiveScore += $score;
                 
                 $insertData[] = [
                     'summative_result_id' => $id,
                     'sort_no' => $sub['sort_no'],
-                    'max_score' => $sub['max_score'] ?? 16,
+                    'max_score' => 6,
                     'score' => $score,
                     'concept' => $sub['concept'] ?? 0,
                     'strategy' => $sub['strategy'] ?? 0,
@@ -495,8 +515,17 @@ class IgbhSummativeEvaluationController extends Controller
             }
             
             $avgWeeklyWorkbook = $workbookCount > 0 ? ($sumWeeklyWorkbook / $workbookCount) : 0;
+            
+            $sumSummativeWeekly = 0;
+            if ($request->has('weekly_data')) {
+                foreach ($request->weekly_data as $wd) {
+                    if (isset($wd['workbook']) && $wd['workbook'] !== null && $wd['workbook'] !== '') {
+                        $sumSummativeWeekly += $wd['workbook'];
+                    }
+                }
+            }
 
-            $finalTotalScore = round($avgWeeklyWorkbook + $avgAttitude + $avgDetection, 1);
+            $finalTotalScore = round($avgWeeklyWorkbook + $avgAttitude + $avgDetection + $totalSubjectiveScore + $sumSummativeWeekly, 1);
 
             DB::table('igbh_summative_results')->where('id', $id)->update([
                 'total_score' => $finalTotalScore
