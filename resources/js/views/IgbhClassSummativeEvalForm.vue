@@ -95,16 +95,16 @@
                   <tr class="bg-white">
                     <template v-for="n in 4" :key="'in_'+n">
                       <td class="border border-gray-300 p-2 text-center align-middle min-w-[80px]">
-                        <input type="number" v-model="formData.subjective_data[n-1].concept" @input="limitInput(formData.subjective_data[n-1], 'concept', 1, 6)" min="1" max="6" class="w-full min-w-[50px] max-w-[70px] mx-auto text-center border border-gray-300 rounded-sm p-1.5 focus:border-indigo-500 focus:outline-none transition-colors">
+                        <input type="number" v-model="formData.subjective_data[n-1].concept" @input="limitInput(formData.subjective_data[n-1], 'concept', 0, 6, $event)" min="0" max="6" class="w-full min-w-[50px] max-w-[70px] mx-auto text-center border border-gray-300 rounded-sm p-1.5 focus:border-indigo-500 focus:outline-none transition-colors">
                       </td>
                       <td class="border border-gray-300 p-2 text-center align-middle min-w-[80px]">
-                        <input type="number" v-model="formData.subjective_data[n-1].strategy" @input="limitInput(formData.subjective_data[n-1], 'strategy', 1, 6)" min="1" max="6" class="w-full min-w-[50px] max-w-[70px] mx-auto text-center border border-gray-300 rounded-sm p-1.5 focus:border-indigo-500 focus:outline-none transition-colors">
+                        <input type="number" v-model="formData.subjective_data[n-1].strategy" @input="limitInput(formData.subjective_data[n-1], 'strategy', 0, 6, $event)" min="0" max="6" class="w-full min-w-[50px] max-w-[70px] mx-auto text-center border border-gray-300 rounded-sm p-1.5 focus:border-indigo-500 focus:outline-none transition-colors">
                       </td>
                       <td class="border border-gray-300 p-2 text-center align-middle min-w-[80px]">
-                        <input type="number" v-model="formData.subjective_data[n-1].calculation" @input="limitInput(formData.subjective_data[n-1], 'calculation', 1, 6)" min="1" max="6" class="w-full min-w-[50px] max-w-[70px] mx-auto text-center border border-gray-300 rounded-sm p-1.5 focus:border-indigo-500 focus:outline-none transition-colors">
+                        <input type="number" v-model="formData.subjective_data[n-1].calculation" @input="limitInput(formData.subjective_data[n-1], 'calculation', 0, 6, $event)" min="0" max="6" class="w-full min-w-[50px] max-w-[70px] mx-auto text-center border border-gray-300 rounded-sm p-1.5 focus:border-indigo-500 focus:outline-none transition-colors">
                       </td>
                       <td class="border border-gray-300 p-2 text-center align-middle min-w-[80px]">
-                        <input type="number" v-model="formData.subjective_data[n-1].expression" @input="limitInput(formData.subjective_data[n-1], 'expression', 1, 6)" min="1" max="6" class="w-full min-w-[50px] max-w-[70px] mx-auto text-center border border-gray-300 rounded-sm p-1.5 focus:border-indigo-500 focus:outline-none transition-colors">
+                        <input type="number" v-model="formData.subjective_data[n-1].expression" @input="limitInput(formData.subjective_data[n-1], 'expression', 0, 6, $event)" min="0" max="6" class="w-full min-w-[50px] max-w-[70px] mx-auto text-center border border-gray-300 rounded-sm p-1.5 focus:border-indigo-500 focus:outline-none transition-colors">
                       </td>
                     </template>
                   </tr>
@@ -134,21 +134,21 @@
                   <tr class="bg-white">
                     <!-- Input 5 -->
                     <td class="border border-gray-300 p-2 text-center align-middle">
-                      <input type="number" v-model="formData.subjective_data[4].concept" @input="limitInput(formData.subjective_data[4], 'concept', 1, 6)" min="1" max="6" class="w-full min-w-[50px] max-w-[70px] mx-auto text-center border border-gray-300 rounded-sm p-1.5 focus:border-indigo-500 focus:outline-none transition-colors">
+                      <input type="number" v-model="formData.subjective_data[4].concept" @input="limitInput(formData.subjective_data[4], 'concept', 0, 6, $event)" min="0" max="6" class="w-full min-w-[50px] max-w-[70px] mx-auto text-center border border-gray-300 rounded-sm p-1.5 focus:border-indigo-500 focus:outline-none transition-colors">
                     </td>
                     <td class="border border-gray-300 p-2 text-center align-middle">
-                      <input type="number" v-model="formData.subjective_data[4].strategy" @input="limitInput(formData.subjective_data[4], 'strategy', 1, 6)" min="1" max="6" class="w-full min-w-[50px] max-w-[70px] mx-auto text-center border border-gray-300 rounded-sm p-1.5 focus:border-indigo-500 focus:outline-none transition-colors">
+                      <input type="number" v-model="formData.subjective_data[4].strategy" @input="limitInput(formData.subjective_data[4], 'strategy', 0, 6, $event)" min="0" max="6" class="w-full min-w-[50px] max-w-[70px] mx-auto text-center border border-gray-300 rounded-sm p-1.5 focus:border-indigo-500 focus:outline-none transition-colors">
                     </td>
                     <td class="border border-gray-300 p-2 text-center align-middle">
-                      <input type="number" v-model="formData.subjective_data[4].calculation" @input="limitInput(formData.subjective_data[4], 'calculation', 1, 6)" min="1" max="6" class="w-full min-w-[50px] max-w-[70px] mx-auto text-center border border-gray-300 rounded-sm p-1.5 focus:border-indigo-500 focus:outline-none transition-colors">
+                      <input type="number" v-model="formData.subjective_data[4].calculation" @input="limitInput(formData.subjective_data[4], 'calculation', 0, 6, $event)" min="0" max="6" class="w-full min-w-[50px] max-w-[70px] mx-auto text-center border border-gray-300 rounded-sm p-1.5 focus:border-indigo-500 focus:outline-none transition-colors">
                     </td>
                     <td class="border border-gray-300 p-2 text-center align-middle">
-                      <input type="number" v-model="formData.subjective_data[4].expression" @input="limitInput(formData.subjective_data[4], 'expression', 1, 6)" min="1" max="6" class="w-full min-w-[50px] max-w-[70px] mx-auto text-center border border-gray-300 rounded-sm p-1.5 focus:border-indigo-500 focus:outline-none transition-colors">
+                      <input type="number" v-model="formData.subjective_data[4].expression" @input="limitInput(formData.subjective_data[4], 'expression', 0, 6, $event)" min="0" max="6" class="w-full min-w-[50px] max-w-[70px] mx-auto text-center border border-gray-300 rounded-sm p-1.5 focus:border-indigo-500 focus:outline-none transition-colors">
                     </td>
                     <!-- Inputs 6-17 -->
                     <template v-for="(wd, index) in formData.weekly_data" :key="'inw_'+index">
                       <td class="border border-gray-300 p-2 text-center align-middle min-w-[80px]">
-                        <input type="number" v-model="wd.workbook" @input="limitInput(wd, 'workbook', 1, wd.max_score)" :min="1" :max="wd.max_score" class="w-full min-w-[50px] max-w-[70px] mx-auto text-center border border-gray-300 rounded-sm p-1.5 focus:border-indigo-500 focus:outline-none transition-colors">
+                        <input type="number" v-model="wd.workbook" @input="limitInput(wd, 'workbook', 0, wd.max_score, $event)" :min="0" :max="wd.max_score" class="w-full min-w-[50px] max-w-[70px] mx-auto text-center border border-gray-300 rounded-sm p-1.5 focus:border-indigo-500 focus:outline-none transition-colors">
                       </td>
                     </template>
                   </tr>
@@ -325,15 +325,37 @@ export default {
         }
       }
     },
-    limitInput(obj, key, min, max) {
+    limitInput(obj, key, min, max, event) {
       if (obj[key] === '' || obj[key] === null) return;
       let val = parseInt(obj[key]);
       if (isNaN(val)) {
         obj[key] = null;
         return;
       }
-      if (val < min) obj[key] = min;
-      if (val > max) obj[key] = max;
+      if (val > max) {
+        val = max;
+        obj[key] = max;
+      } else if (val < min) {
+        val = min;
+        obj[key] = min;
+      }
+
+      // Auto focus next input
+      if (event && event.target) {
+        let valStr = val.toString();
+        let maxStr = max.toString();
+        
+        // condition to jump: length reached or adding another digit strictly exceeds max
+        if (valStr.length >= maxStr.length || (val * 10 > max)) {
+          this.$nextTick(() => {
+            const inputs = Array.from(document.querySelectorAll('input[type="number"]'));
+            const index = inputs.indexOf(event.target);
+            if (index > -1 && index < inputs.length - 1) {
+              inputs[index + 1].focus();
+            }
+          });
+        }
+      }
     }
   }
 };
