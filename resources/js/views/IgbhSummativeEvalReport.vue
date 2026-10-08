@@ -369,7 +369,7 @@
             </div>
           </div>
           
-          <div class="flex flex-col md:flex-row gap-6 mt-4">
+          <div class="flex flex-col md:flex-row print:flex-row gap-4 md:gap-6 mt-4">
             <!-- BTM Table -->
             <div class="flex-1">
               <table class="w-full text-center border-collapse border border-gray-400 text-sm">
@@ -506,7 +506,7 @@ export default {
   computed: {
     displaySubjectiveData() {
       if (this.reportData && this.reportData.subjective_data && this.reportData.subjective_data.length > 0) {
-        return this.reportData.subjective_data;
+        return this.reportData.subjective_data.filter(s => s.sort_no <= 5);
       }
       return [
         { sort_no: 1, max_score: '', score: '', concept: '', strategy: '', calculation: '', expression: '' },
