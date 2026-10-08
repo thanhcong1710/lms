@@ -120,6 +120,9 @@ class IgbhSummativeEvaluationController extends Controller
             return response()->json(['message' => 'Not found'], 404);
         }
 
+        $student = DB::table('students')->where('id_lms', $result->stu_seq)->first();
+        $result->date_of_birth = $student ? $student->date_of_birth : null;
+
         $testObj = DB::table('igbh_tests')->where('test_seq', $result->test_seq)->first();
         $result->test_nm = $testObj ? $testObj->test_nm : null;
         $result->level_cd = $testObj ? $testObj->level_cd : null;
