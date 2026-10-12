@@ -130,7 +130,7 @@ class IgbhClassSummativeEvaluationController extends Controller
                 ->join('students as s', 'c.student_id', '=', 's.id')
                 ->where('c.class_id', $classObj->id)
                 ->whereNotIn('c.status', ['SS003', 'SS004'])
-                ->select('s.stu_seq', 's.name as stu_nm')
+                ->selectRaw('COALESCE(s.id_lms, s.id) as stu_seq, s.name as stu_nm')
                 ->get();
                 
             foreach ($students as $stu) {
