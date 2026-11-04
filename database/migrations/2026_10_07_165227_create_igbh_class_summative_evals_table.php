@@ -11,10 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('igbh_class_summative_evals', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
-        });
+        // Empty stub - replaced by 2026_10_07_165300_create_igbh_class_summative_evals_table.php
     }
 
     /**
@@ -22,6 +19,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('igbh_class_summative_evals');
+        //
     }
 };
